@@ -5,7 +5,7 @@ Welcome to the project! To ensure smooth collaboration and avoid confusion, plea
 ## 1. Organize Your Work
 
 - Create a folder named `notebooks` in the root directory.
-- Place all Jupyter Notebook files (`.ipynb`) that you are working on inside the `notebooks` folder.
+- Place all Jupyter Notebook files `.ipynb` that you are working on inside the `notebooks` folder.
 
 ## 2. Sync Before Starting
 
@@ -17,14 +17,14 @@ git pull origin main
 
 ## 3. Convert Python Files to Jupyter Notebooks
 
-If you need to work on a Python file (`.py`), convert it to a Jupyter Notebook (`.ipynb`) first:
+If you need to work on a Python file `.py`, convert it to a Jupyter Notebook `.ipynb` first:
 
 1. Move the Python file to the `notebooks` folder.
 2. Open it as a Jupyter Notebook.
 
 ## 4. Save Your Work Back to Python
 
-After finishing your work in the Jupyter Notebook, convert it back to a Python file (`.py`):
+After finishing your work in the Jupyter Notebook, convert it back to a Python file `.py`:
 
 1. Convert the notebook to a Python file.
 2. Return the Python file to its original location in the `python_notebooks` folder.
