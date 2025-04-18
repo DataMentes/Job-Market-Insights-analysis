@@ -32,8 +32,9 @@ def apply_translation(data, column, rows='all'):
             data.at[row, column] = translate_if_arabic(data.at[row, column], no_detect=True)
 
 
-def split_column(df, column, index: list, split_char: str, names: list, fill_value='Unknown'):
+def split_column(df, column, index: list, split_char: str, names: list, fill_value='Unknown', reverse = False):
+    reverse = -1 if reverse else 1
     for i, name in zip(index, names):
         df[name] = df[column].str.split(split_char).apply(
-            lambda x: x[::-1][i].strip() if len(index) < len(x) else fill_value)
+            lambda x: x[::reverse][i].strip() if len(index) < len(x) else fill_value)
     return df
