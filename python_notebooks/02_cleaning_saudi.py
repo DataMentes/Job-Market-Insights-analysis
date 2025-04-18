@@ -16,5 +16,6 @@ df
 #%%
 df.location.value_counts()
 #%%
-split_column(df, 'location', index=1, split_char='·', names='location')
+df = split_column(df, 'location', index=[1], split_char='·', names=['location'])
 df
+#%%
