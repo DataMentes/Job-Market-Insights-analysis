@@ -1,14 +1,11 @@
 #%%
-import pandas as pd
-from scripts.clean_data import apply_translation
+from scripts.clean_data import *
 #%%
 df = pd.read_csv('../data/raw/egypt_raw.csv')
 #%%
-apply_translation(df, 'title5555', rows=[7, 20, 128])
+split_column(df, 'location', [1], '·', ['city'])
 #%%
-apply_translation(df, 'title', rows=[7, 20, 128])
+df.career_level.value_counts()
 #%%
-df.loc[7, 'title'] = 'Storekeeper'
-df.loc[16, 'title'] = 'waiter'
-df.head()
-df.info
+split_column(df, 'career_level', [0], '·', ['type_'])
+#%%
