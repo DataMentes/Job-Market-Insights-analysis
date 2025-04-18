@@ -34,8 +34,8 @@ def apply_translation(data, column, rows='all'):
 
 def split_column(df, column, index: list, split_char: str, names: list, fill_value='Unknown', reverse = False):
     df[column].fillna(fill_value, inplace=True)
-    reverse = -1 if reverse else 1
+    reverse = 1 if reverse else -1
     for i, name in zip(index, names):
         df[name] = df[column].str.split(split_char).apply(
-            lambda x: x[::reverse][i].strip() if len(index) < len(x) else fill_value)
+            lambda x: x[::reverse][i].strip() if i < len(x) else fill_value)
     return df
