@@ -31,7 +31,7 @@ def apply_translation(data, column, rows='all'):
             data.at[row, column] = translate_if_arabic(data.at[row, column], no_detect=True)
 
 
-def split_column(df : pd.DataFrame, column, index, split_char , names, fill_value='Unknown'):
+def split_column(df , column, index, split_char , names, fill_value='Unknown'):
     col = df[column]
     result = pd.DataFrame(columns=names)
     for row in col:
@@ -40,6 +40,6 @@ def split_column(df : pd.DataFrame, column, index, split_char , names, fill_valu
         values = []
         for i in index:
             values.append(split_list[index].strip() if index < len(split_list) else fill_value)
-        pd.concat(result, values)
+        result = pd.concat(result, values)
 
     df = pd.merge(df, result, on=index)
