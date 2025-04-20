@@ -1,8 +1,6 @@
 # Data cleaning functions here
 from deep_translator import GoogleTranslator
 from langdetect import detect
-import numpy as np
-import pandas as pd
 
 
 def translate_if_arabic(text, no_detect=False):

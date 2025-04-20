@@ -1,5 +1,8 @@
 #%%
 from scripts.clean_data import *
+import warnings
+import pandas as pd
+warnings.filterwarnings("ignore")
 #%%
 df = pd.read_csv('../data/raw/egypt_raw.csv')
 #%%
