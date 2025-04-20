@@ -22,7 +22,7 @@ def translate_if_arabic(text, no_detect=False):
             return text
     else:
         try:
-            return GoogleTranslator(source='auto', target='en').translate(text)
+            return GoogleTranslator(source='ar', target='en').translate(text)
         except:
             return text
 
