@@ -1,5 +1,6 @@
 #%%
 from scripts.clean_data import *
+import sqlite3
 import warnings
 import pandas as pd
 warnings.filterwarnings("ignore")
@@ -34,8 +35,15 @@ df['sex'].fillna('لا تفضيل', inplace=True)
 df['experience_'].fillna('لا تفضيل', inplace=True)
 df['num_of_exp_years'].fillna('لا تفضيل', inplace=True)
 #%%
-df.drop(columns=['exp', 'no_exp', 'num_of_exp', 'exp', 'experience', 'career_level', 'industry', 'location', 'link','Unnamed: 0','salary', 'nationality'],
+df.drop(columns=['exp', 'no_exp', 'num_of_exp', 'exp', 'experience', 'career_level', 'industry', 'location', 'link','Unnamed: 0','salary', 'nationality', 'residence_area'],
         inplace=True)
 #%%
 df
 #%%
+analyses_date(df, num_days = 120)
+#%%
+df
+#%%
+df.sort_values(by=['title'], ascending=False, inplace=True)
+# sqlite_version = sqlite3.connect('../saudi-arabia.db')
+# df.to_sql('saudi-arabia', con=sqlite_version, if_exists='replace', index=False)
