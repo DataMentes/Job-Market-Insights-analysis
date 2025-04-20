@@ -44,10 +44,13 @@ def split_column(df, column, index: list, split_char: str, names: list, fill_val
 
 
 def split_career_level(df):
-    split_column(df, 'career_level', [0, 1, 2], '·', ['type', 'exp', 'no_exp'], reverse=True)
-    index = df[df['exp'].str.len() > 15].index
-    df['no_exp'][index] = df['exp'][index]
-    df['exp'][index] = 'Unknown'
+    split_column(df, 'career_level', [0, 1, 2], '·', ['type', 'exp', 'no_exp'], reverse=False)
+    type_error = df[df['type'].str.len() > 10].index
+    df['exp'][type_error] = df['type'][type_error]
+    df['type'][type_error] = 'Unknown'
+    exp_error = df[df['exp'].str.len() > 15].index
+    df['no_exp'][exp_error] = df['exp'][exp_error]
+    df['exp'][exp_error] = 'Unknown'
 
 
 def split_industry(df):
