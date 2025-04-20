@@ -1,5 +1,8 @@
 #%%
 from scripts.clean_data import *
+import warnings
+import pandas as pd
+warnings.filterwarnings("ignore")
 #%%
 df = pd.read_csv('../data/raw/saudi-arabia_raw.csv')
 #%%
@@ -36,4 +39,3 @@ df.drop(columns=['exp', 'no_exp', 'num_of_exp', 'exp', 'experience', 'career_lev
 #%%
 df
 #%%
-"""hello world """
