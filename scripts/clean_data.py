@@ -4,6 +4,7 @@ from langdetect import detect
 import numpy as np
 import pandas as pd
 import re
+from datetime import datetime, timedelta
 
 
 def translate_if_arabic(text, no_detect=False):
@@ -70,6 +71,7 @@ def analyses_date(df, num_days):
     initial_value = 2 * number_jobs / num_days
     daily_jobs = np.linspace(initial_value, 0, num_days)
     daily_jobs = np.round(daily_jobs).astype(int)
+    np.random.seed(42)
     random_jobs = [max(0, job + np.random.randint(-10, 10)) for job in daily_jobs]
     random_jobs = np.array(random_jobs)
 
@@ -92,3 +94,6 @@ def analyses_date(df, num_days):
 
     df['date'][index_plus] = df['date'][index_plus] + final_list
     df.sort_values(by=['date'], inplace=True)
+
+    reference_date = datetime(2025, 4, 15)
+    df['date'] = reference_date - pd.to_timedelta(df['date'], unit='D')
