@@ -45,5 +45,5 @@ analyses_date(df, num_days = 120)
 df
 #%%
 df.sort_values(by=['title'], ascending=False, inplace=True)
-# sqlite_version = sqlite3.connect('../saudi-arabia.db')
+# sqlite_version = sqlite3.connect('../database.db')
 # df.to_sql('saudi-arabia', con=sqlite_version, if_exists='replace', index=False)
