@@ -67,11 +67,11 @@ def analyses_date(df):
     df['date'] = df['date'].apply(lambda x: int(re.findall(r'[0-9]+', str(x))[0]))
 
     number_jobs = index_plus.sum()
-    num_days = 60
+    num_days = 120
     initial_value = 2 * number_jobs / num_days
     daily_jobs = np.linspace(initial_value, 0, num_days)
     daily_jobs = np.round(daily_jobs).astype(int)
-    random_jobs = [max(0, job + np.random.randint(1, 100)) for job in daily_jobs]
+    random_jobs = [max(0, job + np.random.randint(-10, 10)) for job in daily_jobs]
     random_jobs = np.array(random_jobs)
 
     difference = number_jobs - random_jobs.sum()
@@ -83,6 +83,15 @@ def analyses_date(df):
 
     final_list = []
     for day, jobs in jobs_distribution:
-        final_list.extend([day] * jobs)
+        if jobs != 0:
+            final_list.extend([day] * jobs)
+
+    if len(final_list) < number_jobs:
+        final_list.extend([0] * (number_jobs - len(final_list)))
+    elif len(final_list) > number_jobs:
+        final_list = final_list[:number_jobs]
+
+    print(len(final_list))
+    print(len(df['date'][index_plus]))
     df['date'][index_plus] = df['date'][index_plus] + final_list
     df.sort_values(by=['date'], inplace=True)
