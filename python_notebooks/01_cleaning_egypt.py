@@ -2,6 +2,7 @@
 from scripts.clean_data import *
 import warnings
 import pandas as pd
+import numpy as np
 warnings.filterwarnings("ignore")
 #%%
 df = pd.read_csv('../data/raw/egypt_raw.csv')
