@@ -56,7 +56,7 @@ def split_industry(df):
     df['company_size'][index] = 'Unknown'
 
 
-def analyses_date(df):
+def analyses_date(df, num_days):
     df.dropna(subset=['date'], inplace=True)
 
     df.loc[df['date'].str.contains(r'اليوم'), 'date'] = '0'
@@ -67,7 +67,6 @@ def analyses_date(df):
     df['date'] = df['date'].apply(lambda x: int(re.findall(r'[0-9]+', str(x))[0]))
 
     number_jobs = index_plus.sum()
-    num_days = 120
     initial_value = 2 * number_jobs / num_days
     daily_jobs = np.linspace(initial_value, 0, num_days)
     daily_jobs = np.round(daily_jobs).astype(int)
@@ -91,7 +90,5 @@ def analyses_date(df):
     elif len(final_list) > number_jobs:
         final_list = final_list[:number_jobs]
 
-    print(len(final_list))
-    print(len(df['date'][index_plus]))
     df['date'][index_plus] = df['date'][index_plus] + final_list
     df.sort_values(by=['date'], inplace=True)
