@@ -1,6 +1,9 @@
 # Data cleaning functions here
 from deep_translator import GoogleTranslator
 from langdetect import detect
+import numpy as np
+import pandas as pd
+import re
 
 
 def translate_if_arabic(text, no_detect=False):
@@ -51,3 +54,35 @@ def split_industry(df):
     index = df[df['industry_'].str.contains("موظف", na=False)].index
     df['industry_'][index] = df['company_size'][index]
     df['company_size'][index] = 'Unknown'
+
+
+def analyses_date(df):
+    df.dropna(subset=['date'], inplace=True)
+
+    df.loc[df['date'].str.contains(r'اليوم'), 'date'] = '0'
+    df.loc[df['date'].str.contains(r'في الامس'), 'date'] = '1'
+    df.loc[df['date'].str.contains(r'قبل يومين'), 'date'] = '2'
+    index_plus = df['date'].str.contains(r'\+')
+
+    df['date'] = df['date'].apply(lambda x: int(re.findall(r'[0-9]+', str(x))[0]))
+
+    number_jobs = index_plus.sum()
+    num_days = 60
+    initial_value = 2 * number_jobs / num_days
+    daily_jobs = np.linspace(initial_value, 0, num_days)
+    daily_jobs = np.round(daily_jobs).astype(int)
+    random_jobs = [max(0, job + np.random.randint(1, 100)) for job in daily_jobs]
+    random_jobs = np.array(random_jobs)
+
+    difference = number_jobs - random_jobs.sum()
+    if difference != 0:
+        random_jobs[:abs(difference)] += np.sign(difference)
+
+    days_list = list(range(1, num_days + 1))
+    jobs_distribution = list(zip(days_list, daily_jobs))
+
+    final_list = []
+    for day, jobs in jobs_distribution:
+        final_list.extend([day] * jobs)
+    df['date'][index_plus] = df['date'][index_plus] + final_list
+    df.sort_values(by=['date'], inplace=True)
