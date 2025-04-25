@@ -135,6 +135,7 @@ def extract_gender(df, column):
 
 
 def extract_remotely(df, column):
+    df[column].fillna('Unknown', inplace=True)
     data = {
         'remote': r'remote\b|remotely',
         'hybrid': r'hybrid\b'
