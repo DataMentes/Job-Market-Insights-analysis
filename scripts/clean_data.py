@@ -137,8 +137,8 @@ def extract_gender(df, column):
 def extract_remotely(df, column):
     df[column].fillna('Unknown', inplace=True)
     data = {
-        'remote': r'remote\b|remotely',
-        'hybrid': r'hybrid\b'
+        'Remote': r'remote\b|remotely',
+        'Hybrid': r'hybrid\b'
     }
     for key, value in data.items():
         index = df[column].str.contains(value)
@@ -181,7 +181,7 @@ def translate_sex(df):
         'لا تفضيل': 'No preference',
         'ذكر': 'Male',
         'انثي': 'Female',
-        'أنثي': 'Female',
+        'أنثى': 'Female',
     }
 
     df['gender'] = df['gender'].replace(dict)
