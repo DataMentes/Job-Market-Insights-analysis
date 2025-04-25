@@ -100,3 +100,28 @@ def analyses_date(df, num_days):
 
     reference_date = datetime(2025, 4, 15)
     df['date'] = reference_date - pd.to_timedelta(df['date'], unit='D')
+
+
+def extract_job_grade(df, column='title'):
+    df[column].fillna('Unknown', inplace=True)
+    mapping_dict = {
+        'Graduate': ['trainee', 'intern', 'entry-level', 'graduate', 'internship', 'interns', 'تمهير', 'تدريب'],
+        'Junior': ['junior'],
+        'Mid Level': ['mid-level'],
+        'Senior': ['senior'],
+        'Management': ['manager', 'principal', 'assistant director'],
+        'Senior Management': ['director', 'vice president', 'svp', 'group manager'],
+        'C-Suite': ['c-suite', 'ceo', 'chief executive officer', 'cfo', 'chief financial officer',
+                    'cio', 'chief information officer', 'coo', 'chief operating officer',
+                    'cto', 'chief technology officer', 'cmo', 'chief marketing officer']
+    }
+    for key in mapping_dict:
+        regex = r'\b|'.join(mapping_dict[key]) + r'\b'
+        if key == 'Senior Management':
+            regex = r'(?<!\bassistant\s)\bdirector\b|' + r'\b|'.join(mapping_dict[key][1:]) + r'\b'
+        mask = df[column].str.contains(regex, regex=True)
+        if key == 'Graduate':
+            df.loc[mask, 'type'] = 'intern'
+        if key == 'Management' or key == 'Senior Management' or key == 'C-Suite':
+            df.loc[mask, 'type'] = 'Management'
+        df.loc[mask, 'experience_'] = key
