@@ -141,8 +141,8 @@ def extract_remotely(df, column):
         'hybrid': r'hybrid\b'
     }
     for key, value in data.items():
-        index = df['remote'].str.contains(value)
-        df.loc[index, column] = key
+        index = df[column].str.contains(value)
+        df.loc[index, 'remote'] = key
 
 
 def translate_experience(df):
