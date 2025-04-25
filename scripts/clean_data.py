@@ -126,7 +126,7 @@ def extract_job_grade(df, column='title'):
         df.loc[mask, 'experience_'] = key
 
 
-def exract_gender(df, column='gender'):
+def exract_gender(df, column):
     index_male = df[column].str.contains('male')
     df.loc[index_male, 'gender'] = 'male'
     index_Female = df[column].str.contains('Female')
