@@ -120,7 +120,7 @@ def extract_job_grade(df, column='title'):
             regex = r'(?<!\bassistant\s)\bdirector\b|' + r'\b|'.join(mapping_dict[key][1:]) + r'\b'
         mask = df[column].str.contains(regex, regex=True)
         if key == 'Graduate':
-            df.loc[mask, 'type'] = 'intern'
+            df.loc[mask, 'type'] = 'Intern'
         if key == 'Management' or key == 'Senior Management' or key == 'C-Suite':
             df.loc[mask, 'type'] = 'Management'
         df.loc[mask, 'experience_'] = key
