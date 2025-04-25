@@ -171,11 +171,11 @@ def translate_sex(df):
 
     df['gender'] = df['gender'].replace(dict)
 
-    def translate_remote(df):
-        dict = {
-            'من المقر': 'On-site',
-            'عن بُعد': 'Remote',
-            'هجين': 'Hybrid'
-        }
+def translate_remote(df):
+    dict = {
+        'من المقر': 'On-site',
+        'عن بُعد': 'Remote',
+        'هجين': 'Hybrid'
+    }
 
-        df['remote'] = df['remote'].replace(dict)
+    df['remote'] = df['remote'].replace(dict)
