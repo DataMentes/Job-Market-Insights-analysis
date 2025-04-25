@@ -129,7 +129,7 @@ def extract_job_grade(df, column='title'):
 def extract_gender(df, column):
     df[column].fillna('Unknown', inplace=True)
     index_male = df[column].str.contains('male')
-    df.loc[index_male, 'gender'] = 'male'
+    df.loc[index_male, 'gender'] = 'Male'
     index_Female = df[column].str.contains('Female')
     df.loc[index_Female, 'gender'] = 'Female'
 
@@ -149,7 +149,7 @@ def translate_experience(df):
     df['job_level'] = df['experience_']
     df.drop(columns=['experience_'], inplace=True)
     dict = {
-        'لا تفضيل': 'No preference',
+        'لا تفضيل': 'No Preference',
         'خريج جديد': 'Graduate',
         'متوسط الخبرة': 'Mid Level',
         'مبتدئ الخبرة': 'Junior',
@@ -163,12 +163,12 @@ def translate_experience(df):
 
 def translate_type(df):
     dict = {
-        'دوام كامل': 'Full -time',
+        'دوام كامل': 'Full-Time',
         'إدارة': 'Management',
-        'تدريب': 'intern',
-        'دوام جزئي': 'part time',
+        'تدريب': 'Intern',
+        'دوام جزئي': 'Part-Time',
         'عقود': 'Contracts',
-        'مؤقت': 'temporary'
+        'مؤقت': 'Temporary'
     }
 
     df['type'] = df['type'].replace(dict)
@@ -181,6 +181,7 @@ def translate_sex(df):
         'لا تفضيل': 'No preference',
         'ذكر': 'Male',
         'انثي': 'Female',
+        'أنثي': 'Female',
     }
 
     df['gender'] = df['gender'].replace(dict)
