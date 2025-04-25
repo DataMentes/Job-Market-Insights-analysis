@@ -3,8 +3,7 @@ from deep_translator import GoogleTranslator
 from langdetect import detect
 import numpy as np
 import pandas as pd
-import re
-from datetime import datetime, timedelta
+from datetime import datetime
 
 
 def translate_if_arabic(text, no_detect=False):
@@ -65,10 +64,10 @@ def analyses_date(df, num_days):
 
     df.loc[df['date'].str.contains(r'اليوم'), 'date'] = '0'
     df.loc[df['date'].str.contains(r'في الامس'), 'date'] = '1'
-    df.loc[df['date'].str.contains(r'قبل يومين'), 'date'] = '2'
+    df.loc[df['date'].str.findall(r'قبل يومين'), 'date'] = '2'
     index_plus = df['date'].str.contains(r'\+')
 
-    df['date'] = df['date'].apply(lambda x: int(re.findall(r'[0-9]+', str(x))[0]))
+    df['date'].str.extract(r'([0-9]+)').astype(float).astype('Int64')
 
     number_jobs = index_plus.sum()
     initial_value = 2 * number_jobs / num_days
