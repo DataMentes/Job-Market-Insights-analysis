@@ -132,6 +132,17 @@ def extract_gender(df, column):
     index_Female = df[column].str.contains('Female')
     df.loc[index_Female, 'gender'] = 'Female'
 
+
+def extract_remotely(df, column):
+    data = {
+        'remote': r'remote\b|remotely',
+        'hybrid': r'hybrid\b'
+    }
+    for key, value in data.items():
+        index = df['remote'].str.contains(value)
+        df.loc[index, column] = key
+
+
 def translate_experience(df):
     df['job_level'] = df['experience_']
     df.drop(columns=['experience_'], inplace=True)
@@ -160,6 +171,7 @@ def translate_type(df):
 
     df['type'] = df['type'].replace(dict)
 
+
 def translate_sex(df):
     df['gender'] = df['sex']
     df.drop(columns=['sex'], inplace=True)
@@ -170,6 +182,7 @@ def translate_sex(df):
     }
 
     df['gender'] = df['gender'].replace(dict)
+
 
 def translate_remote(df):
     dict = {
