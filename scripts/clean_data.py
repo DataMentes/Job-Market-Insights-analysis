@@ -127,6 +127,7 @@ def extract_job_grade(df, column='title'):
 
 
 def extract_gender(df, column):
+    df[column].fillna('Unknown', inplace=True)
     index_male = df[column].str.contains('male')
     df.loc[index_male, 'gender'] = 'male'
     index_Female = df[column].str.contains('Female')
