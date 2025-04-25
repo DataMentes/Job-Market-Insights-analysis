@@ -123,7 +123,7 @@ def extract_job_grade(df, column='title'):
             df.loc[mask, 'type'] = 'Intern'
         if key == 'Management' or key == 'Senior Management' or key == 'C-Suite':
             df.loc[mask, 'type'] = 'Management'
-        df.loc[mask, 'experience_'] = key
+        df.loc[mask, 'job_level'] = key
 
 
 def extract_gender(df, column):
