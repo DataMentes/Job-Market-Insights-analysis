@@ -126,7 +126,7 @@ def extract_job_grade(df, column='title'):
         df.loc[mask, 'experience_'] = key
 
 
-def exract_gender(df, column):
+def extract_gender(df, column):
     index_male = df[column].str.contains('male')
     df.loc[index_male, 'gender'] = 'male'
     index_Female = df[column].str.contains('Female')
@@ -170,3 +170,12 @@ def translate_sex(df):
     }
 
     df['gender'] = df['gender'].replace(dict)
+
+    def translate_remote(df):
+        dict = {
+            'من المقر': 'On-site',
+            'عن بُعد': 'Remote',
+            'هجين': 'Hybrid'
+        }
+
+        df['remote'] = df['remote'].replace(dict)
