@@ -59,6 +59,26 @@ def split_industry(df):
     df['company_size'][index] = 'Unknown'
 
 
+def split_num_of_exp_years(df):
+
+    df['num_of_exp_years'].fillna(np.nan, inplace=True)
+
+    def extract_years(text):
+        if pd.isna(text):
+            return None, None
+        matches = pd.Series(str(text)).str.findall(r'(\d+)').iloc[0]
+        if matches:
+            if len(matches) == 1:
+                return int(matches[0]), 'Unknown'
+            elif len(matches) >= 2:
+                return int(matches[0]), int(matches[1])
+
+        return 'Unknown', 'Unknown'
+    df[['min_num_of_years', 'max_num_of_years']] = df['num_of_exp_years'].apply(lambda x: pd.Series(extract_years(x)))
+
+    df.drop(columns=['num_of_exp_years'], inplace=True)
+
+
 def analyses_date(df, num_days):
     df.dropna(subset=['date'], inplace=True)
 
@@ -103,6 +123,9 @@ def analyses_date(df, num_days):
 
 def extract_job_grade(df, column='title'):
     df[column].fillna('Unknown', inplace=True)
+
+    mapping_dict0 = {'Graduate': 'i', 'Junior': 'ii', 'Mid Level':'iii', 'Senior':'iv',
+                     'Management':'v', 'Senior Management':'vi', 'C-Suite':'vii'}
     mapping_dict = {
         'Graduate': ['trainee', 'intern', 'entry-level', 'graduate', 'internship', 'interns', 'تمهير', 'تدريب'],
         'Junior': ['junior'],
@@ -114,16 +137,21 @@ def extract_job_grade(df, column='title'):
                     'cio', 'chief information officer', 'coo', 'chief operating officer',
                     'cto', 'chief technology officer', 'cmo', 'chief marketing officer']
     }
-    for key in mapping_dict:
-        regex = r'\b|'.join(mapping_dict[key]) + r'\b'
-        if key == 'Senior Management':
-            regex = r'(?<!\bassistant\s)\bdirector\b|' + r'\b|'.join(mapping_dict[key][1:]) + r'\b'
-        mask = df[column].str.contains(regex, regex=True)
-        if key == 'Graduate':
-            df.loc[mask, 'type'] = 'Intern'
-        if key == 'Management' or key == 'Senior Management' or key == 'C-Suite':
-            df.loc[mask, 'type'] = 'Management'
-        df.loc[mask, 'job_level'] = key
+    list = [
+        mapping_dict0,
+        mapping_dict
+    ]
+    for i in [0,1]:
+        for key in list[i]:
+            regex = r'\b|'.join(list[i][key]) + r'\b' if i else rf'(\s|-){list[i][key]}($|\s|\,|- )'
+            if key == 'Senior Management' and i:
+                regex = r'(?<!\bassistant\s)\bdirector\b|' + r'\b|'.join(list[i][key][1:]) + r'\b'
+            mask = df[column].str.contains(regex, regex=True)
+            if key == 'Graduate':
+                df.loc[mask, 'type'] = 'Intern'
+            if key == 'Management' or key == 'Senior Management' or key == 'C-Suite':
+                df.loc[mask, 'type'] = 'Management'
+            df.loc[mask, 'job_level'] = key
 
 
 def extract_gender(df, column):
@@ -178,7 +206,7 @@ def translate_sex(df):
     df['gender'] = df['sex']
     df.drop(columns=['sex'], inplace=True)
     dict = {
-        'لا تفضيل': 'No preference',
+        'لا تفضيل': 'No Preference',
         'ذكر': 'Male',
         'انثي': 'Female',
         'أنثى': 'Female',
