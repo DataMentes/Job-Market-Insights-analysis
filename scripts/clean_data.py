@@ -130,7 +130,7 @@ def extract_job_grade(df, column='title'):
         'Graduate': ['trainee', 'intern', 'entry-level', 'graduate', 'internship', 'interns', 'تمهير', 'تدريب'],
         'Junior': ['junior'],
         'Mid Level': ['mid-level'],
-        'Senior': ['senior'],
+        'Senior': ['senior','supervisor','section head'],
         'Management': ['manager', 'principal', 'assistant director'],
         'Senior Management': ['director', 'vice president', 'svp', 'group manager'],
         'C-Suite': ['c-suite', 'ceo', 'chief executive officer', 'cfo', 'chief financial officer',
