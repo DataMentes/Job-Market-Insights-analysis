@@ -156,7 +156,7 @@ def extract_job_grade(df, column='title'):
 
 def extract_gender(df, column):
     df[column].fillna('Unknown', inplace=True)
-    index_male = df[column].str.contains('male')
+    index_male = df[column].str.contains(r'male|\bmen\b', regex=True)
     df.loc[index_male, 'gender'] = 'Male'
     index_Female = df[column].str.contains('Female')
     df.loc[index_Female, 'gender'] = 'Female'
