@@ -129,7 +129,7 @@ def extract_job_grade(df, column='title'):
     mapping_dict = {
         'Graduate': ['trainee', 'intern', 'entry-level', 'graduate', 'internship', 'interns', 'تمهير', 'تدريب'],
         'Junior': ['junior'],
-        'Mid Level': ['mid-level'],
+        'Mid Level': ['mid-level','intermediate'],
         'Senior': ['senior','supervisor','section head',r'(^sr(\b|\s)|\ssr(\b|\s))','senior associate'],
         'Management': ['manager', 'principal', 'assistant director'],
         'Senior Management': ['senior manager','director', 'vice president', 'svp', 'group manager'],
