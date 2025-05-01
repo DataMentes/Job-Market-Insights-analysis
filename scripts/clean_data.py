@@ -132,7 +132,7 @@ def extract_job_grade(df, column='title'):
         'Mid Level': ['mid-level'],
         'Senior': ['senior','supervisor','section head',r'(^sr(\b|\s)|\ssr(\b|\s))','senior associate'],
         'Management': ['manager', 'principal', 'assistant director'],
-        'Senior Management': ['director', 'vice president', 'svp', 'group manager'],
+        'Senior Management': ['senior manager','director', 'vice president', 'svp', 'group manager'],
         'C-Suite': ['c-suite', 'ceo', 'chief executive officer', 'cfo', 'chief financial officer',
                     'cio', 'chief information officer', 'coo', 'chief operating officer',
                     'cto', 'chief technology officer', 'cmo', 'chief marketing officer']
