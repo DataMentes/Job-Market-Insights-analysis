@@ -10,7 +10,7 @@ import streamlit as st
 # ---------------------------
 # Import Data
 # ---------------------------
-conn = sqlite3.connect('../database.db')
+conn = sqlite3.connect('database.db')
 df = pd.read_sql('SELECT * FROM EGYPT', conn)
 
 # ---------------------------
