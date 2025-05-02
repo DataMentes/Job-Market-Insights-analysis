@@ -183,7 +183,7 @@ def analyze_jobs_by_work_type(data):
     plt.tight_layout()
     plt.show()
 
-    #return work_df
+    return work_df
 
 
 

@@ -533,7 +533,7 @@ df = df.sort_values(by="title", ascending=False, key=lambda col: col.str.lower()
 #%%
 review_matches(df, final_mapping_title)
 #%%
-edite_title(df, final_mapping_title)
+edit_title(df, final_mapping_title)
 df.title.value_counts()
 #%%
 conn = sqlite3.connect('../database.db')

@@ -596,7 +596,7 @@ df.title = df.title.str.replace(pattern_replace,'',regex=True).str.strip()
 #%%
 review_matches(df,edite_title_mapping)
 #%%
-edite_title(df,edite_title_mapping)
+edit_title(df,edite_title_mapping)
 df.title.value_counts()
 #%%
 conn = sqlite3.connect('../database.db')
