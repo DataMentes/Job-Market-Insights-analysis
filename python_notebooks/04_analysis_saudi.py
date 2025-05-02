@@ -53,13 +53,19 @@ titles_df.info()
 # ### Value Counts Summary
 # 
 # This code computes the frequency of unique values in a column. It is commonly used to understand how data is distributed across categories (e.g., how many job postings each company has).
+# %% [markdown]
+# ### 📊 Distribution of Categorical Values
+# 
+# This code block computes the **frequency distribution** of values in a specific column. It's particularly useful for identifying the **most common categories**, such as top employers, cities, or job titles.
+# 
+# Key Insight:
+# - This helps us **identify dominant categories** which could indicate market leaders or preferred locations.
 
 # %%
 titles_df['title'].value_counts().head(10)
 
 
 # %%
-df.loc[:, 'remote']=df['remote'].apply(lambda x: get_display(arabic_reshaper.reshape(x)))
 df.loc[:, 'industry_']=df['industry_'].apply(lambda x: get_display(arabic_reshaper.reshape(x)))
 df.loc[:, 'city']=df['city'].apply(lambda x: get_display(arabic_reshaper.reshape(x)))
 
@@ -75,15 +81,27 @@ df[df['city']=='الرياض'].count()
 # ### Data Visualization
 # 
 # This code creates a visualization to help interpret the data. Visualization is key to discovering patterns, outliers, and trends.
+# %% [markdown]
+# ### 📊 Distribution of Categorical Values
+# 
+# This code block computes the **frequency distribution** of values in a specific column. It's particularly useful for identifying the **most common categories**, such as top employers, cities, or job titles.
+# 
+# Key Insight:
+# - This helps us **identify dominant categories** which could indicate market leaders or preferred locations.
 
 # %%
-titles_df['title'].value_counts().head(10).plot.pie(
-    figsize=(8, 8),
-    autopct='%1.1f%%',
-    startangle=90,
-    title='Top 10 Job Titles Distribution'
-)
-plt.ylabel('')
+plt.figure(figsize=(10, 8))
+top_titles = df['title'].value_counts().head(10)
+
+# Add count labels on top of the bars
+for i, count in enumerate(top_titles.values):
+    plt.text(i, count + 0.5, f'{count}', ha='center', fontsize=12, color='black')
+
+sns.barplot(x=top_titles.index,y=top_titles.values, palette='viridis')
+plt.xticks(rotation=45, ha='right')
+plt.title('Top 10 Job Titles in Saudi Arabia')
+plt.xlabel('Job Title')
+plt.tight_layout()
 plt.show()
 
 # %% [markdown]
@@ -94,6 +112,13 @@ plt.show()
 # ### Data Visualization
 # 
 # This code creates a visualization to help interpret the data. Visualization is key to discovering patterns, outliers, and trends.
+# %% [markdown]
+# ### 📊 Distribution of Categorical Values
+# 
+# This code block computes the **frequency distribution** of values in a specific column. It's particularly useful for identifying the **most common categories**, such as top employers, cities, or job titles.
+# 
+# Key Insight:
+# - This helps us **identify dominant categories** which could indicate market leaders or preferred locations.
 
 # %%
 df['remote'].value_counts().plot.pie(
@@ -113,6 +138,14 @@ plt.show()
 # ### Bar Plot Visualization
 # 
 # This code generates a bar chart to visualize the count of items (e.g., job postings per company). Bar plots are excellent for comparing categorical data.
+# %% [markdown]
+# ### 📈 Horizontal Bar Chart Visualization
+# 
+# This visualization presents the **top categories** (e.g., industries or companies) by their number of job postings using a **horizontal bar chart**.
+# 
+# Why it's useful:
+# - Makes it easier to compare categories.
+# - Highlights **which industries or companies dominate** the job market in this dataset.
 
 # %%
 plt.figure(figsize=(14, 8))
@@ -131,6 +164,13 @@ plt.show()
 # ### Data Visualization
 # 
 # This code creates a visualization to help interpret the data. Visualization is key to discovering patterns, outliers, and trends.
+# %% [markdown]
+# ### 📊 Distribution of Categorical Values
+# 
+# This code block computes the **frequency distribution** of values in a specific column. It's particularly useful for identifying the **most common categories**, such as top employers, cities, or job titles.
+# 
+# Key Insight:
+# - This helps us **identify dominant categories** which could indicate market leaders or preferred locations.
 
 # %%
 df['gender'].value_counts().plot.pie(
@@ -150,6 +190,14 @@ grouped_df = df.groupby(['city', 'industry_'])['title'].count().reset_index()
 # ### Bar Plot Visualization
 # 
 # This code generates a bar chart to visualize the count of items (e.g., job postings per company). Bar plots are excellent for comparing categorical data.
+# %% [markdown]
+# ### 📈 Horizontal Bar Chart Visualization
+# 
+# This visualization presents the **top categories** (e.g., industries or companies) by their number of job postings using a **horizontal bar chart**.
+# 
+# Why it's useful:
+# - Makes it easier to compare categories.
+# - Highlights **which industries or companies dominate** the job market in this dataset.
 
 # %%
 plt.figure(figsize=(14, 8))
@@ -200,6 +248,13 @@ unique_types_count
 # ### Data Visualization
 # 
 # This code creates a visualization to help interpret the data. Visualization is key to discovering patterns, outliers, and trends.
+# %% [markdown]
+# ### 📊 Distribution of Categorical Values
+# 
+# This code block computes the **frequency distribution** of values in a specific column. It's particularly useful for identifying the **most common categories**, such as top employers, cities, or job titles.
+# 
+# Key Insight:
+# - This helps us **identify dominant categories** which could indicate market leaders or preferred locations.
 
 # %%
 # Create an explode list with the same length as the unique job types
@@ -227,15 +282,33 @@ plt.show()
 # ### Bar Plot Visualization
 # 
 # This code generates a bar chart to visualize the count of items (e.g., job postings per company). Bar plots are excellent for comparing categorical data.
+# %% [markdown]
+# ### 📈 Horizontal Bar Chart Visualization
+# 
+# This visualization presents the **top categories** (e.g., industries or companies) by their number of job postings using a **horizontal bar chart**.
+# 
+# Why it's useful:
+# - Makes it easier to compare categories.
+# - Highlights **which industries or companies dominate** the job market in this dataset.
 
 # %%
-#distribution of job level 
-plt.figure(figsize=(14, 8))
-df['job_level'].value_counts().plot(kind='bar', color='skyblue')
-plt.title('Job Level Distribution', fontsize=16)
-plt.xlabel('Job Level', fontsize=14)
-plt.ylabel('Number of Job Postings', fontsize=14)
-plt.xticks(rotation=45, fontsize=12)
+# Count the number of jobs for each job level
+job_level_counts = df['job_level'].value_counts()
+
+# Plotting the bar chart
+plt.figure(figsize=(10, 8))
+sns.barplot(x=job_level_counts.index, y=job_level_counts.values, palette='Set2')
+
+# Add count labels on top of the bars
+for i, count in enumerate(job_level_counts.values):
+    plt.text(i, count + 0.5, f'{count}', ha='center', fontsize=12, color='black')
+
+# Titles and labels
+plt.title('Job Distribution by Job Level', fontsize=16)
+plt.xlabel('Job Level', fontsize=12)
+plt.ylabel('Number of Jobs', fontsize=12)
+plt.xticks(rotation=45)
+plt.tight_layout()
 plt.show()
 
 # %% [markdown]
@@ -246,25 +319,14 @@ plt.show()
 # ### Bar Plot Visualization
 # 
 # This code generates a bar chart to visualize the count of items (e.g., job postings per company). Bar plots are excellent for comparing categorical data.
-
-# %%
-# Prepare data
-top_companies = df['company_name'].value_counts().head(10).sort_values()
-
-# Plot
-plt.figure(figsize=(14, 8))
-sns.barplot(x=top_companies.values, y=top_companies.index, palette='mako')
-
-# Titles and labels
-plt.title('Top 10 Industries by Number of Job Postings', fontsize=18)
-plt.xlabel('Number of Job Postings', fontsize=14)
-plt.ylabel('Company Name', fontsize=14)
-plt.xticks(fontsize=12)
-plt.yticks(fontsize=12)
-sns.despine(left=True, bottom=True)
-plt.tight_layout()
-plt.show()
-
+# %% [markdown]
+# ### 📈 Horizontal Bar Chart Visualization
+# 
+# This visualization presents the **top categories** (e.g., industries or companies) by their number of job postings using a **horizontal bar chart**.
+# 
+# Why it's useful:
+# - Makes it easier to compare categories.
+# - Highlights **which industries or companies dominate** the job market in this dataset.
 # %% [markdown]
 # ## Top 10 Industries by Number of Job Postings
 # 
@@ -283,11 +345,16 @@ plt.show()
 # ### Bar Plot Visualization
 # 
 # This code generates a bar chart to visualize the count of items (e.g., job postings per company). Bar plots are excellent for comparing categorical data.
+# %% [markdown]
+# ### 📈 Horizontal Bar Chart Visualization
+# 
+# This visualization presents the **top categories** (e.g., industries or companies) by their number of job postings using a **horizontal bar chart**.
+# 
+# Why it's useful:
+# - Makes it easier to compare categories.
+# - Highlights **which industries or companies dominate** the job market in this dataset.
 
 # %%
-import matplotlib.pyplot as plt
-import seaborn as sns
-
 # Prepare data
 top_companies = df['company_name'].value_counts().head(10).sort_values()
 
@@ -305,4 +372,23 @@ sns.despine(left=True, bottom=True)
 plt.tight_layout()
 plt.show()
 
+# %% [markdown]
+# ## *Comparison Between Egpyt market and Saudi Arabia market*
+# ## *__________________________________________________________________________________________________________*
+# 
+# %% [markdown]
+# ## Saudi Arabia 
+# ![alt text](5698b510-de4f-4f43-b800-9c1c58140e09.png)
+# ## Egypt 
+# ![alt text](3a66eef9-c367-4083-8298-b0354e5ea326.jfif)
+# %% [markdown]
+# ## Saudi Arabia
+# ![image.png](attachment:image.png)
+# ## Egypt
+# ![alt text](4978465f-a22b-43c5-94df-f85e123ae49a.jfif)
+# %% [markdown]
+# ## Saudi Arabia
+# ![image-2.png](attachment:image-2.png)
+# ## Egypt
+# ![alt text](ba1ac83a-211f-4f41-a483-a373deeb6363-1.jfif)
 
