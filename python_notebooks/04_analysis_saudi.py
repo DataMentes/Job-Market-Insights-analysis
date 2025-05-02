@@ -1,5 +1,13 @@
 # To add a new cell, type '# %%'
 # To add a new markdown cell, type '# %% [markdown]'
+# %% [markdown]
+# ### Explanation
+# This code generates a plot to visualize data, aiding in analysis and communication of trends.
+# %% [markdown]
+# ### Data Visualization
+# 
+# This code creates a visualization to help interpret the data. Visualization is key to discovering patterns, outliers, and trends.
+
 # %%
 import plotly.express as px
 import sqlite3
@@ -38,6 +46,13 @@ titles_df['title'].unique().view()
 # %%
 titles_df.info()
 
+# %% [markdown]
+# ### Explanation
+# This code summarizes the frequency of values in a column, which is useful for understanding the distribution of categorical data.
+# %% [markdown]
+# ### Value Counts Summary
+# 
+# This code computes the frequency of unique values in a column. It is commonly used to understand how data is distributed across categories (e.g., how many job postings each company has).
 
 # %%
 titles_df['title'].value_counts().head(10)
@@ -52,6 +67,14 @@ df.loc[:, 'city']=df['city'].apply(lambda x: get_display(arabic_reshaper.reshape
 # %%
 df[df['city']=='الرياض'].count()
 
+# %% [markdown]
+# ### Explanation
+# This code summarizes the frequency of values in a column, which is useful for understanding the distribution of categorical data.
+# This code generates a plot to visualize data, aiding in analysis and communication of trends.
+# %% [markdown]
+# ### Data Visualization
+# 
+# This code creates a visualization to help interpret the data. Visualization is key to discovering patterns, outliers, and trends.
 
 # %%
 titles_df['title'].value_counts().head(10).plot.pie(
@@ -60,9 +83,17 @@ titles_df['title'].value_counts().head(10).plot.pie(
     startangle=90,
     title='Top 10 Job Titles Distribution'
 )
-
+plt.ylabel('')
 plt.show()
 
+# %% [markdown]
+# ### Explanation
+# This code summarizes the frequency of values in a column, which is useful for understanding the distribution of categorical data.
+# This code generates a plot to visualize data, aiding in analysis and communication of trends.
+# %% [markdown]
+# ### Data Visualization
+# 
+# This code creates a visualization to help interpret the data. Visualization is key to discovering patterns, outliers, and trends.
 
 # %%
 df['remote'].value_counts().plot.pie(
@@ -74,6 +105,14 @@ df['remote'].value_counts().plot.pie(
 plt.ylabel('')  # Remove the y-axis label for better aesthetics
 plt.show()
 
+# %% [markdown]
+# ### Explanation
+# This code summarizes the frequency of values in a column, which is useful for understanding the distribution of categorical data.
+# This code generates a plot to visualize data, aiding in analysis and communication of trends.
+# %% [markdown]
+# ### Bar Plot Visualization
+# 
+# This code generates a bar chart to visualize the count of items (e.g., job postings per company). Bar plots are excellent for comparing categorical data.
 
 # %%
 plt.figure(figsize=(14, 8))
@@ -84,6 +123,14 @@ plt.ylabel('Number of Job Postings', fontsize=14)
 plt.xticks(rotation=45, fontsize=12)
 plt.show()
 
+# %% [markdown]
+# ### Explanation
+# This code summarizes the frequency of values in a column, which is useful for understanding the distribution of categorical data.
+# This code generates a plot to visualize data, aiding in analysis and communication of trends.
+# %% [markdown]
+# ### Data Visualization
+# 
+# This code creates a visualization to help interpret the data. Visualization is key to discovering patterns, outliers, and trends.
 
 # %%
 df['gender'].value_counts().plot.pie(
@@ -96,6 +143,13 @@ df['gender'].value_counts().plot.pie(
 # %%
 grouped_df = df.groupby(['city', 'industry_'])['title'].count().reset_index()
 
+# %% [markdown]
+# ### Explanation
+# This code generates a plot to visualize data, aiding in analysis and communication of trends.
+# %% [markdown]
+# ### Bar Plot Visualization
+# 
+# This code generates a bar chart to visualize the count of items (e.g., job postings per company). Bar plots are excellent for comparing categorical data.
 
 # %%
 plt.figure(figsize=(14, 8))
@@ -106,6 +160,13 @@ plt.ylabel('Number of Job Titles', fontsize=14)
 plt.xticks(rotation=45, fontsize=12)
 plt.show()
 
+# %% [markdown]
+# ### Explanation
+# This code generates a plot to visualize data, aiding in analysis and communication of trends.
+# %% [markdown]
+# ### Line Plot
+# 
+# This code produces a line plot, ideal for showing trends over time or ordered categories.
 
 # %%
 # Convert the 'date' column to datetime format
@@ -131,6 +192,14 @@ unique_types_count = df['type'].nunique()
 # %%
 unique_types_count
 
+# %% [markdown]
+# ### Explanation
+# This code summarizes the frequency of values in a column, which is useful for understanding the distribution of categorical data.
+# This code generates a plot to visualize data, aiding in analysis and communication of trends.
+# %% [markdown]
+# ### Data Visualization
+# 
+# This code creates a visualization to help interpret the data. Visualization is key to discovering patterns, outliers, and trends.
 
 # %%
 # Create an explode list with the same length as the unique job types
@@ -150,8 +219,90 @@ df['type'].value_counts().plot.pie(
 plt.ylabel('')  # Remove the y-axis label for better aesthetics
 plt.show()
 
+# %% [markdown]
+# ### Explanation
+# This code summarizes the frequency of values in a column, which is useful for understanding the distribution of categorical data.
+# This code generates a plot to visualize data, aiding in analysis and communication of trends.
+# %% [markdown]
+# ### Bar Plot Visualization
+# 
+# This code generates a bar chart to visualize the count of items (e.g., job postings per company). Bar plots are excellent for comparing categorical data.
 
 # %%
+#distribution of job level 
+plt.figure(figsize=(14, 8))
+df['job_level'].value_counts().plot(kind='bar', color='skyblue')
+plt.title('Job Level Distribution', fontsize=16)
+plt.xlabel('Job Level', fontsize=14)
+plt.ylabel('Number of Job Postings', fontsize=14)
+plt.xticks(rotation=45, fontsize=12)
+plt.show()
 
+# %% [markdown]
+# ### Explanation
+# This code summarizes the frequency of values in a column, which is useful for understanding the distribution of categorical data.
+# This code generates a plot to visualize data, aiding in analysis and communication of trends.
+# %% [markdown]
+# ### Bar Plot Visualization
+# 
+# This code generates a bar chart to visualize the count of items (e.g., job postings per company). Bar plots are excellent for comparing categorical data.
+
+# %%
+# Prepare data
+top_companies = df['company_name'].value_counts().head(10).sort_values()
+
+# Plot
+plt.figure(figsize=(14, 8))
+sns.barplot(x=top_companies.values, y=top_companies.index, palette='mako')
+
+# Titles and labels
+plt.title('Top 10 Industries by Number of Job Postings', fontsize=18)
+plt.xlabel('Number of Job Postings', fontsize=14)
+plt.ylabel('Company Name', fontsize=14)
+plt.xticks(fontsize=12)
+plt.yticks(fontsize=12)
+sns.despine(left=True, bottom=True)
+plt.tight_layout()
+plt.show()
+
+# %% [markdown]
+# ## Top 10 Industries by Number of Job Postings
+# 
+# This section visualizes the top 10 industries (represented by company names) with the most job postings using a horizontal bar plot. Instead of using basic `matplotlib`, we use **Seaborn** for enhanced styling and better visual clarity.
+# 
+# ### Step-by-step:
+# - **Step 1**: Count the number of job postings per company.
+# - **Step 2**: Take the top 10 companies and sort them for horizontal alignment.
+# - **Step 3**: Use `sns.barplot` to create a horizontal bar chart with a clean palette.
+# - **Step 4**: Add labels, title, and styling for clarity.
+# %% [markdown]
+# ### Explanation
+# This code summarizes the frequency of values in a column, which is useful for understanding the distribution of categorical data.
+# This code generates a plot to visualize data, aiding in analysis and communication of trends.
+# %% [markdown]
+# ### Bar Plot Visualization
+# 
+# This code generates a bar chart to visualize the count of items (e.g., job postings per company). Bar plots are excellent for comparing categorical data.
+
+# %%
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Prepare data
+top_companies = df['company_name'].value_counts().head(10).sort_values()
+
+# Plot
+plt.figure(figsize=(14, 8))
+sns.barplot(x=top_companies.values, y=top_companies.index, palette='mako')
+
+# Titles and labels
+plt.title('Top 10 Industries by Number of Job Postings', fontsize=18)
+plt.xlabel('Number of Job Postings', fontsize=14)
+plt.ylabel('Company Name', fontsize=14)
+plt.xticks(fontsize=12)
+plt.yticks(fontsize=12)
+sns.despine(left=True, bottom=True)
+plt.tight_layout()
+plt.show()
 
 
