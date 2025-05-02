@@ -1,4 +1,26 @@
+# ---------------------------
+# Import Libraries & Packages
+# ---------------------------
+from scripts.analysis import *
+import sqlite3
+import pandas as pd
 import streamlit as st
+
+
+# ---------------------------
+# Import Data
+# ---------------------------
+conn = sqlite3.connect('../database.db')
+df = pd.read_sql('SELECT * FROM EGYPT', conn)
+
+# ---------------------------
+# Egypt Plots
+# ---------------------------
+plot1 = job_distribution_by_city(df[df['city'] != 'Unknown'], plot_name="job_distribution_by_city_egypt", folder='egypt', top_n=10)
+
+# ---------------------------
+# Saudi Plots
+# ---------------------------
 
 # ---------------------------
 # Sidebar Navigation
@@ -21,13 +43,12 @@ if page == "Home":
 elif page == "Egypt Market":
     st.header("Egypt Job Market")
     st.write("This section will display analysis related to the Egyptian job market.")
-    # Placeholder for future visuals/analysis
-    # st.pyplot(fig) or st.plotly_chart(...)
+    st.pyplot(plot1)
 
 elif page == "Saudi Market":
     st.header("Saudi Arabia Job Market")
     st.write("This section will display analysis related to the Saudi Arabian job market.")
-    # Placeholder for future visuals/analysis
+    # st.pyplot(fig)
 
 elif page == "Comparison":
     st.header("Comparison: Egypt vs Saudi Arabia")
