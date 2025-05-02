@@ -23,11 +23,9 @@ df.head(15)
 # ### Split location and career_level columns
 # 
 # - Split `location` column by separator `·`, keep index 1 as `city`.
-# - Split `career_level` column by separator `·`, keep indexes 0, 1, 2 as `type`, `exp`, and `no_exp`.
 # - Further process `career_level` column using `split_career_level` function.
 #%%
 split_column(df, 'location', [1], '·', ['city'], reverse=True)
-split_column(df, 'career_level', [0, 1, 2], '·', ['type', 'exp', 'no_exp'], reverse=True)
 split_career_level(df)
 df.head(15)
 #%% md
@@ -117,7 +115,6 @@ conn = sqlite3.connect('../database.db')
 df = pd.read_sql('SELECT * FROM [saudi-arabia]', conn)
 df.sort_values(by=['title'], ascending=False, inplace=True)
 apply_translation(df, 'title', rows=df.iloc[:400, :].index.tolist())
-# conn = sqlite3.connect('../database.db')
 # df.to_sql('saudi-arabia', con=conn, if_exists='replace', index=True)
 conn.close()
 #%% md
@@ -160,8 +157,8 @@ extract_remotely(df,'description')
 extract_remotely(df,'skills')
 df.drop(columns=['description', 'skills'], inplace=True)
 split_num_of_exp_years(df)
-# sqlite_version = sqlite3.connect('../database.db')
-# df.to_sql('saudi-arabia', con=sqlite_version, if_exists='replace', index=False)
+conn = sqlite3.connect('../database.db')
+# df.to_sql('saudi-arabia', con=conn, if_exists='replace', index=False)
 conn.close()
 df
 #%% md
@@ -591,13 +588,18 @@ edite_title_mapping = {
     r'web developer': 'web developer',
     r'waiter': "waiter",
 }
-
+#%%
+df.title.value_counts()
+#%%
+pattern_replace =r'(^((sr(\b|\s)|\ssr(\b|\s))|senior|junior|staff|female|\bmen\b|\bmale\b|women(\'s)|tpe (iv|iii|ii|i|v)(\s)?(-|/)?)( (senior|graduate))?|^graduate|^trainee\b( -)?)(\s)?(\.|-|/|\\)?|(\.|\-|/|\,|\\)$'
+df.title = df.title.str.replace(pattern_replace,'',regex=True).str.strip()
+#%%
 review_matches(df,edite_title_mapping)
 #%%
-pattern_replace =r'(^((sr(\b|\s)|\ssr(\b|\s))|senior|junior|staff|female|\bmen\b|\bmale\b|women(\'s)|tpe (iv|iii|ii|i|v)(\s)?(-|/)?)( (senior|graduate))?|^graduate|^trainee\b( -)?)(\s)?(\.|-|/)?|(\.|\-|/|\,)$'
-df.title = df.title.str.replace(pattern_replace,'',regex=True).str.strip()
 edite_title(df,edite_title_mapping)
-# sqlite_version = sqlite3.connect('../database.db')
-# df.to_sql('saudi-arabia', con=sqlite_version, if_exists='replace', index=False)
+df.title.value_counts()
+#%%
+conn = sqlite3.connect('../database.db')
+# df.to_sql('saudi-arabia', con=conn, if_exists='replace', index=False)
 conn.close()
 df.title
