@@ -223,3 +223,38 @@ def translate_remote(df):
     }
 
     df['remote'] = df['remote'].replace(dict)
+
+
+def review_matches(df, title_mapping):
+    """
+    البحث عن الأنماط المحددة في القاموس `title_mapping` داخل عمود `title` في DataFrame `df`.
+
+    المدخلات:
+        df (pd.DataFrame): الجدول الذي يحتوي على البيانات.
+        title_mapping (dict): قاموس يحتوي على الأنماط المراد البحث عنها.
+
+    المخرجات:
+        طباعة قائمة بالنتائج التي تم العثور عليها.
+    """
+    pd.set_option('display.max_rows', None)
+    pd.set_option('display.max_colwidth', None)
+
+    for pattern in title_mapping.keys():
+
+        matches = df.title[df.title.str.contains(pattern.lower(), regex=True, na=False)]
+        print(pattern.center(120,'-'))
+        print(matches)
+        print('#'*120)
+
+
+def edite_title(df,title_mapping, patterns_replace = ''):
+
+    df.title = df.title.str.lower().str.strip()
+
+    if patterns_replace:
+        df.title = df.title.str.replace(patterns_replace, '', regex=True).str.strip()
+
+    for pattern, replacement in title_mapping.items():
+        df.title[df.title.str.contains(pattern.lower(), regex=True)] = replacement.lower()
+
+    df.title = df.title.str.title()
