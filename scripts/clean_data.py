@@ -135,6 +135,7 @@ def split_num_of_exp_years(df):
                 return int(matches[0]), int(matches[1])
 
         return 'Unknown', 'Unknown'
+
     df[['min_num_of_years', 'max_num_of_years']] = df['num_of_exp_years'].apply(lambda x: pd.Series(extract_years(x)))
 
     df.drop(columns=['num_of_exp_years'], inplace=True)
@@ -152,10 +153,10 @@ def analyses_date(df, num_days):
 
     df.loc[df['date'].str.contains(r'اليوم'), 'date'] = '0'
     df.loc[df['date'].str.contains(r'في الامس'), 'date'] = '1'
-    df.loc[df['date'].str.findall(r'قبل يومين'), 'date'] = '2'
+    df.loc[df['date'].str.contains(r'قبل يومين'), 'date'] = '2'
     index_plus = df['date'].str.contains(r'\+')
 
-    df['date'].str.extract(r'([0-9]+)').astype(float).astype('Int64')
+    df['date'] = df['date'].str.extract(r'([0-9]+)').astype(float).astype('Int64')
 
     number_jobs = index_plus.sum()
     initial_value = 2 * number_jobs / num_days
@@ -182,7 +183,7 @@ def analyses_date(df, num_days):
     elif len(final_list) > number_jobs:
         final_list = final_list[:number_jobs]
 
-    df['date'][index_plus] = df['date'][index_plus] + final_list
+    df['date'][index_plus] = df['date'][index_plus] + np.array(final_list)
     df.sort_values(by=['date'], inplace=True)
 
     reference_date = datetime(2025, 4, 15)
@@ -199,15 +200,15 @@ def extract_job_grade(df, column='title'):
     """
     df[column].fillna('Unknown', inplace=True)
 
-    mapping_dict0 = {'Graduate': 'i', 'Junior': 'ii', 'Mid Level':'iii', 'Senior':'iv',
-                     'Management':'v', 'Senior Management':'vi', 'C-Suite':'vii'}
+    mapping_dict0 = {'Graduate': 'i', 'Junior': 'ii', 'Mid Level': 'iii', 'Senior': 'iv',
+                     'Management': 'v', 'Senior Management': 'vi', 'C-Suite': 'vii'}
     mapping_dict = {
         'Graduate': ['trainee', 'intern', 'entry-level', 'graduate', 'internship', 'interns', 'تمهير', 'تدريب'],
         'Junior': ['junior'],
-        'Mid Level': ['mid-level','intermediate'],
-        'Senior': ['senior','supervisor','section head',r'(^sr(\b|\s)|\ssr(\b|\s))','senior associate'],
+        'Mid Level': ['mid-level', 'intermediate'],
+        'Senior': ['senior', 'supervisor', 'section head', r'(^sr(\b|\s)|\ssr(\b|\s))', 'senior associate'],
         'Management': ['manager', 'principal', 'assistant director'],
-        'Senior Management': ['senior manager','director', 'vice president', 'svp', 'group manager'],
+        'Senior Management': ['senior manager', 'director', 'vice president', 'svp', 'group manager'],
         'C-Suite': ['c-suite', 'ceo', 'chief executive officer', 'cfo', 'chief financial officer',
                     'cio', 'chief information officer', 'coo', 'chief operating officer',
                     'cto', 'chief technology officer', 'cmo', 'chief marketing officer']
@@ -216,7 +217,7 @@ def extract_job_grade(df, column='title'):
         mapping_dict0,
         mapping_dict
     ]
-    for i in [0,1]:
+    for i in [0, 1]:
         for key in list[i]:
             regex = r'\b|'.join(list[i][key]) + r'\b' if i else rf'(\s|-){list[i][key]}($|\s|\,|- )'
             if key == 'Senior Management' and i:
@@ -350,14 +351,13 @@ def review_matches(df, title_mapping):
     pd.set_option('display.max_colwidth', None)
 
     for pattern in title_mapping.keys():
-
         matches = df.title[df.title.str.contains(pattern.lower(), regex=True, na=False)]
-        print(pattern.center(120,'-'))
+        print(pattern.center(120, '-'))
         print(matches)
-        print('#'*120)
+        print('#' * 120)
 
 
-def edit_title(df,title_mapping, patterns_replace = ''):
+def edit_title(df, title_mapping, patterns_replace=''):
     """
     Edits job titles in a DataFrame based on a provided mapping.
 
