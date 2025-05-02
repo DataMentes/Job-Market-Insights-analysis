@@ -151,7 +151,7 @@ def analyze_jobs_by_time(data, plot_name, folder: Literal['egypt', 'saudi', 'com
     ax.set_title('Job Distribution by Month', fontsize=16)
     ax.set_xlabel('Month', fontsize=12)
     ax.set_ylabel('Number of Jobs', fontsize=12)
-    ax.set_xticks(rotation=0)
+    plt.setp(ax.get_xticklabels(), rotation=0)
     plt.tight_layout()
     plt.show()
 
@@ -210,7 +210,7 @@ def analyze_jobs_by_job_level(data, plot_name, folder: Literal['egypt', 'saudi',
     ax.set_title('Job Distribution by Job Level', fontsize=16)
     ax.set_xlabel('Job Level', fontsize=12)
     ax.set_ylabel('Number of Jobs', fontsize=12)
-    ax.set_xticks(rotation=45)
+    plt.setp(ax.get_xticklabels(), rotation=45)
     plt.tight_layout()
     plt.show()
 
