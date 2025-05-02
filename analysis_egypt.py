@@ -406,34 +406,86 @@ def analyze_jobs_by_job_level(data):
 # %%
 job_level_counts = analyze_jobs_by_job_level(df)
 
+# %% [markdown]
+# ### 📈 Job Trend Over Time
+# 
+# This function visualizes the trend of job postings over time by resampling the data at a chosen frequency (daily, monthly, or yearly). It helps in understanding how the job market fluctuates across different time periods. The chart uses a line plot with time on the x-axis and the number of job postings on the y-axis.
+
 # %%
 
-def analyze_jobs_by_qualification(data):
-    if 'qualification' not in data.columns or 'num_of_vacancies' not in data.columns:
-        raise ValueError("The 'qualification' or 'num_of_vacancies' column is missing from the data")
+def plot_job_trend_over_time(data, freq='M'):
+   
+    df = data.copy()
 
-    # Summing the number of vacancies by qualification
-    qualification_vacancies = data.groupby('qualification')['num_of_vacancies'].sum().sort_values(ascending=False)
+    # Ensure the date column is in datetime format
+    df['date'] = pd.to_datetime(df['date'], errors='coerce')
 
-    # Reshaping the Arabic text in qualifications
-    reshaped_qualifications = [get_display(arabic_reshaper.reshape(qualification)) for qualification in qualification_vacancies.index]
+    # Drop missing dates
+    df = df.dropna(subset=['date'])
 
-    # Plotting the bar chart
-    plt.figure(figsize=(8, 9))
-    sns.barplot(x=reshaped_qualifications, y=qualification_vacancies.values, palette='magma')
-    plt.title('Total Number of Vacancies by Qualification', fontsize=16)
-    plt.xlabel('Qualification', fontsize=12)
-    plt.ylabel('Total Number of Vacancies', fontsize=12)
-    plt.xticks(rotation=45)
+    # Set the date column as index
+    df.set_index('date', inplace=True)
+
+    # Resample and count entries
+    job_counts = df.resample(freq).size()
+
+    # Ensure chronological order
+    job_counts = job_counts.sort_index()
+
+    # Plot
+    plt.figure(figsize=(12, 6))
+    job_counts.plot(marker='o', linestyle='-')
+    plt.title(f'Number of Job Entries Over Time ({freq}-level)')
+    plt.xlabel('Date')
+    plt.ylabel('Number of Jobs')
+    # Removed grid lines
+    # plt.grid(True)
     plt.tight_layout()
     plt.show()
 
-    return qualification_vacancies
 
 
 
 
 # %%
-analyze_jobs_by_qualification(df)
+plot_job_trend_over_time(df)
+
+# %%
+
+def plot_monthly_job_boxplot(data):
+    
+    df = data.copy()
+
+    # Ensure the date column is in datetime format
+    df['date'] = pd.to_datetime(df['date'], errors='coerce')
+    df = df.dropna(subset=['date'])
+
+    # Extract month from date
+    df['month'] = df['date'].dt.month
+
+    # Count jobs per day (or any lower-level granularity), grouped by month
+    daily_counts = df.groupby(['month', df['date'].dt.date]).size().reset_index(name='count')
+    
+    # Prepare boxplot data
+    boxplot_data = [daily_counts[daily_counts['month'] == m]['count'] for m in range(1, 13)]
+
+    # Plot
+    plt.figure(figsize=(12, 6))
+    plt.boxplot(boxplot_data, labels=[
+        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+    ])
+    plt.title('Distribution of Job Entries by Month')
+    plt.xlabel('Month')
+    plt.ylabel('Number of Jobs per Day')
+    plt.tight_layout()
+    plt.show()
+
+
+# %%
+plot_monthly_job_boxplot(df)
+
+# %%
+
 
 
