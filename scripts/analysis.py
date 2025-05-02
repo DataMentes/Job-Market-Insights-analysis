@@ -9,7 +9,7 @@ from typing import Literal
 
 
 
-def job_distribution_by_city(df, plot_name, folder: Literal['egypt', 'saudi', 'compare'], top_n=10):
+def job_distribution_by_city(df, plot_name, folder: Literal['egypt', 'saudi', 'compare'], save = True, top_n=10):
     """
     Plot and save a bar chart showing the distribution of jobs by city.
 
@@ -25,8 +25,12 @@ def job_distribution_by_city(df, plot_name, folder: Literal['egypt', 'saudi', 'c
     plot_name : str
         Name of the output image file (without extension).
 
+
     folder : Literal['egypt', 'saudi', 'compare']
         Folder name where the plot will be saved.
+
+    save : bool
+        Whether to save the output image file (default True).
 
     top_n : int, optional, default=10
         Number of top cities to include in the plot.
@@ -60,14 +64,15 @@ def job_distribution_by_city(df, plot_name, folder: Literal['egypt', 'saudi', 'c
     plt.tight_layout()
     plt.show()
 
-    path = '../visualizations/' + folder + '/' + plot_name + '.png'
-    fig.savefig(path)
+    if save:
+        path = '../visualizations/' + folder + '/' + plot_name + '.png'
+        fig.savefig(path)
 
     return fig
 
 
 
-def analyze_jobs_by_company(data, plot_name, folder: Literal['egypt', 'saudi', 'compare'], top_n=20):
+def analyze_jobs_by_company(data, plot_name, folder: Literal['egypt', 'saudi', 'compare'], save = True, top_n=20):
     """
     Analyze and visualize the number of job postings per company.
 
@@ -84,6 +89,9 @@ def analyze_jobs_by_company(data, plot_name, folder: Literal['egypt', 'saudi', '
 
     folder : Literal['egypt', 'saudi', 'compare']
         Folder name where the plot will be saved.
+
+    save : bool
+        Whether to save the output image file (default True).
 
     top_n : int, optional, default=20
         Number of top companies to include in the plot.
@@ -118,19 +126,20 @@ def analyze_jobs_by_company(data, plot_name, folder: Literal['egypt', 'saudi', '
     ax.set_title('Number of Jobs by Company', fontsize=16)
     ax.set_xlabel('Company Name', fontsize=12)
     ax.set_ylabel('Number of Jobs', fontsize=12)
-    plt.xticks(rotation=45)
+    plt.xticks(rotation=45, ha='right')
     plt.tight_layout()
     # Show the plot
     plt.show()
 
-    path = '../visualizations/' + folder + '/' + plot_name + '.png'
-    fig.savefig(path)
+    if save:
+        path = '../visualizations/' + folder + '/' + plot_name + '.png'
+        fig.savefig(path)
 
     return fig
 
 
 
-def get_top_job_titles_with_plot(data, plot_name, folder: Literal['egypt', 'saudi', 'compare'], top_n=10):
+def get_top_job_titles_with_plot(data, plot_name, folder: Literal['egypt', 'saudi', 'compare'], save = True, top_n=10):
     """
     Generate and visualize the top most frequent job titles from the dataset.
 
@@ -147,6 +156,9 @@ def get_top_job_titles_with_plot(data, plot_name, folder: Literal['egypt', 'saud
 
     folder : Literal['egypt', 'saudi', 'compare']
         Folder name where the plot will be saved.
+
+    save : bool
+        Whether to save the output image file (default True).
 
     top_n : int, optional, default=10
         Number of top job titles to include in the analysis and plot.
@@ -182,14 +194,15 @@ def get_top_job_titles_with_plot(data, plot_name, folder: Literal['egypt', 'saud
     plt.tight_layout()
     plt.show()
 
-    path = '../visualizations/' + folder + '/' + plot_name + '.png'
-    fig.savefig(path)
+    if save:
+        path = '../visualizations/' + folder + '/' + plot_name + '.png'
+        fig.savefig(path)
 
     return fig
 
 
 
-def analyze_jobs_by_work_type(data, plot_name, folder: Literal['egypt', 'saudi', 'compare']):
+def analyze_jobs_by_work_type(data, plot_name, folder: Literal['egypt', 'saudi', 'compare'], save = True):
     """
     Analyze and visualize the distribution of jobs by work type (e.g., Remote, On-site).
 
@@ -207,6 +220,9 @@ def analyze_jobs_by_work_type(data, plot_name, folder: Literal['egypt', 'saudi',
 
     folder : Literal['egypt', 'saudi', 'compare']
         Folder name where the plot will be saved.
+
+    save : bool
+        Whether to save the output image file (default True).
 
     Returns:
     --------
@@ -246,15 +262,16 @@ def analyze_jobs_by_work_type(data, plot_name, folder: Literal['egypt', 'saudi',
     plt.tight_layout()
     plt.show()
 
-    path = '../visualizations/' + folder + '/' + plot_name + '.png'
-    fig.savefig(path)
+    if save:
+        path = '../visualizations/' + folder + '/' + plot_name + '.png'
+        fig.savefig(path)
 
     return fig
 
 
 
 
-def analyze_jobs_by_time(data, plot_name, folder: Literal['egypt', 'saudi', 'compare']):
+def analyze_jobs_by_time(data, plot_name, folder: Literal['egypt', 'saudi', 'compare'], save = True):
     """
     Analyze and visualize the distribution of job postings over time (by month).
 
@@ -272,6 +289,9 @@ def analyze_jobs_by_time(data, plot_name, folder: Literal['egypt', 'saudi', 'com
 
     folder : Literal['egypt', 'saudi', 'compare']
         Folder name where the plot will be saved.
+
+    save : bool
+        Whether to save the output image file (default True).
 
     Returns:
     --------
@@ -326,14 +346,15 @@ def analyze_jobs_by_time(data, plot_name, folder: Literal['egypt', 'saudi', 'com
     plt.tight_layout()
     plt.show()
 
-    path = '../visualizations/' + folder + '/' + plot_name + '.png'
-    fig.savefig(path)
+    if save:
+        path = '../visualizations/' + folder + '/' + plot_name + '.png'
+        fig.savefig(path)
 
     return fig
 
 
 
-def analyze_jobs_by_gender(data, plot_name, folder: Literal['egypt', 'saudi', 'compare']):
+def analyze_jobs_by_gender(data, plot_name, folder: Literal['egypt', 'saudi', 'compare'], save = True):
     """
     Analyze and visualize the distribution of job postings by gender preference.
 
@@ -351,6 +372,9 @@ def analyze_jobs_by_gender(data, plot_name, folder: Literal['egypt', 'saudi', 'c
 
     folder : Literal['egypt', 'saudi', 'compare']
         Folder name where the plot will be saved.
+
+    save : bool
+        Whether to save the output image file (default True).
 
     Returns:
     --------
@@ -389,14 +413,15 @@ def analyze_jobs_by_gender(data, plot_name, folder: Literal['egypt', 'saudi', 'c
     plt.tight_layout()
     plt.show()
 
-    path = '../visualizations/' + folder + '/' + plot_name + '.png'
-    fig.savefig(path)
+    if save:
+        path = '../visualizations/' + folder + '/' + plot_name + '.png'
+        fig.savefig(path)
 
     return fig
 
 
 
-def analyze_jobs_by_job_level(data, plot_name, folder: Literal['egypt', 'saudi', 'compare']):
+def analyze_jobs_by_job_level(data, plot_name, folder: Literal['egypt', 'saudi', 'compare'], save = True):
     """
     Analyze and visualize the distribution of job postings by job level.
 
@@ -414,6 +439,9 @@ def analyze_jobs_by_job_level(data, plot_name, folder: Literal['egypt', 'saudi',
 
     folder : Literal['egypt', 'saudi', 'compare']
         Folder name where the plot will be saved.
+
+    save : bool
+        Whether to save the output image file (default True).
 
     Returns:
     --------
@@ -453,13 +481,14 @@ def analyze_jobs_by_job_level(data, plot_name, folder: Literal['egypt', 'saudi',
     plt.tight_layout()
     plt.show()
 
-    path = '../visualizations/' + folder + '/' + plot_name + '.png'
-    fig.savefig(path)
+    if save:
+        path = '../visualizations/' + folder + '/' + plot_name + '.png'
+        fig.savefig(path)
 
     return fig
 
 
-def plot_job_trend_over_time(data, plot_name, folder: Literal['egypt', 'saudi', 'compare'], freq='M'):
+def plot_job_trend_over_time(data, plot_name, folder: Literal['egypt', 'saudi', 'compare'], save = True, freq='M'):
     """
     Plot the trend of job postings over time with a specified frequency (e.g., monthly or daily).
 
@@ -477,6 +506,9 @@ def plot_job_trend_over_time(data, plot_name, folder: Literal['egypt', 'saudi', 
 
     folder : Literal['egypt', 'saudi', 'compare']
         Folder name where the plot will be saved.
+
+    save : bool
+        Whether to save the output image file (default True).
 
     freq : str, optional, default='M'
         Resampling frequency for time series analysis. Common values include:
@@ -528,14 +560,15 @@ def plot_job_trend_over_time(data, plot_name, folder: Literal['egypt', 'saudi', 
     plt.tight_layout()
     plt.show()
 
-    path = '../visualizations/' + folder + '/' + plot_name + '.png'
-    fig.savefig(path)
+    if save:
+        path = '../visualizations/' + folder + '/' + plot_name + '.png'
+        fig.savefig(path)
 
     return fig
 
 
 
-def plot_monthly_job_boxplot(data, plot_name, folder: Literal['egypt', 'saudi', 'compare']):
+def plot_monthly_job_boxplot(data, plot_name, folder: Literal['egypt', 'saudi', 'compare'], save = True):
     """
     Generate a boxplot showing the daily distribution of job entries by month.
 
@@ -553,6 +586,9 @@ def plot_monthly_job_boxplot(data, plot_name, folder: Literal['egypt', 'saudi', 
 
     folder : Literal['egypt', 'saudi', 'compare']
         Folder name where the plot will be saved.
+
+    save : bool
+        Whether to save the output image file (default True).
 
     Returns:
     --------
@@ -597,13 +633,14 @@ def plot_monthly_job_boxplot(data, plot_name, folder: Literal['egypt', 'saudi', 
     plt.tight_layout()
     plt.show()
 
-    path = '../visualizations/' + folder + '/' + plot_name + '.png'
-    fig.savefig(path)
+    if save:
+        path = '../visualizations/' + folder + '/' + plot_name + '.png'
+        fig.savefig(path)
 
     return fig
 
 
-def plot_job_postings_by_industry(df, plot_name, folder: Literal['egypt', 'saudi', 'compare']):
+def plot_job_postings_by_industry(df, plot_name, folder: Literal['egypt', 'saudi', 'compare'], save = True):
     """
     Plot the top 10 industries by number of job postings with support for Arabic text display.
 
@@ -621,6 +658,9 @@ def plot_job_postings_by_industry(df, plot_name, folder: Literal['egypt', 'saudi
 
     folder : Literal['egypt', 'saudi', 'compare']
         Folder name where the plot will be saved.
+
+    save : bool
+        Whether to save the output image file (default True).
 
     Returns:
     --------
@@ -668,14 +708,16 @@ def plot_job_postings_by_industry(df, plot_name, folder: Literal['egypt', 'saudi
     ax.set_title(get_display(arabic_reshaper.reshape('The highest 10 areas declared for business opportunities')), fontsize=16)
     ax.set_xlabel(get_display(arabic_reshaper.reshape('Domain')), fontsize=14)
     ax.set_ylabel(get_display(arabic_reshaper.reshape('Number of jobs')), fontsize=14)
-    ax.tick_params(axis='x', labelsize=12, rotation=45)
+    ax.tick_params(axis='x', labelsize=12)
+    plt.xticks(rotation=45, ha='right')
     ax.grid(True, linestyle='--', alpha=0.7, axis='y')
 
     plt.tight_layout()
     plt.show()
 
 
-    path = '../visualizations/' + folder + '/' + plot_name + '.png'
-    fig.savefig(path)
+    if save:
+        path = '../visualizations/' + folder + '/' + plot_name + '.png'
+        fig.savefig(path)
 
     return fig
