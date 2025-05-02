@@ -1,20 +1,5 @@
-# %% [markdown]
-# ### Importing the necessary libraries for data analysis and visualization
-# 
-# In this cell, we import:
-# - `sqlite3`: to interact with SQLite databases.
-# - `pandas`: for data manipulation and analysis.
-# - `matplotlib.pyplot` and `seaborn`: for creating visualizations.
-# - `arabic_reshaper` and `bidi.algorithm`: to correctly display Arabic text in visualizations.
-# 
-
 # %%
-import sqlite3
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-import arabic_reshaper
-from bidi.algorithm import get_display
+from scripts.analysis import *
 
 # %% [markdown]
 # ### Loading data from the SQLite database
@@ -67,420 +52,239 @@ print(df['title'].value_counts())
 df = df[df['city'] != 'Unknown']
 
 # %% [markdown]
-# ### Function to analyze job distribution by city
+# ## 🔹 Visualization 1: Top 10 Cities by Number of Jobs
 # 
-# This function, `job_distribution_by_city`, takes a DataFrame and returns the top `n` cities with the highest number of job postings.
+# ### 🔍 Description:
+# A vertical bar chart displaying the number of job listings in the top 10 Egyptian cities.
 # 
-# - `df`: The input DataFrame containing job data.
-# - `top_n`: The number of top cities to return (default is 10).
-# - `plot`: If `True`, the function will generate a bar chart showing the number of jobs per city.
+# ### 📌 Key Insights:
 # 
-# If plotting is enabled:
-# - Arabic text is reshaped and displayed correctly using `arabic_reshaper` and `bidi.algorithm`.
-# - A bar chart is displayed showing the top `n` cities by job count with properly rendered Arabic labels.
+# 1. **Cairo is the Undisputed Hub:**
+#    - Cairo alone accounts for the vast majority of job postings (over 2,000).
+#    - Reflects its status as the economic and business capital of Egypt.
 # 
-# The function returns a DataFrame with two columns: `City` and `Number of Jobs`.
+# 2. **Limited Opportunities in Other Cities:**
+#    - Alexandria comes second, but with a significantly lower count (~100+).
+#    - All other cities (like New Alamein, Sharm El Sheikh, Luxor, etc.) have minimal job postings.
+#    - Suggests a high centralization of employment opportunities in the capital.
 # 
-
-# %%
-
-def job_distribution_by_city(df, top_n=10, plot=False):
-    job_counts = df['city'].value_counts().reset_index()
-    job_counts.columns = ['City', 'Number of Jobs']
-    top_cities = job_counts.head(top_n)
-
-    if plot:
-        # Prepare Arabic text
-        reshaped_labels = [get_display(arabic_reshaper.reshape(city)) for city in top_cities['City']]
-
-        plt.figure(figsize=(10, 6))
-        plt.bar(reshaped_labels, top_cities['Number of Jobs'], color='#20B2AA')
-        plt.xticks(rotation=45, ha='right', fontsize=12)
-        plt.ylabel(get_display(arabic_reshaper.reshape('Number of Jobs')), fontsize=13)
-        plt.title(get_display(arabic_reshaper.reshape(f'Top {top_n} Cities by Number of Jobs')), fontsize=14)
-        plt.tight_layout()
-        plt.show()
-
-    return top_cities
-
-
+# 3. **Implications:**
+#    - Indicates potential internal migration toward Cairo for job seekers.
+#    - May signal the need for investment in decentralizing job markets and regional development.
+# 
+# ### 💡 Overall Takeaway:
+# > Cairo dominates the job market in Egypt, with a steep drop-off in job availability in other cities, highlighting urban centralization and regional imbalance in employment opportunities.
 
 # %%
 top_cities = job_distribution_by_city(df, top_n=10, plot=True)
 print(top_cities)
 
 # %% [markdown]
-# ### Function to analyze the number of job postings by company
+# ## 🔹 Visualization 2: Top 10 Most Frequent Job Titles
 # 
-# This function, `analyze_jobs_by_company`, visualizes the top 20 companies with the highest number of job postings.
+# ### 🔍 Description:
+# A horizontal bar chart showing the most commonly listed job titles in the dataset based on the number of occurrences.
 # 
-# - It first checks if the `company_name` column exists in the DataFrame.
-# - Then, it counts the number of job listings for each company and selects the top 20.
-# - A bar chart is generated using Seaborn to visualize the job distribution across these companies.
+# ### 📌 Key Insights:
 # 
-# The chart includes:
-# - Company names on the x-axis.
-# - Number of job postings on the y-axis.
-# - A title and labeled axes for clarity.
+# 1. **Strong Demand for Accounting Roles:**
+#    - 5 of the top 10 job titles are finance/accounting-related:
+#      - Accountant
+#      - Senior Accountant
+#      - Finance Manager
+#      - Junior Accountant
+#      - Chief Accountant
+#    - Indicates a significant demand in the job market for financial expertise.
 # 
-# This function does not return anything; it directly shows the plot.
+# 2. **Data and Analytics Roles Are Rising:**
+#    - Positions like Senior Business Analyst and Data Engineer appear in the top 10.
+#    - Shows increasing importance of data-driven decision-making.
 # 
-
-# %%
-# Function to analyze jobs by company with visualization
-def analyze_jobs_by_company(data):
-    # Check if the 'company' column exists in the data
-    if 'company_name' not in data.columns:
-        raise ValueError("The 'company' column is missing from the data")
-    
-    # Count the number of jobs for each company
-    company_counts = data['company_name'].value_counts().head(20)
-    
-    # Plotting the bar chart inside the function
-    plt.figure(figsize=(20, 15))
-    sns.barplot(x=company_counts.index, y=company_counts.values, palette='viridis')
-
-    # Adding titles and labels
-    plt.title('Number of Jobs by Company', fontsize=16)
-    plt.xlabel('Company Name', fontsize=12)
-    plt.ylabel('Number of Jobs', fontsize=12)
-    plt.xticks(rotation=45)
-    plt.tight_layout()
-
-    # Show the plot
-    plt.show()
-    
+# 3. **Support and Creative Roles Are Present:**
+#    - Executive Assistant and Graphic Designer made the list.
+#    - Suggests administrative and creative skills are still needed, though in smaller volumes.
+# 
+# ### 💡 Overall Takeaway:
+# > The job market is currently dominated by finance-related positions, with a growing interest in data and analytics, and a continuing (but smaller) need for creative and support roles.
 
 # %%
 analyze_jobs_by_company(df)
 
 # %% [markdown]
-# ### Function to Get and Visualize Top Job Titles
+# ## 🔹 Visualization 3: Number of Jobs by Company
 # 
-# The `get_top_job_titles_with_plot` function identifies and visualizes the most frequent job titles in the dataset.
+# ### 🔍 Description:
+# A vertical bar chart illustrating how many job postings come from each company.
 # 
-# **Key Steps:**
-# - It cleans the job titles by:
-#   - Removing extra spaces.
-#   - Converting all text to lowercase for consistency.
-# - It then calculates the frequency of each job title.
-# - The top `n` most frequent titles are selected (default is 10).
-# - A horizontal bar chart is generated using Seaborn to show the top job titles and how many times they appear.
+# ### 📌 Key Insights:
 # 
-# **Returns:**
-# - A pandas Series containing the top job titles and their counts.
-
-# %%
-def get_top_job_titles_with_plot(df, column_name='title', top_n=10):
-    # تنظيف العناوين: إزالة الفراغات وتوحيد الحالة
-    cleaned_titles = df[column_name].dropna().str.strip().str.lower()
-
-    # حساب التكرارات
-    top_titles = cleaned_titles.value_counts().head(top_n)
-
-    # تحويل البيانات لإطار بيانات مناسب لـ Seaborn
-    plot_data = top_titles.reset_index()
-    plot_data.columns = ['job_title', 'count']
-
-    # رسم المخطط باستخدام Seaborn
-    plt.figure(figsize=(10, 6))
-    sns.barplot(data=plot_data, y='job_title', x='count', palette='magma')
-    plt.title(f"Top {top_n} Most Frequent Job Titles")
-    plt.xlabel("Number of Occurrences")
-    plt.ylabel("Job Title")
-    plt.tight_layout()
-    plt.show()
-
-    return top_titles
+# 1. **Talent 360 Dominates the Market:**
+#    - Over 250 job postings — far ahead of any other company.
+#    - Likely a recruitment firm or aggregator serving multiple clients.
+# 
+# 2. **High Activity from Tech and Telecom Firms:**
+#    - Notable companies include Vodafone Egypt, Giza Systems, Orange, and Accenture.
+#    - Reflects strong demand for digital and telecom roles.
+# 
+# 3. **Diverse but Uneven Sector Representation:**
+#    - Other sectors also visible:
+#      - Real Estate: Palm Hills, Arabia Group
+#      - Tourism: Grand Rotana Resort
+#      - Industrial: Siemens, Schneider Electric
+#    - Shows a variety of industries are hiring, but the majority of roles are concentrated in tech and recruitment.
+# 
+# ### 💡 Overall Takeaway:
+# > Tech and staffing companies are leading job providers, while other sectors like real estate, tourism, and manufacturing contribute modestly to the hiring landscape.
 
 # %%
 get_top_job_titles_with_plot(df)
 
 # %% [markdown]
-# ### Function to analyze job distribution by work type (remote vs on-site)
+# ## 🔹 Visualization 4: Job Distribution by Work Type
 # 
-# The `analyze_jobs_by_work_type` function visualizes how jobs are distributed based on their work type.
+# ### 🔍 Description:
+# A pie chart showing the percentage distribution of jobs based on their work format (On-site, Remote, Hybrid).
 # 
-# - It first checks whether the `'remote'` column exists in the DataFrame.
-# - Then, it calculates the number of jobs by each work type (e.g., Remote, On-site, Hybrid).
-# - It creates a new DataFrame that includes both the count and the percentage of each work type.
+# ### 📌 Key Insights:
 # 
-# A pie chart is generated showing:
-# - Each work type as a slice.
-# - The percentage of total jobs in each category.
-# - A title for the chart.
+# 1. **Overwhelming Majority are On-site Jobs:**
+#    - 88.6% of listings are for on-site positions.
+#    - Implies that traditional office presence is still dominant in Egypt.
 # 
-# The function returns a DataFrame containing:
-# - `Work Type`: The type of work (from the `remote` column).
-# - `Count`: Number of job postings for that type.
-# - `Percentage`: Share of that type as a percentage of total jobs.
+# 2. **Remote and Hybrid Work Are Very Limited:**
+#    - Only 7.4% remote and 4.0% hybrid roles.
+#    - Indicates slow adoption of flexible work models.
 # 
-
-# %%
-def analyze_jobs_by_work_type(data):
-    if 'remote' not in data.columns:
-        raise ValueError("The 'remote' column is missing from the data")
-
-    # Count jobs by work type
-    work_type_counts = data['remote'].value_counts()
-    total = work_type_counts.sum()
-
-    # Create DataFrame with percentage
-    work_df = work_type_counts.reset_index()
-    work_df.columns = ['Work Type', 'Count']
-    work_df['Percentage'] = (work_df['Count'] / total * 100).round(1)
-
-    # Plotting the pie chart
-    plt.figure(figsize=(6, 6))
-    plt.pie(work_df['Count'], labels=work_df['Work Type'], autopct='%1.1f%%', startangle=90, colors=sns.color_palette('muted'))
-
-    # Add title
-    plt.title('Job Distribution by Work Type', fontsize=16)
-    plt.tight_layout()
-    plt.show()
-
-    #return work_df
-
-
+# 3. **Implications:**
+#    - May be due to lack of infrastructure, cultural preferences, or the nature of jobs requiring physical presence.
+#    - A gap exists compared to global trends favoring hybrid and remote work, especially post-COVID.
+# 
+# ### 💡 Overall Takeaway:
+# > The job market in Egypt is still heavily reliant on on-site roles, with minimal adoption of remote or hybrid work formats, highlighting a lag in workplace flexibility.
 
 # %%
 analyze_jobs_by_work_type(df)
 
 # %% [markdown]
-# ### Function to analyze job distribution by month (with top 5 months)
+# ## 🔹 Visualization 5: Job Distribution by Month
 # 
-# The `analyze_jobs_by_time` function visualizes the distribution of job postings across months and returns the top 5 months with the highest number of jobs.
+# ### 📌 Key Insights:
 # 
-# Steps:
-# 1. **Date Validation**: The function first checks if the `date` column exists in the DataFrame.
-# 2. **Date Conversion**: The `date` column is converted to datetime format if it is not already.
-# 3. **Month Extraction**: It extracts the month from the `date` column and creates a new column for the month.
-# 4. **Counting Jobs by Month**: The function counts the number of jobs for each month.
-# 5. **Sorting and Formatting**: The months are sorted by job count in descending order, and their labels are formatted for better presentation.
-# 6. **Plotting**: A bar chart is displayed, showing the number of jobs for each month, with the numbers shown above the bars.
+# .April (Month 4) and March (Month 3) show the highest number of job postings, with 839 and 738 jobs respectively.
 # 
-# The function also returns:
-# - The **top 5 months** with the highest job postings.
-# - The full count of jobs per month for further analysis.
+# .There is a sharp decline after March, with February (403 jobs) and January (228 jobs) showing significantly lower counts.
 # 
-# The output will look like:
-# - `month_counts.head(5)`: Top 5 months with the highest number of jobs.
-# - `month_counts`: All months with the corresponding job counts.
+# .The last three months (December, November) show very low activity, especially November with only 23 job postings.
 # 
-
-# %%
-
-def analyze_jobs_by_time(data):
-    if 'date' not in data.columns:
-        raise ValueError("The 'date' column is missing from the data")
-
-    # Convert 'date' to datetime format if it's not already
-    data['date'] = pd.to_datetime(data['date'], errors='coerce')
-
-    # Extract the month from the 'date' column
-    data['month'] = data['date'].dt.month
-
-    # Count the number of jobs for each month
-    month_counts = data['month'].value_counts()
-
-    # Sort months by job count descending
-    month_counts = month_counts.sort_values(ascending=False)
-
-    # Convert index to string for better x-axis labels (optional)
-    month_counts.index = month_counts.index.astype(str)
-
-    # ترتيب شهور العرض يدوياً حسب القيم
-    ordered_months = month_counts.index.tolist()
-
-    # Plotting
-    plt.figure(figsize=(8,6))
-    sns.barplot(x=month_counts.index, y=month_counts.values, palette="Blues", order=ordered_months)
-
-    # Add numbers on top
-    for i, value in enumerate(month_counts.values):
-        plt.text(i, value + 10, str(value), ha='center', fontsize=12, color='black')
-
-    plt.title('Job Distribution by Month', fontsize=16)
-    plt.xlabel('Month', fontsize=12)
-    plt.ylabel('Number of Jobs', fontsize=12)
-    plt.xticks(rotation=0)
-    plt.tight_layout()
-    plt.show()
-
-    return month_counts.head(5), month_counts
-
+# ### 💡 Overall Takeaway:
+# - Hiring peaks in March and April, indicating a strong seasonal hiring trend during spring. Planning job campaigns or applications in these months could yield better results.
 
 # %%
 top_5_months, month_counts = analyze_jobs_by_time(df)
 
 # %% [markdown]
-# ### Function to analyze job distribution by gender
+# ## 🔹 Visualization 6: Job Distribution by Month
 # 
-# The `analyze_jobs_by_gender` function visualizes how job postings are distributed between different genders.
+# ### 📌 Key Insights:
 # 
-# - It first checks whether the `'gender'` column exists in the dataset.
-# - The function counts the number of job postings for each gender category.
-# - A bar chart is generated to visualize the job distribution.
+# - A dominant majority (2253 jobs) have no gender preference.
+# - Female-targeted roles are 97, while male-targeted roles are just 55.
 # 
-# The chart includes:
-# - Gender categories on the x-axis (e.g., Male, Female, Other).
-# - The number of job postings on the y-axis.
-# - The number of job postings displayed on top of each bar.
-# 
-# The function returns a `gender_counts` Series, which contains the count of job postings for each gender.
-# 
-
-# %%
-
-def analyze_jobs_by_gender(data):
-    if 'gender' not in data.columns:
-        raise ValueError("The 'gender' column is missing from the data")
-
-    # Count the number of jobs for each gender
-    gender_counts = data['gender'].value_counts()
-
-    # Plotting the bar chart
-    plt.figure(figsize=(5, 5))
-    sns.barplot(x=gender_counts.index, y=gender_counts.values, palette='Set2')
-
-    # Add count labels on top of the bars
-    for i, count in enumerate(gender_counts.values):
-        plt.text(i, count + 0.5, f'{count}', ha='center', fontsize=12, color='black')
-
-    # Titles and labels
-    plt.title('Job Distribution by Gender', fontsize=16)
-    plt.xlabel('Gender', fontsize=12)
-    plt.ylabel('Number of Jobs', fontsize=12)
-    plt.tight_layout()
-    plt.show()
-
-    return gender_counts
+# ### 💡 Overall Takeaway:
+# - The job market is largely gender-neutral in job listings, which may reflect a trend toward inclusivity or a focus on qualifications over demographics
 
 # %%
 analyze_jobs_by_gender(df)
 
 # %% [markdown]
-# ### Function to analyze job distribution by job level
+# ## 📊  visualization 7 :Job Level Distribution Analysis
 # 
-# The `analyze_jobs_by_job_level` function visualizes how job postings are distributed across different job levels.
+# ### 📌 Key Insights:
 # 
-# - It first checks whether the `'job_level'` column exists in the dataset.
-# - The function counts the number of job postings for each job level.
-# - A bar chart is generated to show the distribution of job postings across the various job levels.
+# **"No Preference" Dominates**  
+#   - 1,312 job postings have no specified job level.  
+#   - This may indicate flexibility in hiring or a lack of clarity in role definitions.
 # 
-# The chart includes:
-# - Job levels on the x-axis (e.g., Entry, Mid-level, Senior, etc.).
-# - The number of job postings on the y-axis.
-# - The count of job postings is displayed above each bar.
+# - **Strong Demand for Experienced Talent**  
+#   - Senior-level: 544 jobs  
+#   - Management: 409 jobs  
+#   - These figures highlight a clear demand for experienced and leadership-level professionals.
 # 
-# The function returns a `job_level_counts` Series, containing the number of job postings for each job level.
+# - **Limited Entry-Level Opportunities**  
+#   - Junior: 54  
+#   - Graduate: 27  
+#   - Mid Level: 21  
+#   - Opportunities for early-career candidates are noticeably fewer.
 # 
-
-# %%
-
-def analyze_jobs_by_job_level(data):
-    if 'job_level' not in data.columns:
-        raise ValueError("The 'job_level' column is missing from the data")
-
-    # Count the number of jobs for each job level
-    job_level_counts = data['job_level'].value_counts()
-
-    # Plotting the bar chart
-    plt.figure(figsize=(10, 8))
-    sns.barplot(x=job_level_counts.index, y=job_level_counts.values, palette='Set2')
-
-    # Add count labels on top of the bars
-    for i, count in enumerate(job_level_counts.values):
-        plt.text(i, count + 0.5, f'{count}', ha='center', fontsize=12, color='black')
-
-    # Titles and labels
-    plt.title('Job Distribution by Job Level', fontsize=16)
-    plt.xlabel('Job Level', fontsize=12)
-    plt.ylabel('Number of Jobs', fontsize=12)
-    plt.xticks(rotation=45)
-    plt.tight_layout()
-    plt.show()
-
-    return job_level_counts
+# - **Minimal Executive-Level Roles**  
+#   - C-Suite positions: 2  
+#   - These roles are naturally scarce due to their seniority and selectiveness.
+# 
+# ### 💡 Overall Takeaway:
+# - The job market is heavily skewed toward senior and management-level positions, with a surprising number of listings having no specified level. This may reflect a broad hiring strategy or incomplete data entry. Entry-level and executive roles are limited, indicating that companies are prioritizing experienced professionals over new graduates or top-tier executives.
 
 # %%
 job_level_counts = analyze_jobs_by_job_level(df)
 
 # %% [markdown]
-# ### 📈 Job Trend Over Time
+# ## 📈 Visualization 8 : M-Level Job Entries Over Time
 # 
-# This function visualizes the trend of job postings over time by resampling the data at a chosen frequency (daily, monthly, or yearly). It helps in understanding how the job market fluctuates across different time periods. The chart uses a line plot with time on the x-axis and the number of job postings on the y-axis.
-
-# %%
-
-def plot_job_trend_over_time(data, freq='M'):
-   
-    df = data.copy()
-
-    # Ensure the date column is in datetime format
-    df['date'] = pd.to_datetime(df['date'], errors='coerce')
-
-    # Drop missing dates
-    df = df.dropna(subset=['date'])
-
-    # Set the date column as index
-    df.set_index('date', inplace=True)
-
-    # Resample and count entries
-    job_counts = df.resample(freq).size()
-
-    # Ensure chronological order
-    job_counts = job_counts.sort_index()
-
-    # Plot
-    plt.figure(figsize=(12, 6))
-    job_counts.plot(marker='o', linestyle='-')
-    plt.title(f'Number of Job Entries Over Time ({freq}-level)')
-    plt.xlabel('Date')
-    plt.ylabel('Number of Jobs')
-    # Removed grid lines
-    # plt.grid(True)
-    plt.tight_layout()
-    plt.show()
-
-
-
-
+# This line chart tracks the number of job postings for **Management-level (M-level)** roles from **November 2024 to April 2025**.
+# 
+# ### ✅ Key Insights
+# 
+# - **Consistent Growth**:  
+#   The number of M-level job postings increased steadily each month, showing sustained demand.
+# 
+# - **Sharp Growth Between Feb–Mar 2025**:  
+#   - February: ~400 jobs  
+#   - March: ~740 jobs  
+#   - This marks the most significant month-over-month growth.
+# 
+# - **Early Acceleration (Nov–Jan)**:  
+#   - Job entries started at a low point (~30 in Nov) and grew gradually through Jan (~230), indicating the early stages of hiring momentum.
+# 
+# - **Stabilization in April**:  
+#   - April saw continued growth (~840 jobs), but at a slower rate compared to the March surge.
+# 
+# 
+# ### 🧾 Overall Takeaway
+# 
+# The hiring trend for management-level roles has shown strong upward momentum over the past six months, particularly peaking in early 2025. This suggests increasing organizational needs for mid-to-senior management talent, likely driven by business expansion or restructuring initiatives.
+# 
+# 
 
 # %%
 plot_job_trend_over_time(df)
 
-# %%
-
-def plot_monthly_job_boxplot(data):
-    
-    df = data.copy()
-
-    # Ensure the date column is in datetime format
-    df['date'] = pd.to_datetime(df['date'], errors='coerce')
-    df = df.dropna(subset=['date'])
-
-    # Extract month from date
-    df['month'] = df['date'].dt.month
-
-    # Count jobs per day (or any lower-level granularity), grouped by month
-    daily_counts = df.groupby(['month', df['date'].dt.date]).size().reset_index(name='count')
-    
-    # Prepare boxplot data
-    boxplot_data = [daily_counts[daily_counts['month'] == m]['count'] for m in range(1, 13)]
-
-    # Plot
-    plt.figure(figsize=(12, 6))
-    plt.boxplot(boxplot_data, labels=[
-        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-    ])
-    plt.title('Distribution of Job Entries by Month')
-    plt.xlabel('Month')
-    plt.ylabel('Number of Jobs per Day')
-    plt.tight_layout()
-    plt.show()
-
+# %% [markdown]
+# ## 📊 Visualization 9: Distribution of Job Entries by Month
+# 
+# This boxplot illustrates the **daily distribution of job entries** for each month, highlighting variability, medians, and outliers across time.
+# 
+# ### ✅ Key Insights
+# 
+# - **Clear Upward Trend (Jan–Apr)**:
+#   - Each month from January to April shows an **increase in the median** number of jobs posted per day.
+#   - The interquartile range (IQR) also widens, indicating **greater day-to-day variability** in job postings.
+# 
+# - **April Stands Out**:
+#   - April has the **widest spread** of data and the **highest number of outliers**, including some days with more than **200 jobs posted**.
+#   - This suggests a **surge in recruitment activity** or possibly batch job uploads.
+# 
+# - **Consistent Low Activity (Nov–Dec)**:
+#   - Very low median values and tight boxplots indicate **minimal hiring activity** during these months, possibly due to year-end slowdowns.
+# 
+# - **Outliers as Activity Spikes**:
+#   - Multiple months exhibit high outliers, particularly March and April, reflecting **short bursts of high hiring days**.
+# 
+# ---
+# 
+# ### 🧾 Overall Takeaway
+# 
+# - The data reveals a **seasonal hiring pattern**, with job entry volumes **peaking sharply in April** and remaining low in the final months of the year. This suggests that companies significantly ramp up hiring in Q1 and Q2, with April being a strategic month for recruitment efforts.
+# 
+# 
 
 # %%
 plot_monthly_job_boxplot(df)
