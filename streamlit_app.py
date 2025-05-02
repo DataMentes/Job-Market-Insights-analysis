@@ -43,6 +43,8 @@ if page == "Home":
 elif page == "Egypt Market":
     st.header("Egypt Job Market")
     st.write("This section will display analysis related to the Egyptian job market.")
+
+    st.subheader("Top 10 Job Titles in Egypt")
     st.pyplot(plot1)
 
 elif page == "Saudi Market":
