@@ -316,9 +316,9 @@ def plot_job_postings_by_industry(df, plot_name, folder: Literal['egypt', 'saudi
         )
 
     # Formatting with Arabic text
-    ax.set_title(get_display(arabic_reshaper.reshape('أعلى 10 مجالات مُعلنة لفرص العمل')), fontsize=16)
-    ax.set_xlabel(get_display(arabic_reshaper.reshape('المجال')), fontsize=14)
-    ax.set_ylabel(get_display(arabic_reshaper.reshape('عدد الوظائف')), fontsize=14)
+    ax.set_title(get_display(arabic_reshaper.reshape('The highest 10 areas declared for business opportunities')), fontsize=16)
+    ax.set_xlabel(get_display(arabic_reshaper.reshape('Domain')), fontsize=14)
+    ax.set_ylabel(get_display(arabic_reshaper.reshape('Number of jobs')), fontsize=14)
     ax.tick_params(axis='x', labelsize=12, rotation=45)
     ax.grid(True, linestyle='--', alpha=0.7, axis='y')
 
