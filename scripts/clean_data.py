@@ -7,6 +7,16 @@ from datetime import datetime
 
 
 def translate_if_arabic(text, no_detect=False):
+    """
+    Translates the given text to English if it is in Arabic.
+
+    Args:
+        text (str): The text to translate.
+        no_detect (bool, optional): If True, skips language detection and always attempts to translate. Defaults to False.
+
+    Returns:
+        str: The translated text (if Arabic) or the original text (if not Arabic or if translation fails).
+    """
     if not text or not isinstance(text, str):
         return text
 
@@ -27,6 +37,16 @@ def translate_if_arabic(text, no_detect=False):
 
 
 def apply_translation(data, column, rows='all'):
+    """
+    Applies the translate_if_arabic function to a specified column in a DataFrame.
+
+    Args:
+        data (pd.DataFrame): The DataFrame containing the column to translate.
+        column (str): The name of the column to translate.
+        rows (str or list, optional):  Specifies which rows to translate.
+            - 'all': Translate all rows in the column.
+            - list: A list of row indices to translate. Defaults to 'all'.
+    """
     if rows == 'all':
         data[column] = data[column].apply(translate_if_arabic)
     else:
@@ -35,6 +55,18 @@ def apply_translation(data, column, rows='all'):
 
 
 def split_column(df, column, index: list, split_char: str, names: list, fill_value='Unknown', reverse=False):
+    """
+    Splits a column in a DataFrame into multiple columns based on a delimiter.
+
+    Args:
+        df (pd.DataFrame): The DataFrame containing the column to split.
+        column (str): The name of the column to split.
+        index (list): A list of indices indicating which part of the split string to use for each new column.
+        split_char (str): The character used to split the column's values.
+        names (list): A list of names for the new columns.
+        fill_value (str, optional): The value to use if a split string does not have enough parts. Defaults to 'Unknown'.
+        reverse (bool, optional): If True, the split parts are taken from the end of the string. Defaults to False.
+    """
     df[column].fillna('Unknown', inplace=True)
     reverse = -1 if reverse else 1
     for i, name in zip(index, names):
@@ -43,6 +75,13 @@ def split_column(df, column, index: list, split_char: str, names: list, fill_val
 
 
 def split_career_level(df):
+    """
+    Splits the 'career_level' column in a DataFrame into 'type', 'exp', and 'no_exp' columns.
+    Handles errors where 'type' or 'exp' might be incorrectly assigned.
+
+    Args:
+        df (pd.DataFrame): The DataFrame containing the 'career_level' column.
+    """
     split_column(df, 'career_level', [0, 1, 2], '·', ['type', 'exp', 'no_exp'], reverse=False)
     type_error = df[df['type'].str.len() > 10].index
     df['exp'][type_error] = df['type'][type_error]
@@ -53,6 +92,13 @@ def split_career_level(df):
 
 
 def split_industry(df):
+    """
+    Splits the 'industry' column in a DataFrame into 'industry_' and 'company_size' columns.
+    Handles errors where 'industry_' and 'company_size' might be incorrectly assigned.
+
+    Args:
+        df (pd.DataFrame): The DataFrame containing the 'industry' column.
+    """
     split_column(df, 'industry', [0, 1], '·', ['industry_', 'company_size'], fill_value='Unknown', reverse=True)
     index = df[df['industry_'].str.contains("موظف", na=False)].index
     df['industry_'][index] = df['company_size'][index]
@@ -60,10 +106,25 @@ def split_industry(df):
 
 
 def split_num_of_exp_years(df):
+    """
+    Splits the 'num_of_exp_years' column into 'min_num_of_years' and 'max_num_of_years'.
+    Extracts numeric values representing the minimum and maximum years of experience.
 
+    Args:
+        df (pd.DataFrame): The DataFrame containing the 'num_of_exp_years' column.
+    """
     df['num_of_exp_years'].fillna(np.nan, inplace=True)
 
     def extract_years(text):
+        """
+        Extracts the minimum and maximum number of years from a text string.
+
+        Args:
+            text (str): The text string containing the years of experience.
+
+        Returns:
+            tuple: A tuple containing the minimum and maximum years of experience (or 'Unknown' if not found).
+        """
         if pd.isna(text):
             return None, None
         matches = pd.Series(str(text)).str.findall(r'(\d+)').iloc[0]
@@ -80,6 +141,13 @@ def split_num_of_exp_years(df):
 
 
 def analyses_date(df, num_days):
+    """
+    Analyzes and transforms the 'date' column in a DataFrame.  This function appears to normalize date information.
+
+    Args:
+        df (pd.DataFrame): The DataFrame containing the 'date' column.
+        num_days (int):  An integer representing number of days.
+    """
     df.dropna(subset=['date'], inplace=True)
 
     df.loc[df['date'].str.contains(r'اليوم'), 'date'] = '0'
@@ -122,6 +190,13 @@ def analyses_date(df, num_days):
 
 
 def extract_job_grade(df, column='title'):
+    """
+    Extracts job grade information from a specified column (default: 'title') in a DataFrame.
+
+    Args:
+        df (pd.DataFrame): The DataFrame containing the job title column.
+        column (str, optional): The name of the column containing job titles. Defaults to 'title'.
+    """
     df[column].fillna('Unknown', inplace=True)
 
     mapping_dict0 = {'Graduate': 'i', 'Junior': 'ii', 'Mid Level':'iii', 'Senior':'iv',
@@ -155,6 +230,13 @@ def extract_job_grade(df, column='title'):
 
 
 def extract_gender(df, column):
+    """
+    Extracts gender information from a specified column in a DataFrame.
+
+    Args:
+        df (pd.DataFrame): The DataFrame containing the gender information.
+        column (str): The name of the column containing gender-related text.
+    """
     df[column].fillna('Unknown', inplace=True)
     index_male = df[column].str.contains(r'(m|M)ale|\b(m|M)en\b|\b(m|M)an\b', regex=True)
     df.loc[index_male, 'gender'] = 'Male'
@@ -163,6 +245,13 @@ def extract_gender(df, column):
 
 
 def extract_remotely(df, column):
+    """
+    Extracts remote work information from a specified column in a DataFrame.
+
+    Args:
+        df (pd.DataFrame): The DataFrame containing the remote work information.
+        column (str): The name of the column containing remote work-related text.
+    """
     df[column].fillna('Unknown', inplace=True)
     data = {
         'Remote': r'remote\b|remotely',
@@ -174,6 +263,12 @@ def extract_remotely(df, column):
 
 
 def translate_experience(df):
+    """
+    Translates experience-related values in the 'job_level' column of a DataFrame and renames the column.
+
+    Args:
+        df (pd.DataFrame): The DataFrame containing the 'experience_' column.
+    """
     df['job_level'] = df['experience_']
     df.drop(columns=['experience_'], inplace=True)
     dict = {
@@ -190,6 +285,12 @@ def translate_experience(df):
 
 
 def translate_type(df):
+    """
+    Translates job type values in the 'type' column of a DataFrame.
+
+    Args:
+        df (pd.DataFrame): The DataFrame containing the 'type' column.
+    """
     dict = {
         'دوام كامل': 'Full-Time',
         'إدارة': 'Management',
@@ -203,6 +304,12 @@ def translate_type(df):
 
 
 def translate_sex(df):
+    """
+    Translates gender-related values in the 'gender' column of a DataFrame and renames the column
+
+    Args:
+        df (pd.DataFrame): The DataFrame containing the 'sex' column.
+    """
     df['gender'] = df['sex']
     df.drop(columns=['sex'], inplace=True)
     dict = {
@@ -216,6 +323,12 @@ def translate_sex(df):
 
 
 def translate_remote(df):
+    """
+    Translates remote work values in the 'remote' column of a DataFrame.
+
+    Args:
+        df (pd.DataFrame): The DataFrame containing the 'remote' column.
+    """
     dict = {
         'من المقر': 'On-site',
         'عن بُعد': 'Remote',
@@ -227,14 +340,11 @@ def translate_remote(df):
 
 def review_matches(df, title_mapping):
     """
-    البحث عن الأنماط المحددة في القاموس `title_mapping` داخل عمود `title` في DataFrame `df`.
+    Prints the job titles from the DataFrame that match the keys in the title_mapping.
 
-    المدخلات:
-        df (pd.DataFrame): الجدول الذي يحتوي على البيانات.
-        title_mapping (dict): قاموس يحتوي على الأنماط المراد البحث عنها.
-
-    المخرجات:
-        طباعة قائمة بالنتائج التي تم العثور عليها.
+    Args:
+        df (pd.DataFrame): The DataFrame containing the job titles.
+        title_mapping (dict): A dictionary where keys are patterns to search for in job titles.
     """
     pd.set_option('display.max_rows', None)
     pd.set_option('display.max_colwidth', None)
@@ -248,7 +358,13 @@ def review_matches(df, title_mapping):
 
 
 def edite_title(df,title_mapping, patterns_replace = ''):
+    """
+    Edits job titles in a DataFrame based on a provided mapping.
 
+    Args:
+        df (pd.DataFrame): The DataFrame containing the job titles.
+        title_mapping (dict): A dictionary where keys are patterns to search for and values are the replacements.
+    """
     df.title = df.title.str.lower().str.strip()
 
     if patterns_replace:
