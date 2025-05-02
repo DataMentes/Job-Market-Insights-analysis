@@ -357,7 +357,7 @@ def review_matches(df, title_mapping):
         print('#'*120)
 
 
-def edite_title(df,title_mapping, patterns_replace = ''):
+def edit_title(df,title_mapping, patterns_replace = ''):
     """
     Edits job titles in a DataFrame based on a provided mapping.
 
