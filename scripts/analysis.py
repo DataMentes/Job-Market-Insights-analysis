@@ -10,7 +10,39 @@ from typing import Literal
 
 
 def job_distribution_by_city(df, plot_name, folder: Literal['egypt', 'saudi', 'compare'], top_n=10):
+    """
+    Plot and save a bar chart showing the distribution of jobs by city.
 
+    This function generates a bar plot for the top N cities with the highest number
+    of job postings. It supports proper display of Arabic text using arabic_reshaper
+    and bidi.algorithm libraries.
+
+    Parameters:
+    -----------
+    df : pd.DataFrame
+        Input DataFrame containing job data with at least one 'city' column.
+
+    plot_name : str
+        Name of the output image file (without extension).
+
+    folder : Literal['egypt', 'saudi', 'compare']
+        Folder name where the plot will be saved.
+
+    top_n : int, optional, default=10
+        Number of top cities to include in the plot.
+
+    Returns:
+    --------
+    fig : matplotlib.figure.Figure
+        The generated figure object for further use or customization.
+
+    Notes:
+    ------
+    - Expects columns: 'city'
+    - Requires importing:
+        from bidi.algorithm import get_display
+        import arabic_reshaper
+    """
     job_counts = df['city'].value_counts().reset_index()
     job_counts.columns = ['City', 'Number of Jobs']
     top_cities = job_counts.head(top_n)
@@ -36,6 +68,41 @@ def job_distribution_by_city(df, plot_name, folder: Literal['egypt', 'saudi', 'c
 
 
 def analyze_jobs_by_company(data, plot_name, folder: Literal['egypt', 'saudi', 'compare'], top_n=20):
+    """
+    Analyze and visualize the number of job postings per company.
+
+    This function generates a bar chart showing the top N companies with the highest
+    number of job postings. It supports saving the generated plot to a specified directory.
+
+    Parameters:
+    -----------
+    data : pd.DataFrame
+        Input DataFrame containing job data with at least one 'company_name' column.
+
+    plot_name : str
+        Name of the output image file (without extension).
+
+    folder : Literal['egypt', 'saudi', 'compare']
+        Folder name where the plot will be saved.
+
+    top_n : int, optional, default=20
+        Number of top companies to include in the plot.
+
+    Returns:
+    --------
+    fig : matplotlib.figure.Figure
+        The generated figure object for further use or customization.
+
+    Raises:
+    -------
+    ValueError:
+        If the 'company_name' column is not present in the input DataFrame.
+
+    Notes:
+    ------
+    - Expects columns: 'company_name'
+    - Recommended for datasets where company names are consistently formatted.
+    """
     # Check if the 'company' column exists in the data
     if 'company_name' not in data.columns:
         raise ValueError("The 'company' column is missing from the data")
@@ -64,6 +131,41 @@ def analyze_jobs_by_company(data, plot_name, folder: Literal['egypt', 'saudi', '
 
 
 def get_top_job_titles_with_plot(data, plot_name, folder: Literal['egypt', 'saudi', 'compare'], top_n=10):
+    """
+    Generate and visualize the top most frequent job titles from the dataset.
+
+    This function calculates the top N most common job titles and creates a horizontal bar chart
+    to display their frequency. The plot is then saved in the specified directory.
+
+    Parameters:
+    -----------
+    data : pd.DataFrame
+        Input DataFrame containing job data with at least one 'title' column.
+
+    plot_name : str
+        Name of the output image file (without extension).
+
+    folder : Literal['egypt', 'saudi', 'compare']
+        Folder name where the plot will be saved.
+
+    top_n : int, optional, default=10
+        Number of top job titles to include in the analysis and plot.
+
+    Returns:
+    --------
+    fig : matplotlib.figure.Figure
+        The generated figure object for further customization or display.
+
+    Raises:
+    -------
+    KeyError:
+        If the 'title' column is not present in the input DataFrame.
+
+    Notes:
+    ------
+    - Expects columns: 'title'
+    - Uses Seaborn for plotting with a horizontal bar layout for better readability of job titles.
+    """
     # حساب التكرارات
     top_titles = data['title'].value_counts().head(top_n)
 
@@ -88,6 +190,40 @@ def get_top_job_titles_with_plot(data, plot_name, folder: Literal['egypt', 'saud
 
 
 def analyze_jobs_by_work_type(data, plot_name, folder: Literal['egypt', 'saudi', 'compare']):
+    """
+    Analyze and visualize the distribution of jobs by work type (e.g., Remote, On-site).
+
+    This function generates a pie chart showing the percentage distribution of job postings
+    based on the work type (e.g., remote or on-site). It also returns the figure object
+    and saves the plot to the specified directory.
+
+    Parameters:
+    -----------
+    data : pd.DataFrame
+        Input DataFrame containing job data with at least one 'remote' column.
+
+    plot_name : str
+        Name of the output image file (without extension).
+
+    folder : Literal['egypt', 'saudi', 'compare']
+        Folder name where the plot will be saved.
+
+    Returns:
+    --------
+    fig : matplotlib.figure.Figure
+        The generated figure object for further use or customization.
+
+    Raises:
+    -------
+    ValueError:
+        If the 'remote' column is not present in the input DataFrame.
+
+    Notes:
+    ------
+    - Expects columns: 'remote'
+    - Assumes that the 'remote' column contains categorical values indicating work type.
+    - Uses a muted color palette from seaborn for better visual clarity.
+    """
     if 'remote' not in data.columns:
         raise ValueError("The 'remote' column is missing from the data")
 
@@ -119,6 +255,41 @@ def analyze_jobs_by_work_type(data, plot_name, folder: Literal['egypt', 'saudi',
 
 
 def analyze_jobs_by_time(data, plot_name, folder: Literal['egypt', 'saudi', 'compare']):
+    """
+    Analyze and visualize the distribution of job postings over time (by month).
+
+    This function processes a date column to extract monthly trends in job postings,
+    then generates a bar chart showing the number of jobs per month. The months are
+    sorted based on the number of jobs in descending order for better visualization.
+
+    Parameters:
+    -----------
+    data : pd.DataFrame
+        Input DataFrame containing job data with at least one 'date' column.
+
+    plot_name : str
+        Name of the output image file (without extension).
+
+    folder : Literal['egypt', 'saudi', 'compare']
+        Folder name where the plot will be saved.
+
+    Returns:
+    --------
+    fig : matplotlib.figure.Figure
+        The generated figure object for further use or customization.
+
+    Raises:
+    -------
+    ValueError:
+        If the 'date' column is not present in the input DataFrame.
+
+    Notes:
+    ------
+    - Expects columns: 'date'
+    - Converts the 'date' column to datetime format and extracts the month.
+    - Assumes dates are valid or can be coerced using errors='coerce'.
+    - Months in the plot are ordered by job count (not chronological) for emphasis on peak hiring months.
+    """
     if 'date' not in data.columns:
         raise ValueError("The 'date' column is missing from the data")
 
@@ -163,6 +334,40 @@ def analyze_jobs_by_time(data, plot_name, folder: Literal['egypt', 'saudi', 'com
 
 
 def analyze_jobs_by_gender(data, plot_name, folder: Literal['egypt', 'saudi', 'compare']):
+    """
+    Analyze and visualize the distribution of job postings by gender preference.
+
+    This function generates a bar chart showing the number of job postings that specify
+    each gender preference (e.g., Male, Female, Unspecified). It includes value labels
+    on top of each bar for clarity and saves the plot to the specified directory.
+
+    Parameters:
+    -----------
+    data : pd.DataFrame
+        Input DataFrame containing job data with at least one 'gender' column.
+
+    plot_name : str
+        Name of the output image file (without extension).
+
+    folder : Literal['egypt', 'saudi', 'compare']
+        Folder name where the plot will be saved.
+
+    Returns:
+    --------
+    fig : matplotlib.figure.Figure
+        The generated figure object for further use or customization.
+
+    Raises:
+    -------
+    ValueError:
+        If the 'gender' column is not present in the input DataFrame.
+
+    Notes:
+    ------
+    - Expects columns: 'gender'
+    - Assumes the 'gender' column contains categorical values indicating gender preferences.
+    - Value labels are added on top of bars for better readability.
+    """
     if 'gender' not in data.columns:
         raise ValueError("The 'gender' column is missing from the data")
 
@@ -192,6 +397,40 @@ def analyze_jobs_by_gender(data, plot_name, folder: Literal['egypt', 'saudi', 'c
 
 
 def analyze_jobs_by_job_level(data, plot_name, folder: Literal['egypt', 'saudi', 'compare']):
+    """
+    Analyze and visualize the distribution of job postings by job level.
+
+    This function generates a bar chart showing the number of job postings for each job level
+    (e.g., Entry Level, Mid-Level, Senior, etc.). Value labels are added on top of each bar
+    for better readability. The plot is saved to the specified directory.
+
+    Parameters:
+    -----------
+    data : pd.DataFrame
+        Input DataFrame containing job data with at least one 'job_level' column.
+
+    plot_name : str
+        Name of the output image file (without extension).
+
+    folder : Literal['egypt', 'saudi', 'compare']
+        Folder name where the plot will be saved.
+
+    Returns:
+    --------
+    fig : matplotlib.figure.Figure
+        The generated figure object for further use or customization.
+
+    Raises:
+    -------
+    ValueError:
+        If the 'job_level' column is not present in the input DataFrame.
+
+    Notes:
+    ------
+    - Expects columns: 'job_level'
+    - Assumes the 'job_level' column contains categorical values indicating job experience levels.
+    - X-axis labels are rotated for better visibility when category names are long.
+    """
     if 'job_level' not in data.columns:
         raise ValueError("The 'job_level' column is missing from the data")
 
@@ -221,6 +460,46 @@ def analyze_jobs_by_job_level(data, plot_name, folder: Literal['egypt', 'saudi',
 
 
 def plot_job_trend_over_time(data, plot_name, folder: Literal['egypt', 'saudi', 'compare'], freq='M'):
+    """
+    Plot the trend of job postings over time with a specified frequency (e.g., monthly or daily).
+
+    This function analyzes the temporal distribution of job postings by resampling the data
+    based on a specified time frequency (e.g., 'M' for monthly, 'D' for daily), and generates
+    a line plot showing the number of jobs over time. The resulting figure is saved to disk.
+
+    Parameters:
+    -----------
+    data : pd.DataFrame
+        Input DataFrame containing job data with at least one 'date' column.
+
+    plot_name : str
+        Name of the output image file (without extension).
+
+    folder : Literal['egypt', 'saudi', 'compare']
+        Folder name where the plot will be saved.
+
+    freq : str, optional, default='M'
+        Resampling frequency for time series analysis. Common values include:
+        - 'M' for month-end frequency
+        - 'W' for weekly
+        - 'D' for daily
+
+    Returns:
+    --------
+    fig : matplotlib.figure.Figure
+        The generated figure object for further use or customization.
+
+    Raises:
+    -------
+    ValueError:
+        If the 'date' column is not present in the input DataFrame.
+
+    Notes:
+    ------
+    - Expects columns: 'date'
+    - Dates are coerced into valid datetime format; invalid dates are dropped.
+    - The plot shows trends using markers and lines for better visual interpretation.
+    """
     df = data.copy()
 
     # Ensure the date column is in datetime format
@@ -257,6 +536,41 @@ def plot_job_trend_over_time(data, plot_name, folder: Literal['egypt', 'saudi', 
 
 
 def plot_monthly_job_boxplot(data, plot_name, folder: Literal['egypt', 'saudi', 'compare']):
+    """
+    Generate a boxplot showing the daily distribution of job entries by month.
+
+    This function analyzes the variability of daily job posting counts across months,
+    and visualizes the distribution using a boxplot. It shows medians, quartiles,
+    and potential outliers for each month, providing insights into seasonal patterns.
+
+    Parameters:
+    -----------
+    data : pd.DataFrame
+        Input DataFrame containing job data with at least one 'date' column.
+
+    plot_name : str
+        Name of the output image file (without extension).
+
+    folder : Literal['egypt', 'saudi', 'compare']
+        Folder name where the plot will be saved.
+
+    Returns:
+    --------
+    fig : matplotlib.figure.Figure
+        The generated figure object for further use or customization.
+
+    Raises:
+    -------
+    ValueError:
+        If the 'date' column is not present in the input DataFrame.
+
+    Notes:
+    ------
+    - Expects columns: 'date'
+    - Dates are coerced into valid datetime format; invalid dates are dropped.
+    - Daily job counts are grouped by month to create the boxplot structure.
+    - The x-axis uses abbreviated month names (Jan, Feb, ..., Dec) for clarity.
+    """
     df = data.copy()
     # Ensure the date column is in datetime format
     df['date'] = pd.to_datetime(df['date'], errors='coerce')
@@ -290,6 +604,41 @@ def plot_monthly_job_boxplot(data, plot_name, folder: Literal['egypt', 'saudi', 
 
 
 def plot_job_postings_by_industry(df, plot_name, folder: Literal['egypt', 'saudi', 'compare']):
+    """
+    Plot the top 10 industries by number of job postings with support for Arabic text display.
+
+    This function generates a bar chart showing the top 10 industries with the highest number
+    of job postings. It supports proper rendering of Arabic text using the arabic_reshaper and
+    bidi.algorithm libraries.
+
+    Parameters:
+    -----------
+    df : pd.DataFrame
+        Input DataFrame containing job data with at least one 'industry_' column.
+
+    plot_name : str
+        Name of the output image file (without extension).
+
+    folder : Literal['egypt', 'saudi', 'compare']
+        Folder name where the plot will be saved.
+
+    Returns:
+    --------
+    fig : matplotlib.figure.Figure
+        The generated figure object for further use or customization.
+
+    Raises:
+    -------
+    KeyError:
+        If the 'industry_' column is not present in the input DataFrame.
+
+    Notes:
+    ------
+    - Expects columns: 'industry_'
+    - Arabic text is reshaped using arabic_reshaper and get_display for correct display in plots.
+    - Value labels are added on top of each bar for clarity.
+    - Axis labels and title are displayed in Arabic to match the data context.
+    """
     # Prepare data
     top_industries = df['industry_'].value_counts().head(10)
     top_industries = top_industries.reset_index()
