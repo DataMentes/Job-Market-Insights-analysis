@@ -91,7 +91,11 @@ df[df['city']=='الرياض'].count()
 # - This helps us **identify dominant categories** which could indicate market leaders or preferred locations.
 
 # %%
-plot_top_titles(df)
+new_df=df.drop(df[df['city']=='Unknown'].index)
+
+
+# %%
+get_top_job_titles_with_plot(df,'bar_JobTitles','saudi')
 
 # %% [markdown]
 # ### Explanation
@@ -110,7 +114,7 @@ plot_top_titles(df)
 # - This helps us **identify dominant categories** which could indicate market leaders or preferred locations.
 
 # %%
-plot_remote_distribution(df)
+analyze_jobs_by_work_type(df,'typeOfJob','saudi')
 
 # %% [markdown]
 # ### Explanation
@@ -130,7 +134,7 @@ plot_remote_distribution(df)
 # - Highlights **which industries or companies dominate** the job market in this dataset.
 
 # %%
-plot_job_postings_by_industry(df)
+plot_job_postings_by_industry(df,'bar_industry_saudi','saudi')
 
 # %% [markdown]
 # ### Explanation
@@ -149,7 +153,7 @@ plot_job_postings_by_industry(df)
 # - This helps us **identify dominant categories** which could indicate market leaders or preferred locations.
 
 # %%
-plot_pie_chart(df)
+analyze_jobs_by_gender(df,'gendersInSa','saudi')
 
 # %% [markdown]
 # ### Explanation
@@ -168,7 +172,7 @@ plot_pie_chart(df)
 # - Highlights **which industries or companies dominate** the job market in this dataset.
 
 # %%
-plot_city_distribution(df)
+job_distribution_by_city(new_df,'bar_cities','saudi')
 
 # %% [markdown]
 # ### Explanation
@@ -194,7 +198,7 @@ plot_city_distribution(df)
 # - This helps us **identify dominant categories** which could indicate market leaders or preferred locations.
 
 # %%
-plot_job_type_distribution(df)
+
 
 # %% [markdown]
 # ### Explanation
@@ -214,7 +218,7 @@ plot_job_type_distribution(df)
 # - Highlights **which industries or companies dominate** the job market in this dataset.
 
 # %%
-analyze_jobs_by_job_level(df)
+analyze_jobs_by_job_level(df,'job_by_level_sa','saudi')
 
 # %% [markdown]
 # ### Explanation
@@ -260,6 +264,10 @@ analyze_jobs_by_job_level(df)
 # - Highlights **which industries or companies dominate** the job market in this dataset.
 
 # %%
-plot_top_10_companies(df)
+analyze_jobs_by_company(df,'companies&jobs','saudi')
+
+
+# %%
+plot_job_trend_over_time(df, 'saudi_job_postings_over_time', 'saudi')
 
 
