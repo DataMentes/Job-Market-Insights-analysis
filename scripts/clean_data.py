@@ -129,10 +129,10 @@ def extract_job_grade(df, column='title'):
     mapping_dict = {
         'Graduate': ['trainee', 'intern', 'entry-level', 'graduate', 'internship', 'interns', 'تمهير', 'تدريب'],
         'Junior': ['junior'],
-        'Mid Level': ['mid-level'],
+        'Mid Level': ['mid-level','intermediate'],
         'Senior': ['senior','supervisor','section head',r'(^sr(\b|\s)|\ssr(\b|\s))','senior associate'],
         'Management': ['manager', 'principal', 'assistant director'],
-        'Senior Management': ['director', 'vice president', 'svp', 'group manager'],
+        'Senior Management': ['senior manager','director', 'vice president', 'svp', 'group manager'],
         'C-Suite': ['c-suite', 'ceo', 'chief executive officer', 'cfo', 'chief financial officer',
                     'cio', 'chief information officer', 'coo', 'chief operating officer',
                     'cto', 'chief technology officer', 'cmo', 'chief marketing officer']
@@ -156,9 +156,9 @@ def extract_job_grade(df, column='title'):
 
 def extract_gender(df, column):
     df[column].fillna('Unknown', inplace=True)
-    index_male = df[column].str.contains(r'male|\bmen\b', regex=True)
+    index_male = df[column].str.contains(r'(m|M)ale|\b(m|M)en\b|\b(m|M)an\b', regex=True)
     df.loc[index_male, 'gender'] = 'Male'
-    index_Female = df[column].str.contains('Female')
+    index_Female = df[column].str.contains('(f|F)emale|(w|W)omen')
     df.loc[index_Female, 'gender'] = 'Female'
 
 
