@@ -9,6 +9,7 @@
 # This code creates a visualization to help interpret the data. Visualization is key to discovering patterns, outliers, and trends.
 
 # %%
+from scripts.analysis import *
 import plotly.express as px
 import sqlite3
 import pandas as pd
@@ -90,19 +91,7 @@ df[df['city']=='الرياض'].count()
 # - This helps us **identify dominant categories** which could indicate market leaders or preferred locations.
 
 # %%
-plt.figure(figsize=(10, 8))
-top_titles = df['title'].value_counts().head(10)
-
-# Add count labels on top of the bars
-for i, count in enumerate(top_titles.values):
-    plt.text(i, count + 0.5, f'{count}', ha='center', fontsize=12, color='black')
-
-sns.barplot(x=top_titles.index,y=top_titles.values, palette='viridis')
-plt.xticks(rotation=45, ha='right')
-plt.title('Top 10 Job Titles in Saudi Arabia')
-plt.xlabel('Job Title')
-plt.tight_layout()
-plt.show()
+plot_top_titles(df)
 
 # %% [markdown]
 # ### Explanation
@@ -121,14 +110,7 @@ plt.show()
 # - This helps us **identify dominant categories** which could indicate market leaders or preferred locations.
 
 # %%
-df['remote'].value_counts().plot.pie(
-    figsize=(8, 8),
-    autopct='%1.1f%%',
-    startangle=180,
-    title='Remote Work Distribution'
-)
-plt.ylabel('')  # Remove the y-axis label for better aesthetics
-plt.show()
+plot_remote_distribution(df)
 
 # %% [markdown]
 # ### Explanation
@@ -148,13 +130,7 @@ plt.show()
 # - Highlights **which industries or companies dominate** the job market in this dataset.
 
 # %%
-plt.figure(figsize=(14, 8))
-df['industry_'].value_counts().head(10).plot(kind='bar', color='skyblue')
-plt.title('Top 10 Industries by Number of Job Postings', fontsize=16)
-plt.xlabel('Industry', fontsize=14)
-plt.ylabel('Number of Job Postings', fontsize=14)
-plt.xticks(rotation=45, fontsize=12)
-plt.show()
+plot_job_postings_by_industry(df)
 
 # %% [markdown]
 # ### Explanation
@@ -173,15 +149,7 @@ plt.show()
 # - This helps us **identify dominant categories** which could indicate market leaders or preferred locations.
 
 # %%
-df['gender'].value_counts().plot.pie(
-    figsize=(8, 8),
-    autopct='%1.1f%%',
-    startangle=180,
-)
-
-
-# %%
-grouped_df = df.groupby(['city', 'industry_'])['title'].count().reset_index()
+plot_pie_chart(df)
 
 # %% [markdown]
 # ### Explanation
@@ -200,13 +168,7 @@ grouped_df = df.groupby(['city', 'industry_'])['title'].count().reset_index()
 # - Highlights **which industries or companies dominate** the job market in this dataset.
 
 # %%
-plt.figure(figsize=(14, 8))
-grouped_df.groupby('city')['title'].sum().sort_values(ascending=False).head(10).plot(kind='bar', color='skyblue')
-plt.title('Top 10 Cities by Number of Job Titles', fontsize=16)
-plt.xlabel('City', fontsize=14)
-plt.ylabel('Number of Job Titles', fontsize=14)
-plt.xticks(rotation=45, fontsize=12)
-plt.show()
+plot_city_distribution(df)
 
 # %% [markdown]
 # ### Explanation
@@ -215,31 +177,6 @@ plt.show()
 # ### Line Plot
 # 
 # This code produces a line plot, ideal for showing trends over time or ordered categories.
-
-# %%
-# Convert the 'date' column to datetime format
-df['date'] = pd.to_datetime(df['date'])
-
-# Group by date and count the number of job postings
-date_counts = df.groupby('date').size()
-
-# Plot the data
-plt.figure(figsize=(14, 8))
-date_counts.plot(kind='line', color='blue', marker='o')
-plt.title('Job Postings Over Time', fontsize=16)
-plt.xlabel('Date', fontsize=14)
-plt.ylabel('Number of Job Postings', fontsize=14)
-plt.grid(True)
-plt.show()
-
-
-# %%
-unique_types_count = df['type'].nunique()
-
-
-# %%
-unique_types_count
-
 # %% [markdown]
 # ### Explanation
 # This code summarizes the frequency of values in a column, which is useful for understanding the distribution of categorical data.
@@ -257,22 +194,7 @@ unique_types_count
 # - This helps us **identify dominant categories** which could indicate market leaders or preferred locations.
 
 # %%
-# Create an explode list with the same length as the unique job types
-explode = [0.1] * unique_types_count
-
-# Plot the pie chart
-df['type'].value_counts().plot.pie(
-    figsize=(8, 8),
-    autopct='%1.1f%%',
-    startangle=180,
-    explode=explode,
-    title='Job Type Distribution',
-    textprops={'fontsize': 9},
-    legend=True,
-)
-
-plt.ylabel('')  # Remove the y-axis label for better aesthetics
-plt.show()
+plot_job_type_distribution(df)
 
 # %% [markdown]
 # ### Explanation
@@ -292,24 +214,7 @@ plt.show()
 # - Highlights **which industries or companies dominate** the job market in this dataset.
 
 # %%
-# Count the number of jobs for each job level
-job_level_counts = df['job_level'].value_counts()
-
-# Plotting the bar chart
-plt.figure(figsize=(10, 8))
-sns.barplot(x=job_level_counts.index, y=job_level_counts.values, palette='Set2')
-
-# Add count labels on top of the bars
-for i, count in enumerate(job_level_counts.values):
-    plt.text(i, count + 0.5, f'{count}', ha='center', fontsize=12, color='black')
-
-# Titles and labels
-plt.title('Job Distribution by Job Level', fontsize=16)
-plt.xlabel('Job Level', fontsize=12)
-plt.ylabel('Number of Jobs', fontsize=12)
-plt.xticks(rotation=45)
-plt.tight_layout()
-plt.show()
+analyze_jobs_by_job_level(df)
 
 # %% [markdown]
 # ### Explanation
@@ -355,40 +260,6 @@ plt.show()
 # - Highlights **which industries or companies dominate** the job market in this dataset.
 
 # %%
-# Prepare data
-top_companies = df['company_name'].value_counts().head(10).sort_values()
+plot_top_10_companies(df)
 
-# Plot
-plt.figure(figsize=(14, 8))
-sns.barplot(x=top_companies.values, y=top_companies.index, palette='mako')
-
-# Titles and labels
-plt.title('Top 10 Industries by Number of Job Postings', fontsize=18)
-plt.xlabel('Number of Job Postings', fontsize=14)
-plt.ylabel('Company Name', fontsize=14)
-plt.xticks(fontsize=12)
-plt.yticks(fontsize=12)
-sns.despine(left=True, bottom=True)
-plt.tight_layout()
-plt.show()
-
-# %% [markdown]
-# ## *Comparison Between Egpyt market and Saudi Arabia market*
-# ## *__________________________________________________________________________________________________________*
-# 
-# %% [markdown]
-# ## Saudi Arabia 
-# ![alt text](5698b510-de4f-4f43-b800-9c1c58140e09.png)
-# ## Egypt 
-# ![alt text](3a66eef9-c367-4083-8298-b0354e5ea326.jfif)
-# %% [markdown]
-# ## Saudi Arabia
-# ![image.png](attachment:image.png)
-# ## Egypt
-# ![alt text](4978465f-a22b-43c5-94df-f85e123ae49a.jfif)
-# %% [markdown]
-# ## Saudi Arabia
-# ![image-2.png](attachment:image-2.png)
-# ## Egypt
-# ![alt text](ba1ac83a-211f-4f41-a483-a373deeb6363-1.jfif)
 
