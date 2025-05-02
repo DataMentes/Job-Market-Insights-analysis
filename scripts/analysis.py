@@ -218,112 +218,7 @@ def analyze_jobs_by_job_level(data, plot_name, folder: Literal['egypt', 'saudi',
     fig.savefig(path)
 
     return fig
-def plot_job_type_distribution(df):
-# Create an explode list with the same length as the unique job types
-    unique_types_count = df['type'].nunique()
-    explode = [0.1] * unique_types_count
-# Plot the pie chart
-    df['type'].value_counts().plot.pie(
-        figsize=(8, 8),
-        autopct='%1.1f%%',
-        startangle=180,
-        explode=explode,
-        title='Job Type Distribution',
-        textprops={'fontsize': 9},
-        legend=True,)
-    plt.ylabel('')  # Remove the y-axis label for better aesthetics
-    plt.show()
 
-def plot_city_distribution(df):
-    plt.figure(figsize=(14, 8))
-    sns.barplot(
-        x=df['city'].value_counts().head(10).index,
-        y=df['city'].value_counts().head(10).values,
-        palette='viridis'
-    )
-    plt.title('Top 10 Cities by Number of Job Titles', fontsize=16)
-    plt.xlabel('City', fontsize=14)
-    plt.ylabel('Number of Job Titles', fontsize=14)
-    plt.xticks(rotation=45, fontsize=12)
-    plt.show()
-
-def plot_top_titles(df):
-    plt.figure(figsize=(10, 8))
-    top_titles = df['title'].value_counts().head(10)
-
-# Add count labels on top of the bars
-    for i, count in enumerate(top_titles.values):
-        plt.text(i, count + 0.5, f'{count}', ha='center', fontsize=12, color='black')
-
-    sns.barplot(x=top_titles.index,y=top_titles.values, palette='viridis')
-    plt.xticks(rotation=45, ha='right')
-    plt.title('Top 10 Job Titles in Saudi Arabia')
-    plt.xlabel('Job Title')
-    plt.tight_layout()
-    plt.show()
-
-def analyze_jobs_by_job_level(df):
-# Count the number of jobs for each job level
-    job_level_counts = df['job_level'].value_counts()
-
-# Plotting the bar chart
-    plt.figure(figsize=(10, 8))
-    sns.barplot(x=job_level_counts.index, y=job_level_counts.values, palette='Set2')
-
-# Add count labels on top of the bars
-    for i, count in enumerate(job_level_counts.values):
-        plt.text(i, count + 0.5, f'{count}', ha='center', fontsize=12, color='black')
-
-# Titles and labels
-    plt.title('Job Distribution by Job Level', fontsize=16)
-    plt.xlabel('Job Level', fontsize=12)
-    plt.ylabel('Number of Jobs', fontsize=12)
-    plt.xticks(rotation=45)
-    plt.tight_layout()
-    plt.show()
-
-def plot_top_10_companies(df):
-    # Prepare data
-    top_companies = df['company_name'].value_counts().head(10).sort_values()
-
-# Plot
-    plt.figure(figsize=(14, 8))
-    sns.barplot(x=top_companies.values, y=top_companies.index, palette='mako')
-
-# Titles and labels
-    plt.title('Top 10 Industries by Number of Job Postings', fontsize=18)
-    plt.xlabel('Number of Job Postings', fontsize=14)
-    plt.ylabel('Company Name', fontsize=14)
-    plt.xticks(fontsize=12)
-    plt.yticks(fontsize=12)
-    sns.despine(left=True, bottom=True)
-    plt.tight_layout()
-    plt.show()
-
-
-def plot_remote_distribution(df):
-    df['remote'].value_counts().plot.pie(
-    figsize=(8, 8),
-    autopct='%1.1f%%',
-    startangle=180,
-    title='Remote Work Distribution')
-    plt.ylabel('')  # Remove the y-axis label for better aesthetics
-    plt.show()
-
-def plot_job_postings_by_industry(df):
-    plt.figure(figsize=(14, 8))
-    df['industry_'].value_counts().head(10).plot(kind='bar', color='skyblue')
-    plt.title('Top 10 Industries by Number of Job Postings', fontsize=16)
-    plt.xlabel('Industry', fontsize=14)
-    plt.ylabel('Number of Job Postings', fontsize=14)
-    plt.xticks(rotation=45, fontsize=12)
-    plt.show()
-
-def plot_pie_chart(df):
-    df['gender'].value_counts().plot.pie(
-        figsize=(8, 8),
-        autopct='%1.1f%%',
-        startangle=180,)
 
 def plot_job_trend_over_time(data, plot_name, folder: Literal['egypt', 'saudi', 'compare'], freq='M'):
     df = data.copy()
@@ -387,6 +282,49 @@ def plot_monthly_job_boxplot(data, plot_name, folder: Literal['egypt', 'saudi', 
     ax.set_ylabel('Number of Jobs per Day')
     plt.tight_layout()
     plt.show()
+
+    path = '../visualizations/' + folder + '/' + plot_name + '.png'
+    fig.savefig(path)
+
+    return fig
+
+
+def plot_job_postings_by_industry(df, plot_name, folder: Literal['egypt', 'saudi', 'compare']):
+    # Prepare data
+    top_industries = df['industry_'].value_counts().head(10)
+    top_industries = top_industries.reset_index()
+    top_industries.columns = ['Industry', 'Number of Jobs']
+
+    # Reshape Arabic text for proper display
+    reshaped_industries = [
+        get_display(arabic_reshaper.reshape(industry)) for industry in top_industries['Industry']
+    ]
+
+    # Plot
+    fig, ax = plt.subplots(figsize=(14, 8))
+    bars = ax.bar(reshaped_industries, top_industries['Number of Jobs'], color='skyblue')
+
+    # Add value labels on top of the bars
+    for bar in bars:
+        height = bar.get_height()
+        ax.text(
+            bar.get_x() + bar.get_width() / 2,
+            height + 0.5,
+            f'{int(height)}',
+            ha='center',
+            fontsize=10
+        )
+
+    # Formatting with Arabic text
+    ax.set_title(get_display(arabic_reshaper.reshape('أعلى 10 مجالات مُعلنة لفرص العمل')), fontsize=16)
+    ax.set_xlabel(get_display(arabic_reshaper.reshape('المجال')), fontsize=14)
+    ax.set_ylabel(get_display(arabic_reshaper.reshape('عدد الوظائف')), fontsize=14)
+    ax.tick_params(axis='x', labelsize=12, rotation=45)
+    ax.grid(True, linestyle='--', alpha=0.7, axis='y')
+
+    plt.tight_layout()
+    plt.show()
+
 
     path = '../visualizations/' + folder + '/' + plot_name + '.png'
     fig.savefig(path)
