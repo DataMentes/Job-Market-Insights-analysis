@@ -102,8 +102,8 @@ df.head(15)
 # 
 #%%
 df.sort_values(by=['title'], ascending=False, inplace=True)
-# sqlite_version = sqlite3.connect('../database.db')
-# df.to_sql('saudi-arabia', con=sqlite_version, if_exists='replace', index=False)
+# conn = sqlite3.connect('../database.db')
+# df.to_sql('EGYPT', con=conn, if_exists='replace', index=False)
 #%% md
 # ### Manual Data Cleaning and Translation
 # 
@@ -115,12 +115,9 @@ df.sort_values(by=['title'], ascending=False, inplace=True)
 # 
 # 3. **Save the Data**
 #%%
-conn = sqlite3.connect('../database.db')
-df = pd.read_sql('SELECT * FROM [saudi-arabia]', conn)
+df = pd.read_csv('../data/processed/egypt_clean.csv')
 df.sort_values(by=['title'], ascending=False, inplace=True)
 apply_translation(df, 'title', rows=df.iloc[:40, :].index.tolist())
-# df.to_sql('saudi-arabia', con=conn, if_exists='replace', index=True)
-conn.close()
 #%%
 df = df[~df['title'].str.contains('سعودية', na=False)]
 df = df[~df['title'].str.contains('سعوديه', na=False)]
@@ -150,8 +147,7 @@ df = df[~df['title'].str.contains('saudi', na=False)]
 # 
 # 7. **Save the Data**
 #%%
-conn = sqlite3.connect('../database.db')
-df = pd.read_sql('SELECT * FROM [saudi-arabia]', conn)
+df = pd.read_csv('../data/processed/egypt_clean.csv')
 #%%
 translate_experience(df)
 translate_type(df)
@@ -169,7 +165,7 @@ extract_remotely(df, 'skills')
 df.drop(columns=['description', 'skills'], inplace=True)
 split_num_of_exp_years(df)
 conn = sqlite3.connect('../database.db')
-# df.to_sql('saudi-arabia', con=conn, if_exists='replace', index=False)
+# df.to_sql('EGYPT', con=conn, if_exists='replace', index=False)
 conn.close()
 df.head(15)
 #%% md
@@ -188,7 +184,8 @@ df.head(15)
 #    - Sorted the titles alphabetically in ascending order.
 #%%
 conn = sqlite3.connect('../database.db')
-df = pd.read_sql('SELECT * FROM [saudi-arabia]', conn)
+df = pd.read_sql('SELECT * FROM EGYPT', conn)
+#%%
 df['title'] = df['title'].str.replace(r'^\d+\.', '', regex=True).str.strip()
 df['title'] = df['title'].str.replace(r'^a\s\b', '', regex=True).str.strip()
 df.title = df.title.str.lower()
@@ -537,5 +534,5 @@ edit_title(df, final_mapping_title)
 df.title.value_counts()
 #%%
 conn = sqlite3.connect('../database.db')
-df.to_sql('EGYPT', con=conn, if_exists='replace')
+# df.to_sql('EGYPT', con=conn, if_exists='replace')
 conn.close()
