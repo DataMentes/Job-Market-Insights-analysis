@@ -1306,21 +1306,35 @@ fig81 = plot_job_postings_by_industry(df_egy, plot_name="plot_job_postings_by_in
 #%%
 fig82 = plot_job_postings_by_industry(df_saudi, plot_name="plot_job_postings_by_industry_saudi",
                                        folder='saudi', save=False)
+#%% md
+# # ____________________________________________________________________________________
 #%%
-fig91 = analyze_job_type_distribution(df_egy, plot_name="analyze_job_type_distribution_egypt", folder='egypt')
-
+fig91 = analyze_job_type_distribution(df_egy, plot_name="analyze_job_type_distribution_egypt",
+                                      folder='egypt', save=False)
 #%%
-fig92 = analyze_job_type_distribution(df_saudi, plot_name="analyze_job_type_distribution_saudi", folder='egypt')
-
+fig92 = analyze_job_type_distribution(df_saudi, plot_name="analyze_job_type_distribution_saudi",
+                                      folder='saudi', save=False)
+#%% md
+# # ____________________________________________________________________________________
 #%%
-fig101 = compare_experience_requirements(df_egy, plot_name="compare_experience_requirements_egypt", folder='egypt')
+fig101 = compare_experience_requirements(df_egy, plot_name="compare_experience_requirements_egypt",
+                                         folder='egypt', save=False)
 #%%
-fig102 = compare_experience_requirements(df_saudi, plot_name="compare_experience_requirements_saudi", folder='egypt')
+fig102 = compare_experience_requirements(df_saudi, plot_name="compare_experience_requirements_saudi",
+                                         folder='saudi', save=False)
+#%% md
+# # ____________________________________________________________________________________
 #%%
-fig111 = jobs_heatmap_by_city_and_job_level(df_egy, plot_name="jobs_heatmap_by_city_and_job_level_egypt", folder='egypt')
+fig111 = jobs_heatmap_by_city_and_job_level(df_egy, plot_name="jobs_heatmap_by_city_and_job_level_egypt",
+                                            folder='egypt', save=False)
 #%%
-fig112 = jobs_heatmap_by_city_and_job_level(df_saudi, plot_name="jobs_heatmap_by_city_and_job_level_saudi", folder='egypt')
+fig112 = jobs_heatmap_by_city_and_job_level(df_saudi, plot_name="jobs_heatmap_by_city_and_job_level_saudi",
+                                            folder='saudi', save=False)
+#%% md
+# # ____________________________________________________________________________________
 #%%
-fig121 = plot_top_job_titles_wordcloud(df_egy, plot_name="plot_top_job_titles_wordcloud_egypt", folder='egypt')
+fig121 = plot_top_job_titles_wordcloud(df_egy, plot_name="plot_top_job_titles_wordcloud_egypt",
+                                       folder='egypt', save=False)
 #%%
-fig122 = plot_top_job_titles_wordcloud(df_saudi, plot_name="plot_top_job_titles_wordcloud_saudi", folder='egypt')
+fig122 = plot_top_job_titles_wordcloud(df_saudi, plot_name="plot_top_job_titles_wordcloud_saudi",
+                                       folder='saudi', save=False)
