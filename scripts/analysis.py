@@ -61,9 +61,9 @@ def job_distribution_by_city(df, plot_name, folder: Literal['egypt', 'saudi', 'c
     ax.tick_params(axis='x', labelsize=12)
     plt.setp(ax.get_xticklabels(), rotation=45, ha='right')
     ax.set_ylabel(get_display(arabic_reshaper.reshape('Number of Jobs')), fontsize=13)
-    ax.set_title(get_display(arabic_reshaper.reshape(f'Top {top_n} Cities by Number of Jobs')), fontsize=14)
+    ax.set_title(get_display(arabic_reshaper.reshape(f'Top {top_n} Cities by Number of Jobs {folder}')), fontsize=14)
     plt.tight_layout()
-    plt.show()
+    
 
     if save:
         path = '../visualizations/' + folder + '/' + plot_name + '.png'
@@ -126,13 +126,13 @@ def analyze_jobs_by_company(data, plot_name, folder: Literal['egypt', 'saudi', '
     sns.barplot(x=company_counts.index, y=company_counts.values, palette='viridis')
 
     # Adding titles and labels
-    ax.set_title('Number of Jobs by Company', fontsize=16)
+    ax.set_title(f'Number of Jobs by Company {folder}', fontsize=16)
     ax.set_xlabel('Company Name', fontsize=12)
     ax.set_ylabel('Number of Jobs', fontsize=12)
     plt.xticks(rotation=45, ha='right')
     plt.tight_layout()
-    # Show the plot
-    plt.show()
+    
+    
 
     if save:
         path = '../visualizations/' + folder + '/' + plot_name + '.png'
@@ -190,11 +190,11 @@ def get_top_job_titles_with_plot(data, plot_name, folder: Literal['egypt', 'saud
     # رسم المخطط باستخدام Seaborn
     fig, ax = plt.subplots(figsize=(10, 6))
     sns.barplot(data=plot_data, y='job_title', x='count', palette='magma')
-    ax.set_title(f"Top {top_n} Most Frequent Job Titles")
+    ax.set_title(f"Top {top_n} Most Frequent Job Titles {folder}")
     ax.set_xlabel("Number of Occurrences")
     ax.set_ylabel("Job Title")
     plt.tight_layout()
-    plt.show()
+    
 
     if save:
         path = '../visualizations/' + folder + '/' + plot_name + '.png'
@@ -259,9 +259,9 @@ def analyze_jobs_by_work_type(data, plot_name, folder: Literal['egypt', 'saudi',
             colors=sns.color_palette('muted'))
 
     # Add title
-    ax.set_title('Job Distribution by Work Type', fontsize=16)
+    ax.set_title(f'Job Distribution by Work Type {folder}', fontsize=16)
     plt.tight_layout()
-    plt.show()
+    
 
     if save:
         path = '../visualizations/' + folder + '/' + plot_name + '.png'
@@ -323,11 +323,11 @@ def analyze_jobs_by_gender(data, plot_name, folder: Literal['egypt', 'saudi', 'c
         plt.text(i, count + 0.5, f'{count}', ha='center', fontsize=12, color='black')
 
     # Titles and labels
-    ax.set_title('Job Distribution by Gender', fontsize=16)
+    ax.set_title(f'Job Distribution by Gender {folder}', fontsize=16)
     ax.set_xlabel('Gender', fontsize=12)
     ax.set_ylabel('Number of Jobs', fontsize=12)
     plt.tight_layout()
-    plt.show()
+    
 
     if save:
         path = '../visualizations/' + folder + '/' + plot_name + '.png'
@@ -389,12 +389,12 @@ def analyze_jobs_by_job_level(data, plot_name, folder: Literal['egypt', 'saudi',
         plt.text(i, count + 0.5, f'{count}', ha='center', fontsize=12, color='black')
 
     # Titles and labels
-    ax.set_title('Job Distribution by Job Level', fontsize=16)
+    ax.set_title(f'Job Distribution by Job Level {folder}', fontsize=16)
     ax.set_xlabel('Job Level', fontsize=12)
     ax.set_ylabel('Number of Jobs', fontsize=12)
     plt.setp(ax.get_xticklabels(), rotation=45)
     plt.tight_layout()
-    plt.show()
+    
 
     if save:
         path = '../visualizations/' + folder + '/' + plot_name + '.png'
@@ -467,13 +467,13 @@ def plot_job_trend_over_time(data, plot_name, folder: Literal['egypt', 'saudi', 
     # Plot
     fig, ax = plt.subplots(figsize=(10, 6))
     job_counts.plot(marker='o', linestyle='-')
-    ax.set_title(f'Number of Job Entries Over Time ({freq}-level)')
+    ax.set_title(f'Number of Job Entries Over Time {folder}')
     ax.set_xlabel('Date')
     ax.set_ylabel('Number of Jobs')
     # Removed grid lines
     # plt.grid(True)
     plt.tight_layout()
-    plt.show()
+    
 
     if save:
         path = '../visualizations/' + folder + '/' + plot_name + '.png'
@@ -547,7 +547,7 @@ def plot_job_postings_by_industry(df, plot_name, folder: Literal['egypt', 'saudi
         )
 
     # Formatting with Arabic text
-    ax.set_title(get_display(arabic_reshaper.reshape('The highest 10 areas declared for business opportunities')),
+    ax.set_title(get_display(arabic_reshaper.reshape(f'The highest 10 areas declared for business opportunities {folder}')),
                  fontsize=16)
     ax.set_xlabel(get_display(arabic_reshaper.reshape('Domain')), fontsize=14)
     ax.set_ylabel(get_display(arabic_reshaper.reshape('Number of jobs')), fontsize=14)
@@ -556,7 +556,7 @@ def plot_job_postings_by_industry(df, plot_name, folder: Literal['egypt', 'saudi
     ax.grid(True, linestyle='--', alpha=0.7, axis='y')
 
     plt.tight_layout()
-    plt.show()
+    
 
     if save:
         path = '../visualizations/' + folder + '/' + plot_name + '.png'
@@ -606,9 +606,9 @@ def analyze_job_type_distribution(data, plot_name, folder: Literal['egypt', 'sau
     # Show legend with name + percentage
     ax.legend(wedges, labels_with_pct, title="Job Types", loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
 
-    ax.set_title('Job Distribution by Type', fontsize=14)
+    ax.set_title(f'Job Distribution by Type {folder}', fontsize=14)
     plt.tight_layout()
-    plt.show()
+    
 
     if save:
         path = '../visualizations/' + folder + '/' + plot_name + '.png'
@@ -649,10 +649,10 @@ def compare_experience_requirements(data, plot_name, folder: Literal['egypt', 's
 
     fig, ax = plt.subplots(figsize=(10, 6))
     sns.boxplot(data=exp_df, palette='Set3')
-    ax.set_title('Comparison of Min & Max Experience Requirements', fontsize=16)
+    ax.set_title(f'Comparison of Min & Max Experience Requirements {folder}', fontsize=16)
     ax.set_ylabel('Years of Experience', fontsize=12)
     plt.tight_layout()
-    plt.show()
+    
 
     if save:
         path = '../visualizations/' + folder + '/' + plot_name + '.png'
@@ -696,9 +696,9 @@ def jobs_heatmap_by_city_and_job_level(data, plot_name, folder: Literal['egypt',
     fig, ax = plt.subplots(figsize=(12, 8))
     sns.heatmap(pivot_table, cmap='YlGnBu', annot=True, fmt='d')
     plt.xticks(rotation=-45)
-    ax.set_title('Heatmap of Job Count by City and job level')
+    ax.set_title(f'Heatmap of Job Count by City and job level {folder}')
     plt.tight_layout()
-    plt.show()
+    
 
     if save:
         path = '../visualizations/' + folder + '/' + plot_name + '.png'
@@ -741,12 +741,48 @@ def plot_top_job_titles_wordcloud(data, stopwords_list=[], save=False, plot_name
     fig, ax = plt.subplots(figsize=(12, 6))
     ax.imshow(wordcloud, interpolation='bilinear')
     ax.axis('off')
-    ax.set_title('Most Common Job Titles (Wordcloud)', fontsize=16)
+    ax.set_title(f'Most Common Job Titles (Wordcloud) {folder}', fontsize=16)
     plt.tight_layout()
-    plt.show()
+    
 
     if save:
         path = '../visualizations/' + folder + '/' + plot_name + '.png'
         fig.savefig(path)
 
     return fig
+
+
+def combine_figures(fig1, fig2, figsize=(15, 7), main_title="Combined Figure"):
+    # Create a new figure to combine both figures
+    combined_fig, (ax1, ax2) = plt.subplots(1, 2, figsize=figsize)
+
+    # Copy contents of fig1 to ax1
+    for ax in fig1.axes:
+        for artist in ax.get_children():
+            artist.remove()
+            ax1.add_artist(artist)
+        # Copy title, labels, and limits
+        ax1.set_title(ax.get_title())
+        ax1.set_xlabel(ax.get_xlabel())
+        ax1.set_ylabel(ax.get_ylabel())
+        ax1.set_xlim(ax.get_xlim())
+        ax1.set_ylim(ax.get_ylim())
+
+    # Copy contents of fig2 to ax2
+    for ax in fig2.axes:
+        for artist in ax.get_children():
+            artist.remove()
+            ax2.add_artist(artist)
+        # Copy title, labels, and limits
+        ax2.set_title(ax.get_title())
+        ax2.set_xlabel(ax.get_xlabel())
+        ax2.set_ylabel(ax.get_ylabel())
+        ax2.set_xlim(ax.get_xlim())
+        ax2.set_ylim(ax.get_ylim())
+
+    # Add the main title
+    combined_fig.suptitle(main_title, fontsize=20, fontweight='bold', y=1.05)
+
+    # Adjust layout
+    plt.tight_layout()
+    plt.show()
