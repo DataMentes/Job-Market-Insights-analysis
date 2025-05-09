@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import arabic_reshaper
@@ -9,9 +10,7 @@ from typing import Literal
 sns.set(style="whitegrid")
 
 
-
-
-def job_distribution_by_city(df, plot_name, folder: Literal['egypt', 'saudi', 'compare'], save = True, top_n=10):
+def job_distribution_by_city(df, plot_name, folder: Literal['egypt', 'saudi', 'compare'], save=True, top_n=10):
     """
     Plot and save a bar chart showing the distribution of jobs by city.
 
@@ -73,8 +72,7 @@ def job_distribution_by_city(df, plot_name, folder: Literal['egypt', 'saudi', 'c
     return fig
 
 
-
-def analyze_jobs_by_company(data, plot_name, folder: Literal['egypt', 'saudi', 'compare'], save = True, top_n=20):
+def analyze_jobs_by_company(data, plot_name, folder: Literal['egypt', 'saudi', 'compare'], save=True, top_n=20):
     """
     Analyze and visualize the number of job postings per company.
 
@@ -119,7 +117,10 @@ def analyze_jobs_by_company(data, plot_name, folder: Literal['egypt', 'saudi', '
 
     # Count the number of jobs for each company
     company_counts = data['company_name'].value_counts().head(top_n)
-
+    # Reshape Arabic text for proper display
+    company_counts.index = [
+        get_display(arabic_reshaper.reshape(company)) for company in company_counts.index
+    ]
     # Plotting the bar chart inside the function
     fig, ax = plt.subplots(figsize=(10, 6))
     sns.barplot(x=company_counts.index, y=company_counts.values, palette='viridis')
@@ -140,8 +141,7 @@ def analyze_jobs_by_company(data, plot_name, folder: Literal['egypt', 'saudi', '
     return fig
 
 
-
-def get_top_job_titles_with_plot(data, plot_name, folder: Literal['egypt', 'saudi', 'compare'], save = True, top_n=10):
+def get_top_job_titles_with_plot(data, plot_name, folder: Literal['egypt', 'saudi', 'compare'], save=True, top_n=10):
     """
     Generate and visualize the top most frequent job titles from the dataset.
 
@@ -203,8 +203,7 @@ def get_top_job_titles_with_plot(data, plot_name, folder: Literal['egypt', 'saud
     return fig
 
 
-
-def analyze_jobs_by_work_type(data, plot_name, folder: Literal['egypt', 'saudi', 'compare'], save = True):
+def analyze_jobs_by_work_type(data, plot_name, folder: Literal['egypt', 'saudi', 'compare'], save=True):
     """
     Analyze and visualize the distribution of jobs by work type (e.g., Remote, On-site).
 
@@ -271,9 +270,7 @@ def analyze_jobs_by_work_type(data, plot_name, folder: Literal['egypt', 'saudi',
     return fig
 
 
-
-
-def analyze_jobs_by_time(data, plot_name, folder: Literal['egypt', 'saudi', 'compare'], save = True):
+def analyze_jobs_by_time(data, plot_name, folder: Literal['egypt', 'saudi', 'compare'], save=True):
     """
     Analyze and visualize the distribution of job postings over time (by month).
 
@@ -355,8 +352,7 @@ def analyze_jobs_by_time(data, plot_name, folder: Literal['egypt', 'saudi', 'com
     return fig
 
 
-
-def analyze_jobs_by_gender(data, plot_name, folder: Literal['egypt', 'saudi', 'compare'], save = True):
+def analyze_jobs_by_gender(data, plot_name, folder: Literal['egypt', 'saudi', 'compare'], save=True):
     """
     Analyze and visualize the distribution of job postings by gender preference.
 
@@ -422,8 +418,7 @@ def analyze_jobs_by_gender(data, plot_name, folder: Literal['egypt', 'saudi', 'c
     return fig
 
 
-
-def analyze_jobs_by_job_level(data, plot_name, folder: Literal['egypt', 'saudi', 'compare'], save = True):
+def analyze_jobs_by_job_level(data, plot_name, folder: Literal['egypt', 'saudi', 'compare'], save=True):
     """
     Analyze and visualize the distribution of job postings by job level.
 
@@ -490,7 +485,7 @@ def analyze_jobs_by_job_level(data, plot_name, folder: Literal['egypt', 'saudi',
     return fig
 
 
-def plot_job_trend_over_time(data, plot_name, folder: Literal['egypt', 'saudi', 'compare'], save = True, freq='M'):
+def plot_job_trend_over_time(data, plot_name, folder: Literal['egypt', 'saudi', 'compare'], save=True, freq='M'):
     """
     Plot the trend of job postings over time with a specified frequency (e.g., monthly or daily).
 
@@ -569,8 +564,7 @@ def plot_job_trend_over_time(data, plot_name, folder: Literal['egypt', 'saudi', 
     return fig
 
 
-
-def plot_monthly_job_boxplot(data, plot_name, folder: Literal['egypt', 'saudi', 'compare'], save = True):
+def plot_monthly_job_boxplot(data, plot_name, folder: Literal['egypt', 'saudi', 'compare'], save=True):
     """
     Generate a boxplot showing the daily distribution of job entries by month.
 
@@ -642,7 +636,7 @@ def plot_monthly_job_boxplot(data, plot_name, folder: Literal['egypt', 'saudi', 
     return fig
 
 
-def plot_job_postings_by_industry(df, plot_name, folder: Literal['egypt', 'saudi', 'compare'], save = True):
+def plot_job_postings_by_industry(df, plot_name, folder: Literal['egypt', 'saudi', 'compare'], save=True):
     """
     Plot the top 10 industries by number of job postings with support for Arabic text display.
 
@@ -707,7 +701,8 @@ def plot_job_postings_by_industry(df, plot_name, folder: Literal['egypt', 'saudi
         )
 
     # Formatting with Arabic text
-    ax.set_title(get_display(arabic_reshaper.reshape('The highest 10 areas declared for business opportunities')), fontsize=16)
+    ax.set_title(get_display(arabic_reshaper.reshape('The highest 10 areas declared for business opportunities')),
+                 fontsize=16)
     ax.set_xlabel(get_display(arabic_reshaper.reshape('Domain')), fontsize=14)
     ax.set_ylabel(get_display(arabic_reshaper.reshape('Number of jobs')), fontsize=14)
     ax.tick_params(axis='x', labelsize=12)
@@ -716,7 +711,6 @@ def plot_job_postings_by_industry(df, plot_name, folder: Literal['egypt', 'saudi
 
     plt.tight_layout()
     plt.show()
-
 
     if save:
         path = '../visualizations/' + folder + '/' + plot_name + '.png'
@@ -727,7 +721,7 @@ def plot_job_postings_by_industry(df, plot_name, folder: Literal['egypt', 'saudi
 
 def analyze_job_type_distribution(data, plot_name, folder: Literal['egypt', 'saudi', 'compare'], save=True):
     """
-    Analyze the distribution of job types and plot a pie chart with a clean legend.
+    Analyze the distribution of job types and plot a pie chart with percentages outside and arrows.
 
     Parameters:
     -----------
@@ -751,44 +745,46 @@ def analyze_job_type_distribution(data, plot_name, folder: Literal['egypt', 'sau
     sizes = type_counts.values
     percentages = [f"{(count / total) * 100:.4f}%" for count in sizes]
 
-    # Labels in legend: JobName (xx.xxxx%)
-    labels_with_pct = [f"{name} ({pct})" for name, pct in zip(raw_labels, percentages)]
+    colors = sns.color_palette('pastel', len(raw_labels))
 
-    colors = sns.color_palette('pastel', len(labels_with_pct))
-
-    # Define custom function to show 4 decimal places in pie
-    def make_autopct(values):
-        def my_autopct(pct):
-            total = sum(values)
-            val = int(round(pct * total / 100.0))
-            return f'{pct:.4f}%'
-        return my_autopct
-
-    fig, ax = plt.subplots(figsize=(8, 6))
-    wedges, _, autotexts = ax.pie(
+    fig, ax = plt.subplots(figsize=(10, 7))
+    wedges, _, _ = ax.pie(
         sizes,
-        autopct=make_autopct(sizes),
         startangle=140,
         colors=colors,
-        textprops={'fontsize': 10},
-        pctdistance=0.8
+        wedgeprops=dict(width=0.6, edgecolor='w')  # Optional: adjust wedge styling
     )
 
-    # Rotate inside numbers
-    for autotext in autotexts:
-        autotext.set_rotation(-45)
+    # Add annotations with arrows
+    for i, wedge in enumerate(wedges):
+        theta = (wedge.theta1 + wedge.theta2) / 2
+        theta_rad = np.deg2rad(theta)
+        xy = (np.cos(theta_rad), np.sin(theta_rad))  # Point on the wedge edge
+        xytext = (np.cos(theta_rad) * 1.3, np.sin(theta_rad) * 1.3)  # Text position outside
 
-    # Show legend with name + 4-digit percentage
-    ax.legend(wedges, labels_with_pct, title="Job Types", loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
+        ax.annotate(
+            percentages[i],
+            xy=xy,
+            xytext=xytext,
+            textcoords='axes fraction',
+            ha='center',
+            va='center',
+            fontsize=10,
+            arrowprops=dict(arrowstyle="-|>", connectionstyle="arc3", color="black"),
+            bbox=dict(boxstyle="round", fc="white", ec="black", pad=0.3)
+        )
 
-    ax.set_title('Job Distribution by Type', fontsize=14)
+    # Legend with job names only
+    ax.legend(wedges, raw_labels, title="Job Types", loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
+
+    ax.set_title('Job Distribution by Type', fontsize=14, pad=20)
     plt.tight_layout()
-    plt.show()
 
     if save:
         path = f'../visualizations/{folder}/{plot_name}.png'
-        fig.savefig(path, bbox_inches='tight')
+        fig.savefig(path, bbox_inches='tight', dpi=300)
 
+    plt.show()
     return fig
 
 def compare_experience_requirements(data, plot_name, folder: Literal['egypt', 'saudi', 'compare'], save=True):
@@ -835,6 +831,7 @@ def compare_experience_requirements(data, plot_name, folder: Literal['egypt', 's
 
     return fig
 
+
 def jobs_heatmap_by_city_and_job_level(data, plot_name, folder: Literal['egypt', 'saudi', 'compare'], save=True):
     """
     Create a heatmap of job counts by city and job type.
@@ -879,6 +876,7 @@ def jobs_heatmap_by_city_and_job_level(data, plot_name, folder: Literal['egypt',
         fig.savefig(path)
 
     return fig
+
 
 def plot_top_job_titles_wordcloud(data, stopwords_list=[], save=False, plot_name='wordcloud', folder='egypt'):
     """
