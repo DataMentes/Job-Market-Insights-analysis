@@ -835,7 +835,7 @@ def compare_experience_requirements(data, plot_name, folder: Literal['egypt', 's
 
     return fig
 
-def jobs_heatmap_by_city_and_type(data, plot_name, folder: Literal['egypt', 'saudi', 'compare'], save=True):
+def jobs_heatmap_by_city_and_job_level(data, plot_name, folder: Literal['egypt', 'saudi', 'compare'], save=True):
     """
     Create a heatmap of job counts by city and job type.
 
@@ -858,7 +858,7 @@ def jobs_heatmap_by_city_and_type(data, plot_name, folder: Literal['egypt', 'sau
     matplotlib.figure.Figure
         The generated Figure object.
     """
-    pivot_table = pd.pivot_table(data, index='city', columns='type', aggfunc='size', fill_value=0)
+    pivot_table = pd.pivot_table(data, index='city', columns='job_level', aggfunc='size', fill_value=0)
 
     # Convert index and columns to Arabic for display
     reshaped_index = [get_display(arabic_reshaper.reshape(city)) for city in pivot_table.index]
@@ -869,7 +869,8 @@ def jobs_heatmap_by_city_and_type(data, plot_name, folder: Literal['egypt', 'sau
 
     fig, ax = plt.subplots(figsize=(12, 8))
     sns.heatmap(pivot_table, cmap='YlGnBu', annot=True, fmt='d')
-    ax.set_title('Heatmap of Job Count by City and Type')
+    plt.xticks(rotation=-45)
+    ax.set_title('Heatmap of Job Count by City and job level')
     plt.tight_layout()
     plt.show()
 
