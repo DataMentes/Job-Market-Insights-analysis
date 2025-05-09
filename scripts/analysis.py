@@ -611,7 +611,7 @@ def analyze_job_type_distribution(data, plot_name, folder: Literal['egypt', 'sau
     plt.show()
 
     if save:
-        path = f'../visualizations/{folder}/{plot_name}.png'
+        path = '../visualizations/' + folder + '/' + plot_name + '.png'
         fig.savefig(path, bbox_inches='tight')
 
     return fig
@@ -655,7 +655,7 @@ def compare_experience_requirements(data, plot_name, folder: Literal['egypt', 's
     plt.show()
 
     if save:
-        path = f'../visualizations/{folder}/{plot_name}.png'
+        path = '../visualizations/' + folder + '/' + plot_name + '.png'
         fig.savefig(path)
 
     return fig
@@ -701,7 +701,7 @@ def jobs_heatmap_by_city_and_job_level(data, plot_name, folder: Literal['egypt',
     plt.show()
 
     if save:
-        path = f'../visualizations/{folder}/{plot_name}.png'
+        path = '../visualizations/' + folder + '/' + plot_name + '.png'
         fig.savefig(path)
 
     return fig
@@ -746,7 +746,7 @@ def plot_top_job_titles_wordcloud(data, stopwords_list=[], save=False, plot_name
     plt.show()
 
     if save:
-        path = f"../visualizations/{folder}/{plot_name}.png"
+        path = '../visualizations/' + folder + '/' + plot_name + '.png'
         fig.savefig(path)
 
     return fig
