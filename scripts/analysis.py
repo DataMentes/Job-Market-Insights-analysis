@@ -750,39 +750,3 @@ def plot_top_job_titles_wordcloud(data, stopwords_list=[], save=False, plot_name
         fig.savefig(path)
 
     return fig
-
-
-def combine_figures(fig1, fig2, figsize=(15, 7), main_title="Combined Figure"):
-    # Create a new figure to combine both figures
-    combined_fig, (ax1, ax2) = plt.subplots(1, 2, figsize=figsize)
-
-    # Copy contents of fig1 to ax1
-    for ax in fig1.axes:
-        for artist in ax.get_children():
-            artist.remove()
-            ax1.add_artist(artist)
-        # Copy title, labels, and limits
-        ax1.set_title(ax.get_title())
-        ax1.set_xlabel(ax.get_xlabel())
-        ax1.set_ylabel(ax.get_ylabel())
-        ax1.set_xlim(ax.get_xlim())
-        ax1.set_ylim(ax.get_ylim())
-
-    # Copy contents of fig2 to ax2
-    for ax in fig2.axes:
-        for artist in ax.get_children():
-            artist.remove()
-            ax2.add_artist(artist)
-        # Copy title, labels, and limits
-        ax2.set_title(ax.get_title())
-        ax2.set_xlabel(ax.get_xlabel())
-        ax2.set_ylabel(ax.get_ylabel())
-        ax2.set_xlim(ax.get_xlim())
-        ax2.set_ylim(ax.get_ylim())
-
-    # Add the main title
-    combined_fig.suptitle(main_title, fontsize=20, fontweight='bold', y=1.05)
-
-    # Adjust layout
-    plt.tight_layout()
-    plt.show()

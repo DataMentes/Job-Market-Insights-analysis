@@ -1038,303 +1038,1004 @@ df_egy['title'].value_counts().head()
 #%%
 df_saudi['title'].value_counts().head()
 #%% md
-# ##  Visualization 1: Top 10 Cities by Number of Jobs
+# # Analysis and Explanation of Plots
+#%% md
+# ### **Plot 1: Top 10 Cities by Number of Jobs (Egypt)**
 # 
-# ### Description:
-# A vertical bar chart displaying the number of job listings in the top 10 Egyptian cities.
+# #### **Description**
+# - This bar chart shows the top 10 cities in Egypt based on the number of jobs available.
+# - The x-axis represents the names of the cities, while the y-axis represents the number of jobs.
+# - The cities are listed from left to right in descending order of job availability.
 # 
-# ###  Key Insights:
+# #### **Key Observations**
+# 1. **Cairo** has the highest number of jobs, with over 2,000 jobs, making it the dominant city.
+# 2. **Alexandria** follows as the second city with approximately 100 jobs.
+# 3. Other cities such as **New Cairo**, **Sharm El-Sheikh**, **Matrouh**, **Aswan**, **Luxor**, **Giza**, and **Suez** have very low job availability, with most having fewer than 50 jobs.
 # 
-# 1. **Cairo is the Undisputed Hub:**
-#    - Cairo alone accounts for the vast majority of job postings (over 2,000).
-#    - Reflects its status as the economic and business capital of Egypt.
+# #### **Meaning**
+# - Cairo is the capital and largest city in Egypt, serving as the country's political, economic, and cultural center, which explains its high job availability.
+# - Alexandria, as the second-largest city, offers some job opportunities but is far behind Cairo.
+# - Smaller cities like Sharm El-Sheikh, Matrouh, and Aswan have minimal job opportunities, likely due to their smaller populations and more specialized economies (e.g., tourism).
 # 
-# 2. **Limited Opportunities in Other Cities:**
-#    - Alexandria comes second, but with a significantly lower count (~100+).
-#    - All other cities (like New Alamein, Sharm El Sheikh, Luxor, etc.) have minimal job postings.
-#    - Suggests a high centralization of employment opportunities in the capital.
+# ---
 # 
-# 3. **Implications:**
-#    - Indicates potential internal migration toward Cairo for job seekers.
-#    - May signal the need for investment in decentralizing job markets and regional development.
+# ### **Plot 2: Top 10 Cities by Number of Jobs (Saudi Arabia)**
 # 
-# ###  Overall Takeaway:
-# > Cairo dominates the job market in Egypt, with a steep drop-off in job availability in other cities, highlighting urban centralization and regional imbalance in employment opportunities.
+# #### **Description**
+# - This bar chart shows the top 10 cities in Saudi Arabia based on the number of jobs available.
+# - The x-axis represents the names of the cities, while the y-axis represents the number of jobs.
+# - The cities are listed from left to right in descending order of job availability.
 # 
+# #### **Key Observations**
+# 1. **Riyadh** has the highest number of jobs, significantly outperforming other cities with over 2,000 jobs.
+# 2. **Jeddah** follows as the second city with approximately 500 jobs.
+# 3. **Dammam**, **Khobar**, and **Sharqia** have moderate numbers of jobs, ranging from 100 to 300.
+# 4. The remaining cities (**Al-Madinah Al-Munawarah**, **Qatif**, **Jizan**, **Tabuk**, and **Makkah**) have relatively low job availability, with most having fewer than 100 jobs.
+# 
+# #### **Meaning**
+# - Riyadh is the economic and political hub of Saudi Arabia, which explains its dominance in job availability.
+# - Jeddah, being a major port city and financial center, also offers a substantial number of jobs.
+# - Smaller cities like Qatif, Jizan, and Tabuk have limited job opportunities, likely due to their size and economic focus.
+# 
+# ---
+# 
+# ### **Comparison Between the Two Plots**
+# 
+# #### **Similarities**
+# 1. **Dominance of Capital Cities**:
+#    - In both countries, the capital cities (Riyadh for Saudi Arabia and Cairo for Egypt) have the highest number of jobs, highlighting their central role in the economy.
+# 2. **Skewed Distribution**:
+#    - Both plots show a highly skewed distribution, where a few cities dominate job availability, while the majority have very low numbers.
+# 3. **Economic Hubs**:
+#    - Major economic hubs (e.g., Jeddah in Saudi Arabia and Alexandria in Egypt) offer significant job opportunities but are still far behind the capital cities.
+# 
+# #### **Differences**
+# 1. **Second-Largest City Job Availability**:
+#    - In Saudi Arabia, Jeddah offers around 500 jobs, which is a substantial number.
+#    - In Egypt, Alexandria offers only about 100 jobs, indicating a much lower secondary hub compared to Saudi Arabia.
+# 2. **Overall Job Distribution**:
+#    - Saudi Arabia has a broader distribution of jobs across multiple cities (e.g., Dammam, Khobar, Sharqia), whereas Egypt's job market is heavily centralized in Cairo.
+# 3. **Smaller Cities**:
+#    - In Saudi Arabia, smaller cities like Qatif, Jizan, and Tabuk still have some job availability, albeit low.
+#    - In Egypt, smaller cities like Sharm El-Sheikh, Matrouh, and Aswan have almost negligible job opportunities.
+# 
+# #### **Conclusion**
+# - Both Saudi Arabia and Egypt exhibit a strong concentration of jobs in their capital cities, reflecting their economic and political significance.
+# - However, Saudi Arabia shows a slightly more diversified job market across multiple cities, while Egypt's job market is heavily centralized in Cairo, with minimal opportunities elsewhere.
 #%%
 fig11 = job_distribution_by_city(df_egy[df_egy['city'] != 'Unknown'],
                                  plot_name="job_distribution_by_city_egypt", folder='egypt',
                                  top_n=10, save=False)
-#%%
 fig12 = job_distribution_by_city(df_saudi[df_saudi['city'] != 'Unknown'],
                                  plot_name="job_distribution_by_city_saudi", folder='saudi',
                                  top_n=10, save=False)
 #%% md
-# ## Visualization 2: Number of Jobs by Company
+# ### **Plot 1: Number of Jobs by Company (Egypt)**
 # 
-# ### Description:
-# A vertical bar chart illustrating how many job postings come from each company.
+# #### **Description**
+# - This bar chart shows the number of jobs offered by different companies in Egypt.
+# - The x-axis represents the names of the companies, while the y-axis represents the number of jobs.
+# - The companies are listed from left to right in descending order of job availability.
 # 
-# ### Key Insights:
+# #### **Key Observations**
+# 1. **Talent 360** has the highest number of jobs, with over 290 jobs, making it the dominant employer.
+# 2. **SSC - Egypt** follows as the second company with approximately 180 jobs.
+# 3. **Vodafone - Egypt**, **Giza Systems**, and **Orange - Other locations** have moderate numbers of jobs, ranging from 100 to 120.
+# 4. Other companies such as **Raya Holding for Financial Investments**, **swatX Solutions**, and **ProjectGrowth** offer around 50 to 100 jobs.
+# 5. Smaller companies like **RAWAJ**, **Delivery Hero SE**, **ElsewedyElectric**, and **Tagaddod** have relatively low job availability, with most having fewer than 50 jobs.
 # 
-# 1. **Talent 360 Dominates the Market:**
-#    - Over 250 job postings — far ahead of any other company.
-#    - Likely a recruitment firm or aggregator serving multiple clients.
+# #### **Meaning**
+# - **Talent 360** appears to be a major player in the Egyptian job market, possibly due to its focus on recruitment or staffing services.
+# - Companies like **SSC - Egypt** and **Vodafone - Egypt** are significant employers, reflecting the importance of technology and telecommunications in Egypt's economy.
+# - The presence of international brands (e.g., Vodafone) and local companies (e.g., Giza Systems) highlights a diverse job market.
+# - Smaller companies have limited job offerings, indicating a fragmented job landscape outside the top employers.
 # 
-# 2. **High Activity from Tech and Telecom Firms:**
-#    - Notable companies include Vodafone Egypt, Giza Systems, Orange, and Accenture.
-#    - Reflects strong demand for digital and telecom roles.
+# ---
 # 
-# 3. **Diverse but Uneven Sector Representation:**
-#    - Other sectors also visible:
-#      - Real Estate: Palm Hills, Arabia Group
-#      - Tourism: Grand Rotana Resort
-#      - Industrial: Siemens, Schneider Electric
-#    - Shows a variety of industries are hiring, but the majority of roles are concentrated in tech and recruitment.
+# ### **Plot 2: Number of Jobs by Company (Saudi Arabia)**
 # 
-# ### Overall Takeaway:
-# > Tech and staffing companies are leading job providers, while other sectors like real estate, tourism, and manufacturing contribute modestly to the hiring landscape.
+# #### **Description**
+# - This bar chart shows the number of jobs offered by different companies in Saudi Arabia.
+# - The x-axis represents the names of the companies, while the y-axis represents the number of jobs.
+# - The companies are listed from left to right in descending order of job availability.
+# 
+# #### **Key Observations**
+# 1. **Saudi Aramco** has the highest number of jobs, significantly outperforming other companies with over 200 jobs.
+# 2. **InterContinental Hotels Group** follows as the second company with approximately 180 jobs.
+# 3. **Jobs for Humanity**, **HILL INTERNATIONAL**, and **JASARA PMC** have moderate numbers of jobs, ranging from 120 to 170.
+# 4. Other companies such as **NEOM**, **Eram Talent**, **Antal International**, and **Bechtel Corporation** offer around 50 to 70 jobs.
+# 5. Smaller companies like **Arthur Lawrence**, **WorleyParsons**, **Giza Arabia**, and **Ash International** have relatively low job availability, with most having fewer than 50 jobs.
+# 
+# #### **Meaning**
+# - **Saudi Aramco**, being one of the largest oil companies globally and a major employer in Saudi Arabia, dominates the job market.
+# - Companies like **InterContinental Hotels Group** and **Jobs for Humanity** also play significant roles in providing employment opportunities.
+# - The presence of international companies (e.g., Bechtel Corporation) indicates a mix of local and global businesses contributing to the job market.
+# - Smaller companies have limited job offerings, reflecting a more fragmented job market outside the top employers.
+# 
+# ---
+# 
+# ### **Comparison Between the Two Plots**
+# 
+# #### **Similarities**
+# 1. **Dominance of Leading Employers**:
+#    - In both countries, a few leading companies dominate the job market. For example, **Saudi Aramco** in Saudi Arabia and **Talent 360** in Egypt have significantly higher job counts compared to other companies.
+# 2. **Skewed Distribution**:
+#    - Both plots show a highly skewed distribution, where a few companies offer the majority of jobs, while the rest have relatively low job availability.
+# 3. **Presence of International Companies**:
+#    - Both countries have international companies (e.g., Bechtel Corporation in Saudi Arabia and Vodafone in Egypt) contributing to the job market.
+# 
+# #### **Differences**
+# 1. **Leading Employer Job Availability**:
+#    - In Saudi Arabia, **Saudi Aramco** offers over 200 jobs, which is substantial but not as high as **Talent 360** in Egypt, which offers over 290 jobs.
+#    - The second-largest employer in Saudi Arabia (**InterContinental Hotels Group**) offers around 180 jobs, while in Egypt, **SSC - Egypt** offers around 180 jobs.
+# 2. **Overall Job Distribution**:
+#    - Saudi Arabia has a more diversified job market with several companies offering moderate job opportunities (e.g., NEOM, Eram Talent).
+#    - Egypt has a more concentrated job market, with a few large employers (e.g., Talent 360, SSC - Egypt) dominating, while smaller companies have very limited job availability.
+# 3. **Smaller Companies**:
+#    - In Saudi Arabia, smaller companies like **Arthur Lawrence** and **WorleyParsons** still have some job availability, albeit low.
+#    - In Egypt, smaller companies like **RAWAJ** and **Delivery Hero SE** have almost negligible job opportunities, indicating a more fragmented job market.
+# 
+# #### **Conclusion**
+# - Both Saudi Arabia and Egypt exhibit a strong concentration of jobs in a few leading companies, reflecting their economic significance.
+# - However, Saudi Arabia shows a slightly more diversified job market across multiple companies, while Egypt's job market is heavily centralized in a few large employers, with minimal opportunities elsewhere.
 # 
 #%%
 fig21 = analyze_jobs_by_company(df_egy, plot_name="analyze_jobs_by_company_egypt", folder='egypt',
                                 save=False)
-#%%
 fig22 = analyze_jobs_by_company(df_saudi, plot_name="analyze_jobs_by_company_saudi", folder='saudi',
                                 save=False)
 #%% md
-# ## Visualization 3: Top 10 Most Frequent Job Titles
+# ### **Plot 1: Top 10 Most Frequent Job Titles (Egypt)**
 # 
-# ### Description:
-# A horizontal bar chart showing the most commonly listed job titles in the dataset based on the number of occurrences.
+# #### **Description**
+# - This horizontal bar chart shows the top 10 most frequent job titles in Egypt based on the number of occurrences.
+# - The y-axis represents the job titles, while the x-axis represents the number of occurrences.
+# - The job titles are listed from top to bottom in descending order of frequency.
 # 
-# ### Key Insights:
+# #### **Key Observations**
+# 1. **Accountant** is the most frequent job title, with over 80 occurrences.
+# 2. **Business Analyst** follows closely with approximately 65 occurrences.
+# 3. **Account Manager** is the third most frequent job title, with around 60 occurrences.
+# 4. **Support Engineer** and **Graphic Design** have moderate frequencies, with around 40 and 38 occurrences, respectively.
+# 5. Other job titles such as **Software Engineer**, **Customer Service**, **Sales Manager**, **Product Manager**, and **Marketing Manager** have relatively lower frequencies, ranging from 27 to 35 occurrences.
 # 
-# 1. **Strong Demand for Accounting Roles:**
-#    - 5 of the top 10 job titles are finance/accounting-related:
-#      - Accountant
-#      - Senior Accountant
-#      - Finance Manager
-#      - Junior Accountant
-#      - Chief Accountant
-#    - Indicates a significant demand in the job market for financial expertise.
+# #### **Meaning**
+# - **Accounting roles** (e.g., Accountant, Account Manager) are highly prevalent, indicating a strong demand for financial expertise in the Egyptian job market.
+# - **Business Analyst** and **Support Engineer** roles suggest a focus on data analysis and technical support, reflecting the growing importance of technology and analytics.
+# - The presence of graphic design and software engineering roles highlights the significance of creative and IT sectors in Egypt.
+# - Customer service and sales roles indicate a focus on client interaction and relationship management.
 # 
-# 2. **Data and Analytics Roles Are Rising:**
-#    - Positions like Senior Business Analyst and Data Engineer appear in the top 10.
-#    - Shows increasing importance of data-driven decision-making.
+# ---
 # 
-# 3. **Support and Creative Roles Are Present:**
-#    - Executive Assistant and Graphic Designer made the list.
-#    - Suggests administrative and creative skills are still needed, though in smaller volumes.
+# ### **Plot 2: Top 10 Most Frequent Job Titles (Saudi Arabia)**
 # 
-# ### Overall Takeaway:
-# > The job market is currently dominated by finance-related positions, with a growing interest in data and analytics, and a continuing (but smaller) need for creative and support roles.
+# #### **Description**
+# - This horizontal bar chart shows the top 10 most frequent job titles in Saudi Arabia based on the number of occurrences.
+# - The y-axis represents the job titles, while the x-axis represents the number of occurrences.
+# - The job titles are listed from top to bottom in descending order of frequency.
 # 
+# #### **Key Observations**
+# 1. **Sales Manager** is the most frequent job title, with over 85 occurrences.
+# 2. **Account Manager** follows closely with approximately 85 occurrences.
+# 3. **Accountant** is the third most frequent job title, with around 80 occurrences.
+# 4. **Mechanical Engineer** and **Civil Engineer** have moderate frequencies, with around 45 occurrences each.
+# 5. Other job titles such as **Business Development Manager**, **Sales Executive**, **Marketing Manager**, **Account Executive**, and **Sales Representative** have relatively lower frequencies, ranging from 40 to 45 occurrences.
+# 
+# #### **Meaning**
+# - **Sales-related roles** (e.g., Sales Manager, Account Manager) are highly prevalent, indicating a strong focus on sales and customer engagement in the Saudi Arabian job market.
+# - **Accounting and engineering roles** (e.g., Accountant, Mechanical Engineer, Civil Engineer) are also common, reflecting the importance of these fields in industries like construction, finance, and manufacturing.
+# - The presence of business development and marketing roles suggests a focus on growth and strategic planning within organizations.
+# 
+# ---
+# 
+# ### **Comparison Between the Two Plots**
+# 
+# #### **Similarities**
+# 1. **Dominance of Accounting Roles**:
+#    - In both countries, **Accountant** and **Account Manager** are among the top job titles, highlighting the importance of financial roles in both markets.
+# 2. **Presence of Sales Roles**:
+#    - Both plots show significant occurrences of sales-related roles (e.g., Sales Manager, Account Manager).
+# 3. **Moderate Frequency of Technical Roles**:
+#    - Both countries have moderate occurrences of technical roles, such as engineers (Mechanical Engineer, Civil Engineer in Saudi Arabia; Support Engineer, Software Engineer in Egypt).
+# 
+# #### **Differences**
+# 1. **Most Frequent Job Title**:
+#    - In Saudi Arabia, **Sales Manager** is the most frequent job title, emphasizing a strong focus on sales.
+#    - In Egypt, **Accountant** is the most frequent job title, indicating a greater emphasis on financial roles.
+# 2. **Focus on Specific Industries**:
+#    - Saudi Arabia shows a stronger focus on engineering roles (e.g., Mechanical Engineer, Civil Engineer), reflecting its industrial and infrastructure development.
+#    - Egypt has a higher prevalence of roles related to technology and creativity (e.g., Business Analyst, Graphic Design, Software Engineer).
+# 3. **Variation in Secondary Roles**:
+#    - In Saudi Arabia, secondary roles include **Account Manager**, **Accountant**, and **Mechanical Engineer**.
+#    - In Egypt, secondary roles include **Business Analyst**, **Account Manager**, and **Support Engineer**.
+# 
+# #### **Conclusion**
+# - Both Saudi Arabia and Egypt exhibit a strong demand for accounting and sales roles, reflecting their importance across various industries.
+# - However, Saudi Arabia shows a more pronounced focus on engineering and sales, likely due to its industrial and economic structure.
+# - Egypt, on the other hand, demonstrates a greater emphasis on technology, analytics, and creative roles, indicating a different set of industry priorities.
 #%%
 fig31 = get_top_job_titles_with_plot(df_egy, plot_name="get_top_job_titles_with_plot_egypt",
                                      folder='egypt', save=False)
-#%%
 fig32 = get_top_job_titles_with_plot(df_saudi, plot_name="get_top_job_titles_with_plot_saudi",
                                      folder='saudi', save=False)
 #%% md
-# ##  Visualization 4: Job Distribution by Work Type
+# ### **Plot 1: Job Distribution by Work Type (Egypt)**
 # 
-# ### Description:
-# A pie chart showing the percentage distribution of jobs based on their work format (On-site, Remote, Hybrid).
+# #### **Description**
+# - This pie chart shows the distribution of job types based on work arrangements in Egypt.
+# - The chart is divided into three segments:
+#   - **On-site**: Jobs that require physical presence at a workplace.
+#   - **Remote**: Jobs that can be performed entirely from a remote location.
+#   - **Hybrid**: Jobs that combine both on-site and remote work.
 # 
-# ###  Key Insights:
+# #### **Key Observations**
+# 1. **On-site** jobs dominate the distribution, accounting for **86.5%** of the total jobs.
+# 2. **Remote** jobs make up **9.9%** of the total jobs.
+# 3. **Hybrid** jobs have the smallest share, representing only **3.6%** of the total jobs.
 # 
-# 1. **Overwhelming Majority are On-site Jobs:**
-#    - 88.6% of listings are for on-site positions.
-#    - Implies that traditional office presence is still dominant in Egypt.
+# #### **Meaning**
+# - The overwhelming majority of jobs in Egypt are **on-site**, indicating that most employers prefer or require employees to work physically at a workplace.
+# - **Remote** jobs represent a small but notable portion of the job market, suggesting some flexibility in work arrangements but not as prevalent as on-site roles.
+# - **Hybrid** jobs are minimal, reflecting limited adoption of flexible work models that combine both on-site and remote work.
 # 
-# 2. **Remote and Hybrid Work Are Very Limited:**
-#    - Only 7.4% remote and 4.0% hybrid roles.
-#    - Indicates slow adoption of flexible work models.
+# ---
 # 
-# 3. **Implications:**
-#    - May be due to lack of infrastructure, cultural preferences, or the nature of jobs requiring physical presence.
-#    - A gap exists compared to global trends favoring hybrid and remote work, especially post-COVID.
+# ### **Plot 2: Job Distribution by Work Type (Saudi Arabia)**
 # 
-# ### Overall Takeaway:
-# > The job market in Egypt is still heavily reliant on on-site roles, with minimal adoption of remote or hybrid work formats, highlighting a lag in workplace flexibility.
+# #### **Description**
+# - This pie chart shows the distribution of job types based on work arrangements in Saudi Arabia.
+# - The chart is divided into three segments:
+#   - **On-site**: Jobs that require physical presence at a workplace.
+#   - **Remote**: Jobs that can be performed entirely from a remote location.
+#   - **Hybrid**: Jobs that combine both on-site and remote work.
+# 
+# #### **Key Observations**
+# 1. **On-site** jobs dominate the distribution, accounting for **93.0%** of the total jobs.
+# 2. **Remote** jobs make up **3.4%** of the total jobs.
+# 3. **Hybrid** jobs have a slightly larger share compared to Egypt, representing **3.5%** of the total jobs.
+# 
+# #### **Meaning**
+# - Similar to Egypt, **on-site** jobs are overwhelmingly dominant in Saudi Arabia, indicating a strong preference for physical workplace attendance.
+# - **Remote** jobs are even less prevalent in Saudi Arabia compared to Egypt, suggesting fewer opportunities for fully remote work.
+# - **Hybrid** jobs show a slightly higher proportion than in Egypt, indicating a marginal increase in the adoption of flexible work models.
+# 
+# ---
+# 
+# ### **Comparison Between the Two Plots**
+# 
+# #### **Similarities**
+# 1. **Dominance of On-site Jobs**:
+#    - Both countries exhibit a strong preference for **on-site** jobs, with over 85% of jobs requiring physical presence.
+# 2. **Low Remote Jobs**:
+#    - Both countries have a very low percentage of **remote** jobs, indicating limited opportunities for fully remote work.
+# 3. **Minimal Hybrid Jobs**:
+#    - Both countries show a small share of **hybrid** jobs, reflecting limited adoption of flexible work models.
+# 
+# #### **Differences**
+# 1. **Proportion of On-site Jobs**:
+#    - In Saudi Arabia, **on-site** jobs account for **93.0%**, which is significantly higher than Egypt's **86.5%**.
+#    - This suggests a stronger emphasis on traditional workplace settings in Saudi Arabia.
+# 2. **Proportion of Remote Jobs**:
+#    - Egypt has a slightly higher percentage of **remote** jobs (9.9%) compared to Saudi Arabia (3.4%), indicating more opportunities for remote work in Egypt.
+# 3. **Proportion of Hybrid Jobs**:
+#    - Saudi Arabia has a slightly higher percentage of **hybrid** jobs (3.5%) compared to Egypt (3.6%), although both are minimal.
+# 
+# #### **Conclusion**
+# - Both Egypt and Saudi Arabia heavily favor **on-site** jobs, reflecting a traditional approach to work arrangements.
+# - However, Egypt shows a slightly higher prevalence of **remote** jobs, while Saudi Arabia demonstrates a marginally higher adoption of **hybrid** work models.
+# - Overall, both countries have limited flexibility in work arrangements, with a strong reliance on physical workplace attendance.
 # 
 #%%
 fig41 = analyze_jobs_by_work_type(df_egy, plot_name="analyze_jobs_by_work_type_egypt",
                                   folder='egypt', save=False)
-#%%
 fig42 = analyze_jobs_by_work_type(df_saudi, plot_name="analyze_jobs_by_work_type_saudi",
                                   folder='saudi', save=False)
 #%% md
-# ##  Visualization 5: Job Distribution by Month
+# ### **Plot 1: Job Distribution by Gender (Egypt)**
 # 
-# ###  Key Insights:
+# #### **Description**
+# - This bar chart shows the job distribution based on gender in Egypt.
+# - The x-axis represents the gender categories: **No Preference**, **Female**, and **Male**.
+# - The y-axis represents the number of jobs.
 # 
-# - A dominant majority (2253 jobs) have no gender preference.
-# - Female-targeted roles are 97, while male-targeted roles are just 55.
+# #### **Key Observations**
+# 1. **No Preference**:
+#    - Dominates the distribution with **3,815 jobs**, indicating that most job postings do not specify a gender preference.
+# 2. **Female**:
+#    - Has a very small share with **130 jobs**.
+# 3. **Male**:
+#    - Has an even smaller share with **64 jobs**.
 # 
-# ###  Overall Takeaway:
-# - The job market is largely gender-neutral in job listings, which may reflect a trend toward inclusivity or a focus on qualifications over demographics
+# #### **Meaning**
+# - The vast majority of job postings in Egypt are **gender-neutral** (No Preference), suggesting that employers are open to hiring candidates regardless of gender.
+# - The extremely low numbers for **Female** and **Male** indicate that gender-specific job postings are rare in Egypt.
 # 
+# ---
+# 
+# ### **Plot 2: Job Distribution by Gender (Saudi Arabia)**
+# 
+# #### **Description**
+# - This bar chart shows the job distribution based on gender in Saudi Arabia.
+# - The x-axis represents the gender categories: **No Preference**, **Male**, and **Female**.
+# - The y-axis represents the number of jobs.
+# 
+# #### **Key Observations**
+# 1. **No Preference**:
+#    - Dominates the distribution with **4,986 jobs**, indicating that most job postings do not specify a gender preference.
+# 2. **Male**:
+#    - Has a slightly higher share compared to Egypt with **274 jobs**.
+# 3. **Female**:
+#    - Has a share of **245 jobs**, which is also higher than Egypt but still relatively low.
+# 
+# #### **Meaning**
+# - Similar to Egypt, the majority of job postings in Saudi Arabia are **gender-neutral** (No Preference), showing that employers prioritize gender-inclusive hiring practices.
+# - While **Male** and **Female** specific job postings are still low, they are slightly more prevalent in Saudi Arabia compared to Egypt, indicating a marginal increase in gender-specific job opportunities.
+# 
+# ---
+# 
+# ### **Comparison Between the Two Plots**
+# 
+# #### **Similarities**
+# 1. **Dominance of No Preference**:
+#    - In both countries, the majority of job postings fall under the **No Preference** category, reflecting a strong trend toward gender-neutral job advertisements.
+# 2. **Low Gender-Specific Jobs**:
+#    - Both countries have very few job postings that specify a preference for either **Male** or **Female** candidates.
+# 
+# #### **Differences**
+# 1. **Proportion of No Preference Jobs**:
+#    - In Saudi Arabia, **No Preference** jobs account for **4,986 jobs**, which is significantly higher than Egypt's **3,815 jobs**.
+#    - This suggests that Saudi Arabia has a larger overall job market or more gender-neutral job postings.
+# 2. **Gender-Specific Jobs**:
+#    - Egypt has very low numbers for both **Female** (130 jobs) and **Male** (64 jobs).
+#    - Saudi Arabia shows slightly higher numbers for **Male** (274 jobs) and **Female** (245 jobs), indicating a marginal increase in gender-specific job opportunities compared to Egypt.
+# 
+# #### **Conclusion**
+# - Both Egypt and Saudi Arabia exhibit a strong preference for gender-neutral job postings, with the majority of jobs falling under the **No Preference** category.
+# - However, Saudi Arabia shows a slightly higher prevalence of gender-specific job postings (both Male and Female) compared to Egypt, although these numbers remain relatively low overall.
+# - This indicates a general trend toward inclusive hiring practices in both countries, with Saudi Arabia showing a marginally higher level of gender-specific job opportunities.
 #%%
 fig51 = analyze_jobs_by_gender(df_egy, plot_name="analyze_jobs_by_gender_egypt", folder='egypt',
                                save=False)
-#%%
 fig52 = analyze_jobs_by_gender(df_saudi, plot_name="analyze_jobs_by_gender_saudi", folder='saudi',
                                save=False)
 #%% md
-# ##  visualization 6 :Job Level Distribution Analysis
+# ### **Plot 1: Job Distribution by Job Level (Egypt)**
 # 
-# ###  Key Insights:
+# #### **Description**
+# - This bar chart shows the distribution of jobs based on job levels in Egypt.
+# - The x-axis represents the job levels: **Senior**, **Management**, **Junior**, **Senior Management**, **Graduate**, **Mid Level**, and **C-Suite**.
+# - The y-axis represents the number of jobs.
 # 
-# **"No Preference" Dominates**
-#   - 1,312 job postings have no specified job level.
-#   - This may indicate flexibility in hiring or a lack of clarity in role definitions.
+# #### **Key Observations**
+# 1. **Senior**:
+#    - Dominates the distribution with **843 jobs**, indicating that senior-level positions are the most prevalent.
+# 2. **Management**:
+#    - Is the second most common job level with **679 jobs**.
+# 3. **Junior**:
+#    - Has **79 jobs**, representing a moderate share.
+# 4. **Senior Management**:
+#    - Has **67 jobs**, which is relatively low compared to other levels.
+# 5. **Graduate**:
+#    - Has **52 jobs**, indicating a small but present share.
+# 6. **Mid Level**:
+#    - Has **28 jobs**, showing a very low occurrence.
+# 7. **C-Suite**:
+#    - Has only **4 jobs**, reflecting an extremely small presence.
 # 
-# - **Strong Demand for Experienced Talent**
-#   - Senior-level: 544 jobs
-#   - Management: 409 jobs
-#   - These figures highlight a clear demand for experienced and leadership-level professionals.
+# #### **Meaning**
+# - The majority of job opportunities in Egypt are concentrated at the **Senior** and **Management** levels, suggesting a strong demand for experienced professionals and managers.
+# - Entry-level positions (**Junior**, **Graduate**) and higher executive roles (**C-Suite**) are less common, indicating a limited number of opportunities for both fresh graduates and top-tier executives.
+# - Mid-level positions (**Mid Level**) also have a low representation, highlighting a potential gap in mid-career opportunities.
 # 
-# - **Limited Entry-Level Opportunities**
-#   - Junior: 54
-#   - Graduate: 27
-#   - Mid Level: 21
-#   - Opportunities for early-career candidates are noticeably fewer.
+# ---
 # 
-# - **Minimal Executive-Level Roles**
-#   - C-Suite positions: 2
-#   - These roles are naturally scarce due to their seniority and selectiveness.
+# ### **Plot 2: Job Distribution by Job Level (Saudi Arabia)**
 # 
-# ### Overall Takeaway:
-# - The job market is heavily skewed toward senior and management-level positions, with a surprising number of listings having no specified level. This may reflect a broad hiring strategy or incomplete data entry. Entry-level and executive roles are limited, indicating that companies are prioritizing experienced professionals over new graduates or top-tier executives.
+# #### **Description**
+# - This bar chart shows the distribution of jobs based on job levels in Saudi Arabia.
+# - The x-axis represents the job levels: **Mid Level**, **Management**, **Junior**, **Graduate**, **Senior**, **Senior Management**, and **C-Suite**.
+# - The y-axis represents the number of jobs.
 # 
+# #### **Key Observations**
+# 1. **Mid Level**:
+#    - Dominates the distribution with **138 jobs**, indicating that mid-level positions are the most prevalent.
+# 2. **Management**:
+#    - Is the second most common job level with **69 jobs**.
+# 3. **Junior**:
+#    - Has **28 jobs**, representing a moderate share.
+# 4. **Graduate**:
+#    - Has **22 jobs**, indicating a small but present share.
+# 5. **Senior**:
+#    - Has **11 jobs**, showing a very low occurrence.
+# 6. **Senior Management**:
+#    - Has **6 jobs**, reflecting an extremely small presence.
+# 7. **C-Suite**:
+#    - Has only **3 jobs**, indicating an even smaller number of opportunities.
+# 
+# #### **Meaning**
+# - In Saudi Arabia, **Mid Level** positions are the most common, suggesting a strong demand for professionals with some experience but not yet at the senior or management level.
+# - **Management** roles follow closely, indicating a need for middle-to-upper management skills.
+# - Entry-level positions (**Junior**, **Graduate**) and higher executive roles (**C-Suite**, **Senior Management**) are less common, similar to Egypt.
+# - Senior-level positions (**Senior**) are particularly scarce, highlighting a potential shortage of high-level leadership roles.
+# 
+# ---
+# 
+# ### **Comparison Between the Two Plots**
+# 
+# #### **Similarities**
+# 1. **Dominance of Higher-Level Positions**:
+#    - Both countries show a strong preference for higher-level positions such as **Senior** (in Egypt) and **Mid Level** (in Saudi Arabia).
+# 2. **Low Representation of C-Suite and Senior Management**:
+#    - Both countries have very few job openings for **C-Suite** and **Senior Management** roles, indicating a limited number of top-tier executive positions.
+# 3. **Moderate Presence of Entry-Level Jobs**:
+#    - Both countries have a moderate number of **Junior** and **Graduate** positions, suggesting opportunities for early-career professionals.
+# 
+# #### **Differences**
+# 1. **Most Common Job Level**:
+#    - In Egypt, **Senior** positions are the most common, with **843 jobs**.
+#    - In Saudi Arabia, **Mid Level** positions dominate with **138 jobs**.
+# 2. **Distribution of Mid-Level Roles**:
+#    - Egypt has a relatively low number of **Mid Level** jobs (**28 jobs**), while Saudi Arabia has a significantly higher number (**138 jobs**).
+# 3. **Representation of Senior Roles**:
+#    - Egypt has a much higher number of **Senior** jobs (**843 jobs**) compared to Saudi Arabia (**11 jobs**).
+# 4. **Management Roles**:
+#    - Egypt has more **Management** jobs (**679 jobs**) than Saudi Arabia (**69 jobs**).
+# 
+# #### **Conclusion**
+# - Both Egypt and Saudi Arabia prioritize hiring experienced professionals, with Egypt focusing more on **Senior** roles and Saudi Arabia emphasizing **Mid Level** positions.
+# - There is a general scarcity of **C-Suite** and **Senior Management** roles in both countries, indicating a limited number of top executive opportunities.
+# - While entry-level positions exist in both countries, they are not as dominant as higher-level roles, reflecting a stronger demand for experienced talent.
 #%%
 fig61 = analyze_jobs_by_job_level(df_egy[df_egy['job_level'] != 'No Preference'],
                                   plot_name="analyze_jobs_by_job_level_egypt",
                                   folder='egypt', save=False)
-#%%
 fig62 = analyze_jobs_by_job_level(df_saudi[df_saudi['job_level'] != 'No Preference'],
                                   plot_name="analyze_jobs_by_job_level_saudi",
                                   folder='saudi', save=False)
 #%% md
-# ## Visualization 7 : M-Level Job Entries Over Time
+# ### **Plot 1: Number of Job Entries Over Time (Egypt)**
 # 
-# This line chart tracks the number of job postings for **Management-level (M-level)** roles from **November 2024 to April 2025**.
+# #### **Description**
+# - This line chart shows the trend in the number of job entries over time in Egypt.
+# - The x-axis represents the date, spanning from November 2025 to April 2025.
+# - The y-axis represents the number of job entries.
 # 
-# ### Key Insights
+# #### **Key Observations**
+# 1. **Initial Phase (November 2025)**:
+#    - The number of job entries starts at a very low value, close to zero.
+# 2. **Gradual Increase**:
+#    - From November to December 2025, there is a steady increase in job entries.
+# 3. **Significant Growth**:
+#    - Between January and February 2025, the number of job entries grows more rapidly.
+# 4. **Peak in March 2025**:
+#    - The highest number of job entries is observed in March 2025, reaching approximately **1,200 jobs**.
+# 5. **Slight Decline in April 2025**:
+#    - There is a minor decline in April 2025, but the number of job entries remains high, around **1,200 jobs**.
 # 
-# - **Consistent Growth**:
-#   The number of M-level job postings increased steadily each month, showing sustained demand.
+# #### **Meaning**
+# - The chart indicates a consistent upward trend in job entries over the six-month period, suggesting increasing job opportunities in Egypt.
+# - The rapid growth between January and March 2025 could be due to seasonal factors, economic improvements, or specific industry developments.
+# - The slight dip in April 2025 might indicate a temporary slowdown or stabilization after the peak.
 # 
-# - **Sharp Growth Between Feb–Mar 2025**:
-#   - February: ~400 jobs
-#   - March: ~740 jobs
-#   - This marks the most significant month-over-month growth.
+# ---
 # 
-# - **Early Acceleration (Nov–Jan)**:
-#   - Job entries started at a low point (~30 in Nov) and grew gradually through Jan (~230), indicating the early stages of hiring momentum.
+# ### **Plot 2: Number of Job Entries Over Time (Saudi Arabia)**
 # 
-# - **Stabilization in April**:
-#   - April saw continued growth (~840 jobs), but at a slower rate compared to the March surge.
+# #### **Description**
+# - This line chart shows the trend in the number of job entries over time in Saudi Arabia.
+# - The x-axis represents the date, spanning from November 2025 to April 2025.
+# - The y-axis represents the number of job entries.
 # 
+# #### **Key Observations**
+# 1. **Initial Phase (November 2025)**:
+#    - The number of job entries starts at a very low value, close to zero.
+# 2. **Gradual Increase**:
+#    - From November to December 2025, there is a steady increase in job entries.
+# 3. **Significant Growth**:
+#    - Between January and February 2025, the number of job entries grows more rapidly.
+# 4. **Peak in March 2025**:
+#    - The highest number of job entries is observed in March 2025, reaching approximately **1,600 jobs**.
+# 5. **Slight Decline in April 2025**:
+#    - There is a minor decline in April 2025, but the number of job entries remains high, around **1,500 jobs**.
 # 
-# ### Overall Takeaway
+# #### **Meaning**
+# - Similar to Egypt, the chart shows a consistent upward trend in job entries over the six-month period, indicating growing job opportunities in Saudi Arabia.
+# - The rapid growth between January and March 2025 suggests strong economic activity or specific initiatives driving job creation.
+# - The slight dip in April 2025 might reflect a temporary pause or adjustment after the peak, similar to Egypt.
 # 
-# The hiring trend for management-level roles has shown strong upward momentum over the past six months, particularly peaking in early 2025. This suggests increasing organizational needs for mid-to-senior management talent, likely driven by business expansion or restructuring initiatives.
+# ---
 # 
+# ### **Comparison Between the Two Plots**
 # 
+# #### **Similarities**
+# 1. **Overall Trend**:
+#    - Both countries show a consistent upward trend in job entries from November 2025 to March 2025, indicating increasing job opportunities.
+# 2. **Rapid Growth Period**:
+#    - In both countries, the most significant growth occurs between January and March 2025, suggesting a common factor influencing job market dynamics during this period.
+# 3. **Slight Decline in April**:
+#    - Both countries experience a minor decline in job entries in April 2025, although the numbers remain high compared to earlier months.
 # 
+# #### **Differences**
+# 1. **Magnitude of Job Entries**:
+#    - Saudi Arabia consistently has a higher number of job entries compared to Egypt throughout the entire period.
+#    - For example, in March 2025, Saudi Arabia reaches **1,600 jobs**, while Egypt reaches **1,200 jobs**.
+# 2. **Initial Starting Point**:
+#    - Both countries start with a very low number of job entries in November 2025, but Saudi Arabia appears to have a slightly higher initial baseline.
+# 3. **Peak Values**:
+#    - Saudi Arabia's peak in March 2025 is significantly higher (**1,600 jobs**) compared to Egypt's peak (**1,200 jobs**).
+# 
+# #### **Conclusion**
+# - Both Egypt and Saudi Arabia exhibit positive trends in job entries over the six-month period, reflecting improving job markets.
+# - However, Saudi Arabia demonstrates a stronger job market overall, with consistently higher job entry numbers and a more pronounced peak in March 2025.
+# - The slight declines in April 2025 for both countries suggest potential temporary adjustments or seasonal fluctuations, but the overall upward trajectory remains strong.
 #%%
 fig71 = plot_job_trend_over_time(df_egy, plot_name="plot_job_trend_over_time_egypt", folder='egypt',
                                  save=False)
-#%%
 fig72 = plot_job_trend_over_time(df_saudi, plot_name="plot_job_trend_over_time_saudi", folder='saudi',
                                  save=False)
 #%% md
-# ## Visualization 8: The Highest 10 Areas Declared for Business Opportunities
+# ### **Plot 1: The Highest 10 Areas Declared for Business Opportunities (Egypt)**
 # 
-# This bar chart illustrates the distribution of business opportunities across different domains, highlighting the most prominent areas based on the number of jobs declared. The chart provides insights into which sectors are currently experiencing the highest demand for business opportunities.
+# #### **Description**
+# - This bar chart shows the top 10 domains with the highest number of business opportunities in Egypt.
+# - The x-axis represents the domains, while the y-axis represents the number of jobs.
 # 
-# ### Key Insights
+# #### **Key Observations**
+# 1. **خدمات الدعم التجاري الأخرى (Other Commercial Support Services)**:
+#    - Dominates the chart with **3,240 jobs**, indicating it is the most significant area for business opportunities.
+# 2. **الاستشارات الهندسية العامة (General Engineering Consultancy)**:
+#    - Has **97 jobs**, making it the second-highest domain.
+# 3. **الاستشارات الإدارية (Management Consultancy)**:
+#    - Follows with **85 jobs**.
+# 4. **الاستعانة بالمصادر الخارجية المبيعات (Outsourcing Sales Resources)**:
+#    - Has **65 jobs**.
+# 5. **التعليم العالي (Higher Education)**:
+#    - Shows **58 jobs**.
+# 6. **الضيافة والسكن (Hospitality and Accommodation)**:
+#    - Also has **58 jobs**.
+# 7. **التسوق (Retail)**:
+#    - Has **43 jobs**.
+# 8. **Unknown**:
+#    - Shows **36 jobs**.
+# 9. **البناء والتشييد (Construction)**:
+#    - Has **35 jobs**.
+# 10. **البيع بالتجزئة وبالجملة (Wholesale and Retail Trade)**:
+#     - Has **30 jobs**.
 # 
-# - **Dominance of "خدمات الدعم التجاري الأخرى" (Other Commercial Support Services)**:
-#   - This domain leads by a significant margin with **3,240 job opportunities**, far exceeding all other sectors.
-#   - This suggests that businesses in this area are actively seeking support services, possibly due to high operational needs or expansion plans.
+# #### **Meaning**
+# - **Other Commercial Support Services** is the leading domain, suggesting a strong demand for services that support commercial activities.
+# - **General Engineering Consultancy** and **Management Consultancy** also show significant activity, indicating a focus on professional services.
+# - Domains like **Higher Education**, **Hospitality and Accommodation**, and **Retail** have moderate job opportunities, reflecting their importance in the Egyptian economy.
+# - The presence of "Unknown" suggests some data may not be categorized, but even so, it indicates limited opportunities compared to other sectors.
 # 
-# - **Engineering Consultancy and Administrative Consulting**:
-#   - Both "الاستشارات الهندسية العامة" (General Engineering Consultancy) and "الاستشارات الإدارية" (Administrative Consulting) show moderate activity, with **97** and **85** job opportunities, respectively.
-#   - These sectors indicate a steady demand for professional advisory services, likely driven by infrastructure projects or organizational restructuring.
+# ---
 # 
-# - **Low Activity in Traditional Sectors**:
-#   - Traditional sectors such as "البناء والتشييد" (Construction and Building) and "التail بالتجزئة والجملة" (Retail and Wholesale Trade) have relatively low job counts (**35** and **30**, respectively).
-#   - This could imply that these industries are either saturated or facing challenges in attracting new business opportunities.
+# ### **Plot 2: The Highest 10 Areas Declared for Business Opportunities (Saudi Arabia)**
 # 
-# - **Miscellaneous Categories**:
-#   - Domains like "Unknown" and "التسويق" (Marketing) have minimal activity, indicating either limited data availability or less focus on these areas.
-#   - "التعليم العالي" (Higher Education) and "الصحة والسكن" (Healthcare and Housing) also show low engagement, suggesting they might not be prioritized in current business strategies.
+# #### **Description**
+# - This bar chart shows the top 10 domains with the highest number of business opportunities in Saudi Arabia.
+# - The x-axis represents the domains, while the y-axis represents the number of jobs.
 # 
-# ### Overall Takeaway
+# #### **Key Observations**
+# 1. **خدمات الدعم التجاري الأخرى (Other Commercial Support Services)**:
+#    - Dominates the chart with **3,835 jobs**, indicating it is the most significant area for business opportunities.
+# 2. **الاستشارات الإدارية (Management Consultancy)**:
+#    - Has **109 jobs**, making it the second-highest domain.
+# 3. **البناء والتشييد (Construction)**:
+#    - Follows with **94 jobs**.
+# 4. **الاستشارات الهندسية العامة (General Engineering Consultancy)**:
+#    - Has **84 jobs**.
+# 5. **البيع بالتجزئة وبالجملة (Wholesale and Retail Trade)**:
+#    - Shows **70 jobs**.
+# 6. **المطاعم وخدمات الطعام (Restaurants and Food Services)**:
+#    - Has **54 jobs**.
+# 7. **خدمات تكنولوجيا المعلومات (Information Technology Services)**:
+#    - Shows **52 jobs**.
+# 8. **النفط والغاز (Oil and Gas)**:
+#    - Has **46 jobs**.
+# 9. **الضيافة والسكن (Hospitality and Accommodation)**:
+#    - Shows **41 jobs**.
+# 10. **خدمات الرعاية الصحية الأخرى (Other Healthcare Services)**:
+#     - Has **39 jobs**.
 # 
-# The data reveals a **clear preference for service-oriented sectors**, particularly in *"Other Commercial Support Services"*, which dominates the landscape with over **3,000 job opportunities**.
+# #### **Meaning**
+# - **Other Commercial Support Services** is the leading domain, highlighting a strong demand for services that support commercial activities.
+# - **Management Consultancy** and **Construction** also show significant activity, indicating a focus on professional services and infrastructure development.
+# - Domains like **General Engineering Consultancy**, **Wholesale and Retail Trade**, and **Restaurants and Food Services** have moderate job opportunities, reflecting their importance in the Saudi Arabian economy.
+# - **Oil and Gas** and **Hospitality and Accommodation** also contribute to the job market, showcasing the diversity of opportunities across various sectors.
 # 
-# Professional consulting services (*engineering* and *administrative*) remain active but at a much lower scale compared to the leading sector.
+# ---
 # 
-# Traditional sectors such as *construction* and *retail* appear to be less attractive for business opportunities, potentially due to economic shifts or industry-specific challenges.
+# ### **Comparison Between the Two Plots**
 # 
-# The dominance of support services highlights a trend toward outsourcing and specialized expertise, reflecting modern business practices focused on efficiency and scalability.
+# #### **Similarities**
+# 1. **Dominance of Other Commercial Support Services**:
+#    - Both countries show **Other Commercial Support Services** as the leading domain, indicating a strong demand for services that support commercial activities.
+# 2. **Presence of Professional Services**:
+#    - Both plots highlight domains such as **Management Consultancy** and **General Engineering Consultancy**, reflecting a focus on professional services.
+# 3. **Moderate Presence of Retail and Hospitality**:
+#    - Both countries have moderate job opportunities in **Retail** and **Hospitality and Accommodation**, showing the importance of these sectors in both economies.
 # 
-# ### Recommendations
+# #### **Differences**
+# 1. **Magnitude of Job Opportunities**:
+#    - In Saudi Arabia, **Other Commercial Support Services** has **3,835 jobs**, which is significantly higher than Egypt's **3,240 jobs**.
+#    - This suggests a larger overall job market or more diverse opportunities in Saudi Arabia.
+# 2. **Prominence of Construction**:
+#    - **Construction** is a significant domain in Saudi Arabia (**94 jobs**) but does not appear in the top 10 for Egypt, indicating a stronger focus on infrastructure development in Saudi Arabia.
+# 3. **Oil and Gas Sector**:
+#    - **Oil and Gas** is a notable domain in Saudi Arabia (**46 jobs**) but is not present in Egypt, reflecting the importance of the oil industry in Saudi Arabia.
+# 4. **Healthcare Services**:
+#    - **Other Healthcare Services** appears in the top 10 for Saudi Arabia (**39 jobs**) but is not present in Egypt, suggesting a stronger emphasis on healthcare opportunities in Saudi Arabia.
 # 
-# - **Focus on High-Demand Sectors**: Businesses should prioritize exploring opportunities in *"Other Commercial Support Services"* due to its overwhelming dominance.
-# - **Diversify Investment**: While traditional sectors show low activity, they may present long-term growth potential. Companies can consider strategic investments in these areas for future expansion.
-# - **Data Collection and Analysis**: Further investigation is needed to understand why certain sectors, like marketing and higher education, have minimal activity. This could involve analyzing market trends, regulatory factors, or industry-specific challenges.
-# 
-# ### Visual Summary
-# 
-# | Sector                                 | Arabic Name                             | Job Count |
-# |----------------------------------------|------------------------------------------|-----------|
-# | Other Commercial Support Services      | خدمات الدعم التجاري الأخرى               | 3,240     |
-# | General Engineering Consultancy        | الاستشارات الهندسية العامة                | 97        |
-# | Administrative Consulting              | الاستشارات الإدارية                      | 85        |
-# | Construction and Building              | البناء والتشييد                          | 35        |
-# | Retail and Wholesale Trade             | التجزئة والجملة                          | 30        |
-# 
-# This visualization underscores the importance of understanding sector-specific dynamics to identify lucrative business opportunities effectively.
+# #### **Conclusion**
+# - Both Egypt and Saudi Arabia exhibit a strong demand for **Other Commercial Support Services**, indicating a common trend in the need for services that support commercial activities.
+# - However, Saudi Arabia shows a larger overall job market and a stronger focus on sectors like **Construction**, **Oil and Gas**, and **Healthcare Services**, reflecting its economic diversification efforts.
+# - Egypt, on the other hand, has a more balanced distribution of opportunities across domains such as **General Engineering Consultancy**, **Management Consultancy**, and **Retail**, highlighting a different set of priorities in its economy.
 #%%
 fig81 = plot_job_postings_by_industry(df_egy, plot_name="plot_job_postings_by_industry_egypt",
                                        folder='egypt', save=False)
-#%%
 fig82 = plot_job_postings_by_industry(df_saudi, plot_name="plot_job_postings_by_industry_saudi",
                                        folder='saudi', save=False)
 #%% md
-# # ____________________________________________________________________________________
+# ### **Plot 1: Job Distribution by Type (Egypt)**
+# 
+# #### **Description**
+# - This pie chart shows the distribution of job types in Egypt.
+# - The chart is divided into several segments representing different job types:
+#   - **Unknown**: 76.48%
+#   - **Management**: 18.68%
+#   - **Full-Time**: 3.14%
+#   - **Intern**: 1.47%
+#   - **Part-Time**: 0.10%
+#   - **Contracts**: 0.10%
+#   - **Temporary**: 0.02%
+# 
+# #### **Key Observations**
+# 1. **Unknown**:
+#    - Dominates the distribution with **76.48%**, indicating that a significant portion of job listings do not specify the job type.
+# 2. **Management**:
+#    - Is the second-largest segment with **18.68%**, showing a notable presence of management roles.
+# 3. **Full-Time**:
+#    - Represents **3.14%** of the jobs, indicating a moderate number of full-time positions.
+# 4. **Intern**:
+#    - Accounts for **1.47%**, suggesting a small but present number of internship opportunities.
+# 5. **Part-Time**, **Contracts**, and **Temporary**:
+#    - Have very low percentages (**0.10%, 0.10%, and 0.02%**, respectively), indicating minimal occurrences of these job types.
+# 
+# #### **Meaning**
+# - The overwhelming majority of job listings in Egypt are categorized as **Unknown**, which could imply incomplete data or a lack of detailed job type information.
+# - **Management** roles are the next most common, reflecting a strong demand for leadership and managerial positions.
+# - Full-time positions are moderately prevalent, while internships, part-time roles, contracts, and temporary jobs are relatively rare.
+# 
+# ---
+# 
+# ### **Plot 2: Job Distribution by Type (Saudi Arabia)**
+# 
+# #### **Description**
+# - This pie chart shows the distribution of job types in Saudi Arabia.
+# - The chart is divided into several segments representing different job types:
+#   - **Unknown**: 76.77%
+#   - **Full-Time**: 21.82%
+#   - **Management**: 0.73%
+#   - **Intern**: 0.31%
+#   - **Part-Time**: 0.27%
+#   - **Contracts**: 0.09%
+#   - **Temporary**: 0.02%
+# 
+# #### **Key Observations**
+# 1. **Unknown**:
+#    - Dominates the distribution with **76.77%**, similar to Egypt, indicating a significant portion of job listings without specified job types.
+# 2. **Full-Time**:
+#    - Is the second-largest segment with **21.82%**, showing a higher prevalence compared to Egypt.
+# 3. **Management**:
+#    - Represents only **0.73%**, which is significantly lower than Egypt's **18.68%**.
+# 4. **Intern**, **Part-Time**, **Contracts**, and **Temporary**:
+#    - Have very low percentages (**0.31%, 0.27%, 0.09%, and 0.02%**, respectively), indicating minimal occurrences of these job types.
+# 
+# #### **Meaning**
+# - Similar to Egypt, the majority of job listings in Saudi Arabia are categorized as **Unknown**, suggesting incomplete data or a lack of detailed job type information.
+# - **Full-Time** positions are more prevalent in Saudi Arabia compared to Egypt, reflecting a stronger focus on permanent employment.
+# - Management roles are much less common in Saudi Arabia, indicating a potential difference in organizational structures or industry demands.
+# - Internships, part-time roles, contracts, and temporary jobs are similarly rare in both countries.
+# 
+# ---
+# 
+# ### **Comparison Between the Two Plots**
+# 
+# #### **Similarities**
+# 1. **Dominance of Unknown Jobs**:
+#    - Both countries show a high percentage of **Unknown** job types, with Egypt at **76.48%** and Saudi Arabia at **76.77%**. This suggests a common issue of incomplete job descriptions across both markets.
+# 2. **Low Occurrence of Part-Time, Contracts, and Temporary Jobs**:
+#    - Both countries have very low percentages for part-time, contract, and temporary jobs, indicating that these job types are not widely available in either market.
+# 3. **Moderate Presence of Internships**:
+#    - Both countries have a small but present number of internship opportunities, with Egypt at **1.47%** and Saudi Arabia at **0.31%**.
+# 
+# #### **Differences**
+# 1. **Full-Time Jobs**:
+#    - In Saudi Arabia, **Full-Time** jobs account for **21.82%**, which is significantly higher than Egypt's **3.14%**. This suggests a stronger emphasis on permanent employment in Saudi Arabia.
+# 2. **Management Roles**:
+#    - Egypt has a much higher percentage of **Management** roles (**18.68%**) compared to Saudi Arabia (**0.73%**). This indicates a substantial difference in the demand for leadership positions between the two countries.
+# 3. **Distribution of Other Job Types**:
+#    - While both countries have low percentages for internships, part-time roles, contracts, and temporary jobs, the specific percentages differ slightly. For example, Saudi Arabia has a slightly higher percentage for internships (**0.31%**) compared to Egypt (**1.47%**).
+# 
+# #### **Conclusion**
+# - Both Egypt and Saudi Arabia face a challenge with a large proportion of job listings being categorized as **Unknown**, highlighting a need for more detailed job descriptions.
+# - Saudi Arabia shows a stronger focus on **Full-Time** employment compared to Egypt, while Egypt has a significantly higher demand for **Management** roles.
+# - Overall, both countries exhibit a limited availability of part-time, contract, and temporary jobs, with internships also being relatively rare but more prevalent in Egypt.
 #%%
 fig91 = analyze_job_type_distribution(df_egy, plot_name="analyze_job_type_distribution_egypt",
                                       folder='egypt', save=False)
-#%%
 fig92 = analyze_job_type_distribution(df_saudi, plot_name="analyze_job_type_distribution_saudi",
                                       folder='saudi', save=False)
 #%% md
-# # ____________________________________________________________________________________
+# ### **Plot 1: Comparison of Min & Max Experience Requirements (Egypt)**
+# 
+# #### **Description**
+# - This box plot compares the minimum (`min_num_of_years`) and maximum (`max_num_of_years`) years of experience required for jobs in Egypt.
+# - The y-axis represents the number of years of experience.
+# - The x-axis has two categories: `min_num_of_years` and `max_num_of_years`.
+# 
+# #### **Key Observations**
+# 1. **Minimum Years of Experience (`min_num_of_years`)**:
+#    - The median value is around **3 years**.
+#    - The interquartile range (IQR) spans from approximately **0 to 6 years**, indicating that most job postings require between 0 and 6 years of experience.
+#    - There are a few outliers with higher minimum requirements, reaching up to **10 years**.
+# 
+# 2. **Maximum Years of Experience (`max_num_of_years`)**:
+#    - The median value is around **8 years**.
+#    - The IQR spans from approximately **5 to 15 years**, showing that most job postings have a maximum requirement between 5 and 15 years.
+#    - There are several outliers with very high maximum requirements, reaching up to **20 years**.
+# 
+# #### **Meaning**
+# - **Minimum Experience**:
+#   - Most job postings in Egypt do not require extensive experience, with a median of 3 years. However, there are some roles that demand more, such as those requiring 10 years or more.
+# - **Maximum Experience**:
+#   - The majority of job postings have a maximum experience requirement of around 8 years, but there is significant variability, with some roles accepting candidates with up to 20 years of experience.
+#   - The presence of outliers suggests that certain specialized or senior-level positions may have much higher experience requirements.
+# 
+# ---
+# 
+# ### **Plot 2: Comparison of Min & Max Experience Requirements (Saudi Arabia)**
+# 
+# #### **Description**
+# - This box plot compares the minimum (`min_num_of_years`) and maximum (`max_num_of_years`) years of experience required for jobs in Saudi Arabia.
+# - The y-axis represents the number of years of experience.
+# - The x-axis has two categories: `min_num_of_years` and `max_num_of_years`.
+# 
+# #### **Key Observations**
+# 1. **Minimum Years of Experience (`min_num_of_years`)**:
+#    - The median value is around **3 years**.
+#    - The IQR spans from approximately **0 to 6 years**, similar to Egypt, indicating that most job postings require between 0 and 6 years of experience.
+#    - There are a few outliers with higher minimum requirements, reaching up to **10 years**.
+# 
+# 2. **Maximum Years of Experience (`max_num_of_years`)**:
+#    - The median value is around **9 years**.
+#    - The IQR spans from approximately **5 to 17 years**, showing that most job postings have a maximum requirement between 5 and 17 years.
+#    - There are several outliers with very high maximum requirements, reaching up to **20 years**.
+# 
+# #### **Meaning**
+# - **Minimum Experience**:
+#   - Similar to Egypt, most job postings in Saudi Arabia do not require extensive experience, with a median of 3 years. However, there are some roles that demand more, such as those requiring 10 years or more.
+# - **Maximum Experience**:
+#   - The majority of job postings have a maximum experience requirement of around 9 years, but there is significant variability, with some roles accepting candidates with up to 20 years of experience.
+#   - The presence of outliers suggests that certain specialized or senior-level positions may have much higher experience requirements.
+# 
+# ---
+# 
+# ### **Comparison Between the Two Plots**
+# 
+# #### **Similarities**
+# 1. **Median Minimum Experience**:
+#    - Both countries show a median minimum experience requirement of around **3 years**, indicating that most entry-level or mid-level roles do not require extensive prior experience.
+# 2. **Range of Minimum Experience**:
+#    - Both countries have a similar IQR for minimum experience, ranging from **0 to 6 years**, suggesting a comparable distribution of low-experience roles.
+# 3. **Presence of Outliers**:
+#    - Both plots show outliers with higher minimum experience requirements (up to **10 years**), indicating that specialized or senior roles exist in both markets.
+# 4. **Median Maximum Experience**:
+#    - Both countries have a median maximum experience requirement of around **8–9 years**, suggesting that most job postings target professionals with moderate experience levels.
+# 5. **Range of Maximum Experience**:
+#    - Both countries have a wide range of maximum experience requirements, with IQRs spanning from **5 to 15–17 years**, reflecting diverse job opportunities across different experience levels.
+# 6. **High Outliers for Maximum Experience**:
+#    - Both plots show outliers with very high maximum experience requirements (up to **20 years**), indicating that senior-level or highly specialized roles exist in both markets.
+# 
+# #### **Differences**
+# 1. **Median Maximum Experience**:
+#    - Saudi Arabia has a slightly higher median maximum experience requirement (**9 years**) compared to Egypt (**8 years**), suggesting that Saudi Arabia may have a slightly higher demand for experienced professionals.
+# 2. **Range of Maximum Experience**:
+#    - Saudi Arabia has a slightly wider IQR for maximum experience (**5 to 17 years**) compared to Egypt (**5 to 15 years**), indicating a broader range of experience requirements in Saudi Arabia.
+# 3. **Outliers for Maximum Experience**:
+#    - Saudi Arabia has more pronounced outliers for maximum experience, with values reaching **20 years**, compared to Egypt, which also has outliers but at a similar level.
+# 
+# #### **Conclusion**
+# - Both Egypt and Saudi Arabia exhibit similar patterns in terms of minimum and maximum experience requirements, with most job postings targeting professionals with 3–9 years of experience.
+# - However, Saudi Arabia shows a slightly higher demand for experienced professionals, as indicated by the higher median maximum experience requirement and the broader range of experience levels.
+# - Both countries have a mix of entry-level, mid-level, and senior-level roles, with some specialized positions requiring significantly more experience.
 #%%
 fig101 = compare_experience_requirements(df_egy, plot_name="compare_experience_requirements_egypt",
                                          folder='egypt', save=False)
-#%%
 fig102 = compare_experience_requirements(df_saudi, plot_name="compare_experience_requirements_saudi",
                                          folder='saudi', save=False)
 #%% md
-# # ____________________________________________________________________________________
+# ### **Plot 1: Heatmap of Job Count by City and Job Level (Egypt)**
+# 
+# #### **Description**
+# - This heatmap shows the distribution of job counts across different cities in Egypt, categorized by job levels.
+# - The x-axis represents the job levels: **C-Suite**, **Graduate**, **Junior**, **Management**, **Mid Level**, **No Preference**, **Senior**, and **Senior Management**.
+# - The y-axis represents the cities in Egypt.
+# - The color intensity indicates the number of jobs, with darker shades representing higher job counts.
+# 
+# #### **Key Observations**
+# 1. **Most Prominent Cities**:
+#    - **القاهرة (Cairo)** has the highest job counts across multiple job levels:
+#      - **No Preference**: 1,160 jobs.
+#      - **Mid Level**: 509 jobs.
+#      - **Management**: 377 jobs.
+#      - Other levels have moderate to low job counts.
+#    - **الإسكندرية (Alexandria)** also shows significant job counts:
+#      - **No Preference**: 62 jobs.
+#      - **Mid Level**: 21 jobs.
+#      - Other levels have minimal job counts.
+# 2. **Job Levels with High Demand**:
+#    - **No Preference** consistently shows the highest job counts across most cities.
+#    - **Mid Level** and **Management** also have notable job counts in major cities like Cairo and Alexandria.
+# 3. **Cities with Low Job Counts**:
+#    - Many smaller cities (e.g., أسوان, الجونة, السويس) have very low or zero job counts across all levels.
+#    - Only a few cities (e.g., القاهرة, الإسكندرية) contribute significantly to the job market.
+# 
+# #### **Meaning**
+# - **Cairo** is the dominant city in terms of job opportunities, offering a wide range of roles at various levels, particularly in **No Preference** and **Mid Level** positions.
+# - **Alexandria** is the second-largest contributor but with significantly fewer job opportunities compared to Cairo.
+# - Smaller cities have limited job availability, indicating that the majority of job opportunities are concentrated in major urban centers.
+# - The high count of **No Preference** jobs suggests that many employers are open to hiring candidates regardless of specific job level preferences.
+# 
+# ---
+# 
+# ### **Plot 2: Heatmap of Job Count by City and Job Level (Saudi Arabia)**
+# 
+# #### **Description**
+# - This heatmap shows the distribution of job counts across different cities in Saudi Arabia, categorized by job levels.
+# - The x-axis represents the job levels: **C-Suite**, **Graduate**, **Junior**, **Management**, **Mid Level**, **No Preference**, **Senior**, and **Senior Management**.
+# - The y-axis represents the cities in Saudi Arabia.
+# - The color intensity indicates the number of jobs, with darker shades representing higher job counts.
+# 
+# #### **Key Observations**
+# 1. **Most Prominent Cities**:
+#    - **الرياض (Riyadh)** has the highest job counts across multiple job levels:
+#      - **No Preference**: 1,970 jobs.
+#      - **Mid Level**: 2,020 jobs.
+#      - **Management**: 17 jobs.
+#      - Other levels have moderate to low job counts.
+#    - **الدمام (Dammam)** also shows significant job counts:
+#      - **No Preference**: 262 jobs.
+#      - **Mid Level**: 42 jobs.
+#      - Other levels have minimal job counts.
+# 2. **Job Levels with High Demand**:
+#    - **No Preference** consistently shows the highest job counts across most cities.
+#    - **Mid Level** and **Management** also have notable job counts in major cities like Riyadh and Dammam.
+# 3. **Cities with Low Job Counts**:
+#    - Many smaller cities (e.g., الباحة, حفر الباطن, عنيزة) have very low or zero job counts across all levels.
+#    - Only a few cities (e.g., الرياض, الدمام) contribute significantly to the job market.
+# 
+# #### **Meaning**
+# - **Riyadh** is the dominant city in terms of job opportunities, offering a wide range of roles at various levels, particularly in **No Preference** and **Mid Level** positions.
+# - **Dammam** is the second-largest contributor but with significantly fewer job opportunities compared to Riyadh.
+# - Smaller cities have limited job availability, indicating that the majority of job opportunities are concentrated in major urban centers.
+# - Similar to Egypt, the high count of **No Preference** jobs suggests that many employers are open to hiring candidates regardless of specific job level preferences.
+# 
+# ---
+# 
+# ### **Comparison Between the Two Plots**
+# 
+# #### **Similarities**
+# 1. **Dominance of Major Cities**:
+#    - In both countries, a few major cities (Cairo in Egypt and Riyadh in Saudi Arabia) dominate the job market, offering the majority of job opportunities.
+# 2. **High Count of No Preference Jobs**:
+#    - Both countries show a strong preference for **No Preference** jobs, indicating that many employers are flexible regarding job level requirements.
+# 3. **Concentration of Opportunities**:
+#    - Both countries exhibit a concentration of job opportunities in major urban centers, with smaller cities having very limited job availability.
+# 4. **Mid Level and Management Roles**:
+#    - Both countries show significant demand for **Mid Level** and **Management** roles in major cities.
+# 
+# #### **Differences**
+# 1. **Magnitude of Job Counts**:
+#    - Saudi Arabia has significantly higher job counts overall, especially in major cities like Riyadh, where the **No Preference** category reaches 1,970 jobs.
+#    - Egypt's highest job count is 1,160 jobs in Cairo, which is lower than Saudi Arabia's numbers.
+# 2. **Number of Prominent Cities**:
+#    - Egypt has two prominent cities (Cairo and Alexandria), while Saudi Arabia has more prominent cities (Riyadh, Dammam, etc.), although Riyadh dominates the job market.
+# 3. **Distribution Across Job Levels**:
+#    - In Egypt, **No Preference** jobs are highly dominant across all cities.
+#    - In Saudi Arabia, **Mid Level** jobs also show high counts in major cities, contributing significantly to the job market.
+# 
+# #### **Conclusion**
+# - Both Egypt and Saudi Arabia exhibit a strong concentration of job opportunities in major urban centers, with Cairo and Riyadh being the primary hubs for employment.
+# - The high count of **No Preference** jobs in both countries reflects a trend toward flexible hiring practices.
+# - Saudi Arabia shows a larger overall job market, with higher job counts across major cities, while Egypt has a more focused job market centered around Cairo and Alexandria.
 #%%
 fig111 = jobs_heatmap_by_city_and_job_level(df_egy, plot_name="jobs_heatmap_by_city_and_job_level_egypt",
                                             folder='egypt', save=False)
-#%%
 fig112 = jobs_heatmap_by_city_and_job_level(df_saudi, plot_name="jobs_heatmap_by_city_and_job_level_saudi",
                                             folder='saudi', save=False)
 #%% md
-# # ____________________________________________________________________________________
+# ### **Plot 1: Most Common Job Titles (Wordcloud) - Egypt**
+# 
+# #### **Description**
+# - This word cloud visualizes the most common job titles in Egypt.
+# - The size of each word represents its frequency in the dataset, with larger words indicating more frequent job titles.
+# - Words like **Account Manager**, **Manager**, **Senior**, **Lead**, **Specialist**, and **Accountant** are prominently displayed.
+# 
+# #### **Key Observations**
+# 1. **Prominent Job Titles**:
+#    - **Account Manager**: One of the most frequently occurring job titles.
+#    - **Manager**: A very common role, reflecting a strong demand for managerial positions.
+#    - **Senior**, **Lead**, and **Specialist**: These terms indicate higher-level or specialized roles.
+#    - **Accountant**: Another prominent title, suggesting a significant demand for financial expertise.
+# 2. **Other Common Roles**:
+#    - Words like **Engineer**, **Software**, **Project**, and **Sales** appear frequently, indicating roles in engineering, software development, project management, and sales.
+#    - Terms such as **Business Analyst**, **Support**, and **Coordinator** also appear, showing a mix of analytical, support, and coordination roles.
+# 3. **Industry-Specific Roles**:
+#    - Words like **Data Analyst**, **Design Engineer**, and **Customer Service** suggest a diverse range of industries, including technology, engineering, and customer service.
+# 
+# #### **Meaning**
+# - The word cloud highlights a strong emphasis on **management** and **specialized roles** in Egypt, with a particular focus on **accounting** and **managerial positions**.
+# - The presence of technical roles (e.g., **Software Engineer**, **Project Manager**) indicates a growing demand for skills in technology and project management.
+# - The inclusion of **Sales** and **Customer Service** roles suggests a focus on client-facing and business development activities.
+# 
+# ---
+# 
+# ### **Plot 2: Most Common Job Titles (Wordcloud) - Saudi Arabia**
+# 
+# #### **Description**
+# - This word cloud visualizes the most common job titles in Saudi Arabia.
+# - The size of each word represents its frequency in the dataset, with larger words indicating more frequent job titles.
+# - Words like **Consultant**, **Supervisor**, **Specialist**, **Engineer**, **Lead**, and **Manager** are prominently displayed.
+# 
+# #### **Key Observations**
+# 1. **Prominent Job Titles**:
+#    - **Consultant**: A highly frequent job title, indicating a strong demand for consulting roles.
+#    - **Supervisor**: Another common role, reflecting a need for supervisory positions.
+#    - **Specialist**, **Engineer**, and **Lead**: These terms highlight roles that require specialized skills and leadership.
+#    - **Manager**: A prevalent title, similar to Egypt, showing a demand for managerial positions.
+# 2. **Other Common Roles**:
+#    - Words like **Director**, **Sales Manager**, and **Project Manager** appear frequently, indicating roles in leadership, sales, and project management.
+#    - Terms such as **Business Development**, **Analyst**, and **Technician** suggest a mix of business-focused, analytical, and technical roles.
+# 3. **Industry-Specific Roles**:
+#    - Words like **Civil Engineer**, **Security**, and **Procurement** indicate roles in construction, security, and supply chain management.
+#    - The presence of **Sales Executive Process Engineer** and **Human Resource Officer** reflects a blend of technical and administrative roles.
+# 
+# #### **Meaning**
+# - The word cloud highlights a strong emphasis on **consulting**, **supervisory**, and **specialized roles** in Saudi Arabia, with a particular focus on **engineering** and **managerial positions**.
+# - The inclusion of **business development** and **sales** roles suggests a focus on growth and client engagement.
+# - Technical roles (e.g., **Engineer**, **Technician**) indicate a demand for skilled professionals in various industries.
+# 
+# ---
+# 
+# ### **Comparison Between the Two Plots**
+# 
+# #### **Similarities**
+# 1. **Dominance of Managerial Roles**:
+#    - Both countries show a strong emphasis on **managerial positions**, with words like **Manager**, **Lead**, and **Supervisor** appearing prominently.
+# 2. **Presence of Specialized Roles**:
+#    - Both word clouds include terms like **Specialist**, **Engineer**, and **Analyst**, indicating a demand for specialized skills.
+# 3. **Focus on Sales and Customer-Facing Roles**:
+#    - Words like **Sales Manager**, **Account Manager**, and **Customer Service** appear in both plots, reflecting a common need for sales and client-facing roles.
+# 4. **Technical and Analytical Roles**:
+#    - Both countries have a mix of technical and analytical roles, with terms like **Software Engineer**, **Data Analyst**, and **Business Analyst** appearing in both word clouds.
+# 
+# #### **Differences**
+# 1. **Prominent Job Titles**:
+#    - In Egypt, **Account Manager** and **Accountant** are highly prominent, indicating a strong focus on accounting and sales roles.
+#    - In Saudi Arabia, **Consultant** and **Engineer** stand out, reflecting a greater emphasis on consulting and engineering roles.
+# 2. **Industry-Specific Roles**:
+#    - Egypt has more prominent roles in **customer service** and **design engineering**, while Saudi Arabia shows a stronger presence of **civil engineering** and **security** roles.
+# 3. **Leadership Roles**:
+#    - Saudi Arabia has a higher prominence of **Director** and **Business Development** roles, suggesting a stronger focus on leadership and strategic roles compared to Egypt.
+# 
+# #### **Conclusion**
+# - Both Egypt and Saudi Arabia exhibit a strong demand for **managerial** and **specialized roles**, with a focus on **technical** and **analytical** skills.
+# - However, Egypt shows a stronger emphasis on **accounting** and **sales**, while Saudi Arabia highlights **consulting**, **engineering**, and **leadership** roles.
+# - The differences reflect variations in industry priorities and economic structures between the two countries, with Egypt leaning toward services and sales, and Saudi Arabia focusing on engineering and strategic development.
 #%%
 fig121 = plot_top_job_titles_wordcloud(df_egy, plot_name="plot_top_job_titles_wordcloud_egypt",
                                        folder='egypt', save=False)
-#%%
 fig122 = plot_top_job_titles_wordcloud(df_saudi, plot_name="plot_top_job_titles_wordcloud_saudi",
                                        folder='saudi', save=False)
