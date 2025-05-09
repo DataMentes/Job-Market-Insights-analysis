@@ -567,7 +567,7 @@ def plot_job_postings_by_industry(df, plot_name, folder: Literal['egypt', 'saudi
 
 def analyze_job_type_distribution(data, plot_name, folder: Literal['egypt', 'saudi', 'compare'], save=True):
     """
-    Analyze the distribution of job types and plot a pie chart with percentages outside and arrows.
+    Analyze the distribution of job types and plot a pie chart with a clean legend.
 
     Parameters:
     -----------
@@ -589,48 +589,31 @@ def analyze_job_type_distribution(data, plot_name, folder: Literal['egypt', 'sau
     total = type_counts.sum()
     raw_labels = type_counts.index.tolist()
     sizes = type_counts.values
-    percentages = [f"{(count / total) * 100:.4f}%" for count in sizes]
+    percentages = [f"{(count / total) * 100:.2f}%" for count in sizes]  # Reduced to 2 decimal places for clarity
 
-    colors = sns.color_palette('pastel', len(raw_labels))
+    # Labels in legend: JobName (xx.xx%)
+    labels_with_pct = [f"{name} ({pct})" for name, pct in zip(raw_labels, percentages)]
 
-    fig, ax = plt.subplots(figsize=(10, 7))
-    wedges, _, _ = ax.pie(
+    colors = sns.color_palette('pastel', len(labels_with_pct))
+
+    fig, ax = plt.subplots(figsize=(8, 6))
+    wedges, texts = ax.pie(
         sizes,
-        startangle=140,
         colors=colors,
-        wedgeprops=dict(width=0.6, edgecolor='w')  # Optional: adjust wedge styling
+        startangle=140,
     )
 
-    # Add annotations with arrows
-    for i, wedge in enumerate(wedges):
-        theta = (wedge.theta1 + wedge.theta2) / 2
-        theta_rad = np.deg2rad(theta)
-        xy = (np.cos(theta_rad), np.sin(theta_rad))  # Point on the wedge edge
-        xytext = (np.cos(theta_rad) * 1.3, np.sin(theta_rad) * 1.3)  # Text position outside
+    # Show legend with name + percentage
+    ax.legend(wedges, labels_with_pct, title="Job Types", loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
 
-        ax.annotate(
-            percentages[i],
-            xy=xy,
-            xytext=xytext,
-            textcoords='axes fraction',
-            ha='center',
-            va='center',
-            fontsize=10,
-            arrowprops=dict(arrowstyle="-|>", connectionstyle="arc3", color="black"),
-            bbox=dict(boxstyle="round", fc="white", ec="black", pad=0.3)
-        )
-
-    # Legend with job names only
-    ax.legend(wedges, raw_labels, title="Job Types", loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
-
-    ax.set_title('Job Distribution by Type', fontsize=14, pad=20)
+    ax.set_title('Job Distribution by Type', fontsize=14)
     plt.tight_layout()
+    plt.show()
 
     if save:
         path = f'../visualizations/{folder}/{plot_name}.png'
-        fig.savefig(path, bbox_inches='tight', dpi=300)
+        fig.savefig(path, bbox_inches='tight')
 
-    plt.show()
     return fig
 
 def compare_experience_requirements(data, plot_name, folder: Literal['egypt', 'saudi', 'compare'], save=True):

@@ -1169,24 +1169,6 @@ fig42 = analyze_jobs_by_work_type(df_saudi, plot_name="analyze_jobs_by_work_type
 # 
 # ###  Key Insights:
 # 
-# * April (Month 4) and March (Month 3) show the highest number of job postings, with 839 and 738 jobs respectively.
-# 
-# * There is a sharp decline after March, with February (403 jobs) and January (228 jobs) showing significantly lower2 counts.
-# 
-# * The last three months (December, November) show very low activity, especially November with only 23 job postings.
-# 
-# ###  Overall Takeaway:
-# - Hiring peaks in March and April, indicating a strong seasonal hiring trend during spring. Planning job campaigns or applications in these months could yield better results.
-# 
-#%%
-fig51 = analyze_jobs_by_time(df_egy, plot_name="analyze_jobs_by_time_egypt", folder='egypt', save=False)
-#%%
-fig52 = analyze_jobs_by_time(df_saudi, plot_name="analyze_jobs_by_time_saudi", folder='saudi', save=False)
-#%% md
-# ##  Visualization 6: Job Distribution by Month
-# 
-# ###  Key Insights:
-# 
 # - A dominant majority (2253 jobs) have no gender preference.
 # - Female-targeted roles are 97, while male-targeted roles are just 55.
 # 
@@ -1194,13 +1176,13 @@ fig52 = analyze_jobs_by_time(df_saudi, plot_name="analyze_jobs_by_time_saudi", f
 # - The job market is largely gender-neutral in job listings, which may reflect a trend toward inclusivity or a focus on qualifications over demographics
 # 
 #%%
-fig61 = analyze_jobs_by_gender(df_egy, plot_name="analyze_jobs_by_gender_egypt", folder='egypt',
+fig51 = analyze_jobs_by_gender(df_egy, plot_name="analyze_jobs_by_gender_egypt", folder='egypt',
                                save=False)
 #%%
-fig62 = analyze_jobs_by_gender(df_saudi, plot_name="analyze_jobs_by_gender_saudi", folder='saudi',
+fig52 = analyze_jobs_by_gender(df_saudi, plot_name="analyze_jobs_by_gender_saudi", folder='saudi',
                                save=False)
 #%% md
-# ##  visualization 7 :Job Level Distribution Analysis
+# ##  visualization 6 :Job Level Distribution Analysis
 # 
 # ###  Key Insights:
 # 
@@ -1227,15 +1209,15 @@ fig62 = analyze_jobs_by_gender(df_saudi, plot_name="analyze_jobs_by_gender_saudi
 # - The job market is heavily skewed toward senior and management-level positions, with a surprising number of listings having no specified level. This may reflect a broad hiring strategy or incomplete data entry. Entry-level and executive roles are limited, indicating that companies are prioritizing experienced professionals over new graduates or top-tier executives.
 # 
 #%%
-fig71 = analyze_jobs_by_job_level(df_egy[df_egy['job_level'] != 'No Preference'],
+fig61 = analyze_jobs_by_job_level(df_egy[df_egy['job_level'] != 'No Preference'],
                                   plot_name="analyze_jobs_by_job_level_egypt",
                                   folder='egypt', save=False)
 #%%
-fig72 = analyze_jobs_by_job_level(df_saudi[df_saudi['job_level'] != 'No Preference'],
+fig62 = analyze_jobs_by_job_level(df_saudi[df_saudi['job_level'] != 'No Preference'],
                                   plot_name="analyze_jobs_by_job_level_saudi",
                                   folder='saudi', save=False)
 #%% md
-# ## Visualization 8 : M-Level Job Entries Over Time
+# ## Visualization 7 : M-Level Job Entries Over Time
 # 
 # This line chart tracks the number of job postings for **Management-level (M-level)** roles from **November 2024 to April 2025**.
 # 
@@ -1263,45 +1245,13 @@ fig72 = analyze_jobs_by_job_level(df_saudi[df_saudi['job_level'] != 'No Preferen
 # 
 # 
 #%%
-fig81 = plot_job_trend_over_time(df_egy, plot_name="plot_job_trend_over_time_egypt", folder='egypt',
+fig71 = plot_job_trend_over_time(df_egy, plot_name="plot_job_trend_over_time_egypt", folder='egypt',
                                  save=False)
 #%%
-fig82 = plot_job_trend_over_time(df_saudi, plot_name="plot_job_trend_over_time_saudi", folder='saudi',
+fig72 = plot_job_trend_over_time(df_saudi, plot_name="plot_job_trend_over_time_saudi", folder='saudi',
                                  save=False)
 #%% md
-# ## Visualization 9: Distribution of Job Entries by Month
-# 
-# This boxplot illustrates the **daily distribution of job entries** for each month, highlighting variability, medians, and outliers across time.
-# 
-# ### Key Insights
-# 
-# - **Clear Upward Trend (Jan–Apr)**:
-#   - Each month from January to April shows an **increase in the median** number of jobs posted per day.
-#   - The interquartile range (IQR) also widens, indicating **greater day-to-day variability** in job postings.
-# 
-# - **April Stands Out**:
-#   - April has the **widest spread** of data and the **highest number of outliers**, including some days with more than **200 jobs posted**.
-#   - This suggests a **surge in recruitment activity** or possibly batch job uploads.
-# 
-# - **Consistent Low Activity (Nov–Dec)**:
-#   - Very low median values and tight boxplots indicate **minimal hiring activity** during these months, possibly due to year-end slowdowns.
-# 
-# - **Outliers as Activity Spikes**:
-#   - Multiple months exhibit high outliers, particularly March and April, reflecting **short bursts of high hiring days**.
-# 
-# ---
-# 
-# ### Overall Takeaway
-# 
-# - The data reveals a **seasonal hiring pattern**, with job entry volumes **peaking sharply in April** and remaining low in the final months of the year. This suggests that companies significantly ramp up hiring in Q1 and Q2, with April being a strategic month for recruitment efforts.
-#%%
-fig91 = plot_monthly_job_boxplot(df_egy, plot_name="plot_monthly_job_boxplot_egypt", folder='egypt',
-                                 save=False)
-#%%
-fig92 = plot_monthly_job_boxplot(df_saudi, plot_name="plot_monthly_job_boxplot_saudi", folder='saudi',
-                                 save=False)
-#%% md
-# ## Visualization 10: The Highest 10 Areas Declared for Business Opportunities
+# ## Visualization 8: The Highest 10 Areas Declared for Business Opportunities
 # 
 # This bar chart illustrates the distribution of business opportunities across different domains, highlighting the most prominent areas based on the number of jobs declared. The chart provides insights into which sectors are currently experiencing the highest demand for business opportunities.
 # 
@@ -1351,8 +1301,26 @@ fig92 = plot_monthly_job_boxplot(df_saudi, plot_name="plot_monthly_job_boxplot_s
 # 
 # This visualization underscores the importance of understanding sector-specific dynamics to identify lucrative business opportunities effectively.
 #%%
-fig101 = plot_job_postings_by_industry(df_egy, plot_name="plot_job_postings_by_industry_egypt",
+fig81 = plot_job_postings_by_industry(df_egy, plot_name="plot_job_postings_by_industry_egypt",
                                        folder='egypt', save=False)
 #%%
-fig102 = plot_job_postings_by_industry(df_saudi, plot_name="plot_job_postings_by_industry_saudi",
+fig82 = plot_job_postings_by_industry(df_saudi, plot_name="plot_job_postings_by_industry_saudi",
                                        folder='saudi', save=False)
+#%%
+fig91 = analyze_job_type_distribution(df_egy, plot_name="analyze_job_type_distribution_egypt", folder='egypt')
+
+#%%
+fig92 = analyze_job_type_distribution(df_saudi, plot_name="analyze_job_type_distribution_saudi", folder='egypt')
+
+#%%
+fig101 = compare_experience_requirements(df_egy, plot_name="compare_experience_requirements_egypt", folder='egypt')
+#%%
+fig102 = compare_experience_requirements(df_saudi, plot_name="compare_experience_requirements_saudi", folder='egypt')
+#%%
+fig111 = jobs_heatmap_by_city_and_job_level(df_egy, plot_name="jobs_heatmap_by_city_and_job_level_egypt", folder='egypt')
+#%%
+fig112 = jobs_heatmap_by_city_and_job_level(df_saudi, plot_name="jobs_heatmap_by_city_and_job_level_saudi", folder='egypt')
+#%%
+fig121 = plot_top_job_titles_wordcloud(df_egy, plot_name="plot_top_job_titles_wordcloud_egypt", folder='egypt')
+#%%
+fig122 = plot_top_job_titles_wordcloud(df_saudi, plot_name="plot_top_job_titles_wordcloud_saudi", folder='egypt')
