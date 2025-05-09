@@ -6,6 +6,8 @@ import arabic_reshaper
 from bidi.algorithm import get_display
 from typing import Literal
 
+sns.set(style="whitegrid")
+
 
 
 
@@ -718,6 +720,205 @@ def plot_job_postings_by_industry(df, plot_name, folder: Literal['egypt', 'saudi
 
     if save:
         path = '../visualizations/' + folder + '/' + plot_name + '.png'
+        fig.savefig(path)
+
+    return fig
+
+
+def analyze_job_type_distribution(data, plot_name, folder: Literal['egypt', 'saudi', 'compare'], save=True):
+    """
+    Analyze the distribution of job types and plot a pie chart with a clean legend.
+
+    Parameters:
+    -----------
+    data : pd.DataFrame
+        DataFrame containing a 'type' column representing the job type.
+    plot_name : str
+        The name of the file to save the plot to.
+    folder : Literal['egypt', 'saudi', 'compare']
+        The subfolder to save the plot in.
+    save : bool, optional
+        Whether to save the plot to a file. Defaults to True.
+
+    Returns:
+    --------
+    matplotlib.figure.Figure
+        The generated Figure object.
+    """
+    type_counts = data['type'].value_counts()
+    total = type_counts.sum()
+    raw_labels = type_counts.index.tolist()
+    sizes = type_counts.values
+    percentages = [f"{(count / total) * 100:.4f}%" for count in sizes]
+
+    # Labels in legend: JobName (xx.xxxx%)
+    labels_with_pct = [f"{name} ({pct})" for name, pct in zip(raw_labels, percentages)]
+
+    colors = sns.color_palette('pastel', len(labels_with_pct))
+
+    # Define custom function to show 4 decimal places in pie
+    def make_autopct(values):
+        def my_autopct(pct):
+            total = sum(values)
+            val = int(round(pct * total / 100.0))
+            return f'{pct:.4f}%'
+        return my_autopct
+
+    fig, ax = plt.subplots(figsize=(8, 6))
+    wedges, _, autotexts = ax.pie(
+        sizes,
+        autopct=make_autopct(sizes),
+        startangle=140,
+        colors=colors,
+        textprops={'fontsize': 10},
+        pctdistance=0.8
+    )
+
+    # Rotate inside numbers
+    for autotext in autotexts:
+        autotext.set_rotation(-45)
+
+    # Show legend with name + 4-digit percentage
+    ax.legend(wedges, labels_with_pct, title="Job Types", loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
+
+    ax.set_title('Job Distribution by Type', fontsize=14)
+    plt.tight_layout()
+    plt.show()
+
+    if save:
+        path = f'../visualizations/{folder}/{plot_name}.png'
+        fig.savefig(path, bbox_inches='tight')
+
+    return fig
+
+def compare_experience_requirements(data, plot_name, folder: Literal['egypt', 'saudi', 'compare'], save=True):
+    """
+    Compare minimum and maximum experience requirements for jobs.
+
+    This function generates a boxplot to compare the minimum and maximum years of experience
+    required for the jobs in the provided dataset.  It cleans the data by removing
+    missing and non-numeric values before plotting.
+
+    Parameters:
+    -----------
+    data : pd.DataFrame
+        DataFrame containing 'min_num_of_years' and 'max_num_of_years' columns.
+    plot_name : str
+        The name of the file to save the plot to.
+    folder : Literal['egypt', 'saudi', 'compare']
+        The subfolder to save the plot in.  Must be one of 'egypt', 'saudi', or 'compare'.
+    save : bool, optional
+        Whether to save the plot to a file.  Defaults to True.
+
+    Returns:
+    --------
+    matplotlib.figure.Figure
+        The generated Figure object.
+    """
+    exp_df = data[['min_num_of_years', 'max_num_of_years']].copy()
+    exp_df = exp_df.dropna()
+    exp_df = exp_df[(exp_df['min_num_of_years'] != 'Unknown') & (exp_df['max_num_of_years'] != 'Unknown')]
+
+    exp_df['min_num_of_years'] = pd.to_numeric(exp_df['min_num_of_years'], errors='coerce')
+    exp_df['max_num_of_years'] = pd.to_numeric(exp_df['max_num_of_years'], errors='coerce')
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+    sns.boxplot(data=exp_df, palette='Set3')
+    ax.set_title('Comparison of Min & Max Experience Requirements', fontsize=16)
+    ax.set_ylabel('Years of Experience', fontsize=12)
+    plt.tight_layout()
+    plt.show()
+
+    if save:
+        path = f'../visualizations/{folder}/{plot_name}.png'
+        fig.savefig(path)
+
+    return fig
+
+def jobs_heatmap_by_city_and_type(data, plot_name, folder: Literal['egypt', 'saudi', 'compare'], save=True):
+    """
+    Create a heatmap of job counts by city and job type.
+
+    This function generates a heatmap showing the number of available jobs in each city
+    for each job type present in the dataset.
+
+    Parameters:
+    -----------
+    data : pd.DataFrame
+        DataFrame containing 'city' and 'type' columns.
+    plot_name : str
+        The name of the file to save the plot to.
+    folder : Literal['egypt', 'saudi', 'compare']
+        The subfolder to save the plot in.  Must be one of 'egypt', 'saudi', or 'compare'.
+    save : bool, optional
+        Whether to save the plot to a file.  Defaults to True.
+
+    Returns:
+    --------
+    matplotlib.figure.Figure
+        The generated Figure object.
+    """
+    pivot_table = pd.pivot_table(data, index='city', columns='type', aggfunc='size', fill_value=0)
+
+    # Convert index and columns to Arabic for display
+    reshaped_index = [get_display(arabic_reshaper.reshape(city)) for city in pivot_table.index]
+    reshaped_columns = [get_display(arabic_reshaper.reshape(job_type)) for job_type in pivot_table.columns]
+
+    pivot_table.index = reshaped_index
+    pivot_table.columns = reshaped_columns
+
+    fig, ax = plt.subplots(figsize=(12, 8))
+    sns.heatmap(pivot_table, cmap='YlGnBu', annot=True, fmt='d')
+    ax.set_title('Heatmap of Job Count by City and Type')
+    plt.tight_layout()
+    plt.show()
+
+    if save:
+        path = f'../visualizations/{folder}/{plot_name}.png'
+        fig.savefig(path)
+
+    return fig
+
+def plot_top_job_titles_wordcloud(data, stopwords_list=[], save=False, plot_name='wordcloud', folder='egypt'):
+    """
+    Generate a word cloud of the most common job titles.
+
+    This function creates a visual representation (word cloud) of the most frequent job titles
+    in the dataset.  You can customize the words to exclude (stopwords).
+
+    Parameters:
+    -----------
+    data : pd.DataFrame
+        DataFrame containing a 'title' column representing the job title.
+    stopwords_list : list, optional
+        List of words to exclude from the word cloud.  Defaults to an empty list.
+    save : bool, optional
+        Whether to save the plot to a file.  Defaults to False.
+    plot_name : str, optional
+        The name of the file to save the plot to.  Defaults to 'wordcloud'.
+    folder : str, optional
+        The subfolder to save the plot in.  Defaults to 'egypt'.
+
+    Returns:
+    --------
+    matplotlib.figure.Figure
+        The generated Figure object.
+    """
+    from wordcloud import WordCloud
+
+    text = ' '.join(data['title'].dropna())
+    wordcloud = WordCloud(width=1000, height=600, background_color='white',
+                          stopwords=set(stopwords_list), colormap='viridis').generate(text)
+
+    fig, ax = plt.subplots(figsize=(12, 6))
+    ax.imshow(wordcloud, interpolation='bilinear')
+    ax.axis('off')
+    ax.set_title('Most Common Job Titles (Wordcloud)', fontsize=16)
+    plt.tight_layout()
+    plt.show()
+
+    if save:
+        path = f"../visualizations/{folder}/{plot_name}.png"
         fig.savefig(path)
 
     return fig
