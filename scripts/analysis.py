@@ -1,11 +1,10 @@
-import os
 import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import arabic_reshaper
 from bidi.algorithm import get_display
 from typing import Literal
+from wordcloud import WordCloud
 
 sns.set(style="whitegrid")
 
@@ -732,7 +731,7 @@ def plot_top_job_titles_wordcloud(data, stopwords_list=[], save=False, plot_name
     matplotlib.figure.Figure
         The generated Figure object.
     """
-    from wordcloud import WordCloud
+
 
     text = ' '.join(data['title'].dropna())
     wordcloud = WordCloud(width=1000, height=600, background_color='white',
