@@ -66,30 +66,31 @@ streamlit run app.py
 * Job Distribution by City
 * Jobs by Company
 * Top Job Titles
-* Work Type Distribution
-* Job Levels
-* Job Trends Over Time
-* Industry Distribution
+* Jobs by Work Type
+* Jobs by Gender
+* Jobs by Job Level
+* Job Trend Over Time
+* Job Postings by Industry
 * Job Type Distribution
 * Experience Requirements
-* Heatmaps
-* Word Clouds
+* Heatmap by City and Job Level
+* Top Job Titles Word Cloud
 
 ## 📢 **Contributors**
 
-* **Ezz Al-Din Emad** - Machine Learning Engineer
-* **Sarah Ali** - Data Analyst
-* **Omar El-Sayed** - ML Engineer
-* **Mona Ibrahim** - Business Analyst
+* **Ezz Al-Din Emad** - Machine Learning Engineer 
+  - `Data Cleaning`
+* **Abdallah Mohamed** - Data Scientist
+  - `Data Cleaning`
+* **Adel Maher** - Data Analyst
+  - `Data Analysis`
+* **Ali Ahmed** - Data Scientist
+  - `Data Analysis`
+
 
 ## 🌐 **Links**
 
 * **Live App:** [Job Market Insights Analysis](https://job-market-insights-analysis.streamlit.app)
 * **Team Portfolio:** [DataMentes Team](https://team-portfolio.streamlit.app)
-* **GitHub Repository:** [EzzAl-Din/Job\_Market\_Insights](https://github.com/EzzAl-Din/Job_Market_Insights)
+* **GitHub Repository:** [https://github.com/DataMentes/Job-Market-Insights-analysis](https://github.com/DataMentes/Job-Market-Insights-analysis)
 
----
-
-## 📌 **License**
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
