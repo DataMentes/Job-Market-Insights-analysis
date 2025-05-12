@@ -332,7 +332,7 @@ def main():
     # ---------------------------
     st.markdown("---")
     st.markdown("Created by DataMentes Team | Job Market Analysis Tool")
-    st.markdown("Team Members Profile:[https://team-portfolio.streamlit.app](https://team-portfolio.streamlit.app)")
+    st.markdown("Team Members Profile: [https://team-portfolio.streamlit.app](https://team-portfolio.streamlit.app)")
 
 
 if __name__ == "__main__":
