@@ -326,15 +326,13 @@ def main():
             with col2:
                 st.markdown(f"Saudi Arabia: {plot_names[i]}")
                 st.pyplot(saudi_figs[i])
-    elif page == 'Team Members Profile':
-        st.header(f"Team Members Profile")
 
     # ---------------------------
     # Footer or Credits
     # ---------------------------
     st.markdown("---")
     st.markdown("Created by DataMentes Team | Job Market Analysis Tool")
-    st.page_link('https://team-portfolio.streamlit.app', label='Team Members Profile')
+    st.markdown("Team Members Profile:[https://team-portfolio.streamlit.app](https://team-portfolio.streamlit.app)")
 
 
 if __name__ == "__main__":
