@@ -120,35 +120,35 @@ def main():
         st.dataframe(df_saudi_before)
         st.write("""## Data Cleaning and Transformation Summary
             
-            ### 1. **Initial Column Splitting**
-               - **Location**: Extracted `city` by splitting the `location` column using the separator `·`.
-               - **Career Level**: Divided `career_level` into `type`, `exp`, and `no_exp` columns.
-            
-            ### 2. **Handling Missing Values**
-               - Replaced "Unknown" values in `exp` and `no_exp` with `NaN`.
-               - Combined similar columns (`experience` & `exp`, `num_of_exp` & `no_exp`) into new columns (`experience_`, `num_of_exp_years`).
-               - Filled missing values in categorical columns (`remote`, `age`, `sex`, etc.) with default values like "لا تفضيل" (no preference).
-            
-            ### 3. **Dropping Unnecessary Columns**
-               - Removed irrelevant columns such as `age`, `salary`, `qualification`, and others that were not needed for analysis.
-            
-            ### 4. **Standardizing Job Titles**
-               - Removed leading numbers, periods, and unwanted terms (e.g., "sr", "junior") from job titles.
-               - Mapped job titles to standardized names using predefined mappings.
-            
-            ### 5. **Manual Adjustments and Translation**
-               - Manually cleaned and translated the `title` column for consistency.
-               - Removed rows containing specific keywords like "سعودية", "saudi".
-            
-            ### 6. **Updating Experience Information**
-               - Updated rows where `type` included "تدريب" to set `experience_` to "خريج جديد" (New Graduate).
-            
-            ### 7. **Extracting Additional Information**
-               - Extracted gender and remote work information from text columns (`title`, `description`, `skills`).
-            
-            ### 8. **Final Adjustments**
-               - Dropped unnecessary columns like `description` and `skills`.
-               - Processed and cleaned the `num_of_exp_years` column.""")
+### 1. **Initial Column Splitting**
+   - **Location**: Extracted `city` by splitting the `location` column using the separator `·`.
+   - **Career Level**: Divided `career_level` into `type`, `exp`, and `no_exp` columns.
+
+### 2. **Handling Missing Values**
+   - Replaced "Unknown" values in `exp` and `no_exp` with `NaN`.
+   - Combined similar columns (`experience` & `exp`, `num_of_exp` & `no_exp`) into new columns (`experience_`, `num_of_exp_years`).
+   - Filled missing values in categorical columns (`remote`, `age`, `sex`, etc.) with default values like "لا تفضيل" (no preference).
+
+### 3. **Dropping Unnecessary Columns**
+   - Removed irrelevant columns such as `age`, `salary`, `qualification`, and others that were not needed for analysis.
+
+### 4. **Standardizing Job Titles**
+   - Removed leading numbers, periods, and unwanted terms (e.g., "sr", "junior") from job titles.
+   - Mapped job titles to standardized names using predefined mappings.
+
+### 5. **Manual Adjustments and Translation**
+   - Manually cleaned and translated the `title` column for consistency.
+   - Removed rows containing specific keywords like "سعودية", "saudi".
+
+### 6. **Updating Experience Information**
+   - Updated rows where `type` included "تدريب" to set `experience_` to "خريج جديد" (New Graduate).
+
+### 7. **Extracting Additional Information**
+   - Extracted gender and remote work information from text columns (`title`, `description`, `skills`).
+
+### 8. **Final Adjustments**
+   - Dropped unnecessary columns like `description` and `skills`.
+   - Processed and cleaned the `num_of_exp_years` column.""")
 
         st.markdown("Egypt Dataset After Preprocessing")
         st.dataframe(df_egypt)
