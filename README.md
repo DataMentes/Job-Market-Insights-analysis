@@ -1,3 +1,5 @@
+# App Link:
+- `https://job-market-insights-analysis.streamlit.app`
 # Project Guidelines
 
 Welcome to the project! To ensure smooth collaboration and avoid confusion, please follow these rules when working on this repository:
