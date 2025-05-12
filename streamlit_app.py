@@ -118,8 +118,7 @@ def main():
         st.dataframe(df_egypt_before)
         st.markdown("Saudi Arabia Dataset Before Preprocessing")
         st.dataframe(df_saudi_before)
-        st.write(
-            """## Data Cleaning and Transformation Summary
+        st.write("""## Data Cleaning and Transformation Summary
             
             ### 1. **Initial Column Splitting**
                - **Location**: Extracted `city` by splitting the `location` column using the separator `·`.
@@ -149,8 +148,7 @@ def main():
             
             ### 8. **Final Adjustments**
                - Dropped unnecessary columns like `description` and `skills`.
-               - Processed and cleaned the `num_of_exp_years` column."""
-        )
+               - Processed and cleaned the `num_of_exp_years` column.""")
 
         st.markdown("Egypt Dataset After Preprocessing")
         st.dataframe(df_egypt)
