@@ -250,7 +250,7 @@ df_saudi.head(15)
 # 4. **Sort Titles**:
 #    - Sorted the titles alphabetically in ascending order.
 #%%
-conn = sqlite3.connect('database.db')
+conn = sqlite3.connect('data/database.db')
 df_egypt = pd.read_sql('SELECT * FROM EGYPT', conn)
 df_saudi = pd.read_sql('SELECT * FROM [saudi-arabia]', conn)
 #%%
@@ -1006,7 +1006,7 @@ df_egypt.title.value_counts()
 edit_title(df_saudi, final_mapping_title_saudi)
 df_saudi.title.value_counts()
 #%%
-conn = sqlite3.connect('database.db')
+conn = sqlite3.connect('data/database.db')
 # df.to_sql('EGYPT', con=conn, if_exists='replace')
 # df.to_sql('saudi-arabia', con=conn, if_exists='replace')
 #conn.close()
@@ -1014,7 +1014,7 @@ conn = sqlite3.connect('database.db')
 # ## Analysis
 # 
 #%%
-conn = sqlite3.connect('database.db')
+conn = sqlite3.connect('data/database.db')
 df_egy = pd.read_sql('SELECT * FROM EGYPT', conn)
 df_saudi = pd.read_sql('SELECT * FROM [saudi-arabia]', conn)
 #%%

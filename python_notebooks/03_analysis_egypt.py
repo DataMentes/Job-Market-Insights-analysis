@@ -12,7 +12,7 @@ warnings.filterwarnings("ignore", category=FutureWarning)
 # 
 # 
 #%%
-conn = sqlite3.connect('../database.db')
+conn = sqlite3.connect('../data/database.db')
 df = pd.read_sql('SELECT * FROM EGYPT', conn)
 
 #%% md

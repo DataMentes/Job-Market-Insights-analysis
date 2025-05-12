@@ -164,7 +164,7 @@ extract_remotely(df, 'skills')
 #%%
 df.drop(columns=['description', 'skills'], inplace=True)
 split_num_of_exp_years(df)
-conn = sqlite3.connect('../database.db')
+conn = sqlite3.connect('../data/database.db')
 # df.to_sql('EGYPT', con=conn, if_exists='replace', index=False)
 conn.close()
 df.head(15)
@@ -183,7 +183,7 @@ df.head(15)
 # 4. **Sort Titles**:
 #    - Sorted the titles alphabetically in ascending order.
 #%%
-conn = sqlite3.connect('../database.db')
+conn = sqlite3.connect('../data/database.db')
 df = pd.read_sql('SELECT * FROM EGYPT', conn)
 #%%
 df['title'] = df['title'].str.replace(r'^\d+\.', '', regex=True).str.strip()
@@ -533,6 +533,6 @@ review_matches(df, final_mapping_title)
 edit_title(df, final_mapping_title)
 df.title.value_counts()
 #%%
-conn = sqlite3.connect('../database.db')
+conn = sqlite3.connect('../data/database.db')
 # df.to_sql('EGYPT', con=conn, if_exists='replace')
 conn.close()

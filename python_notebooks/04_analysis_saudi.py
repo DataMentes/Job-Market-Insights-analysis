@@ -20,7 +20,7 @@ from bidi.algorithm import get_display
 
 
 # %%
-conn = sqlite3.connect('../database.db')
+conn = sqlite3.connect('../data/database.db')
 df = pd.read_sql('SELECT * FROM [saudi-arabia]', conn)
 
 

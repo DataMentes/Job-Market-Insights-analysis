@@ -111,7 +111,7 @@ df.sort_values(by=['title'], ascending=False, inplace=True)
 # 
 # 3. **Save the Data**
 #%%
-conn = sqlite3.connect('../database.db')
+conn = sqlite3.connect('../data/database.db')
 df = pd.read_sql('SELECT * FROM [saudi-arabia]', conn)
 df.sort_values(by=['title'], ascending=False, inplace=True)
 apply_translation(df, 'title', rows=df.iloc[:400, :].index.tolist())
@@ -140,7 +140,7 @@ conn.close()
 # 
 # 7. **Save the Data**
 #%%
-conn = sqlite3.connect('../database.db')
+conn = sqlite3.connect('../data/database.db')
 df = pd.read_sql('SELECT * FROM [saudi-arabia]', conn)
 index = df.type.str.contains(r'تدريب', regex=True)
 df.loc[index, 'experience_'] = 'خريج جديد'
@@ -157,7 +157,7 @@ extract_remotely(df,'description')
 extract_remotely(df,'skills')
 df.drop(columns=['description', 'skills'], inplace=True)
 split_num_of_exp_years(df)
-conn = sqlite3.connect('../database.db')
+conn = sqlite3.connect('../data/database.db')
 # df.to_sql('saudi-arabia', con=conn, if_exists='replace', index=False)
 conn.close()
 df
@@ -176,7 +176,7 @@ df
 # 4. **Sort Titles**:
 #    - Sorted the titles alphabetically in ascending order.
 #%%
-conn = sqlite3.connect('../database.db')
+conn = sqlite3.connect('../data/database.db')
 df = pd.read_sql('SELECT * FROM [saudi-arabia]', conn)
 df['title'] = df['title'].str.replace(r'^\d+\.', '', regex=True).str.strip()
 df['title'] = df['title'].str.replace(r'^a\s\b', '', regex=True).str.strip()
@@ -599,7 +599,7 @@ review_matches(df,edite_title_mapping)
 edit_title(df,edite_title_mapping)
 df.title.value_counts()
 #%%
-conn = sqlite3.connect('../database.db')
+conn = sqlite3.connect('../data/database.db')
 # df.to_sql('saudi-arabia', con=conn, if_exists='replace', index=False)
 conn.close()
 df.title

@@ -1,62 +1,95 @@
-# App Link:
-- `https://job-market-insights-analysis.streamlit.app`
-# Project Guidelines
+# Job Market Insights Analysis
 
-Welcome to the project! To ensure smooth collaboration and avoid confusion, please follow these rules when working on this repository:
+🚀 **Live Demo:** [Job Market Insights Analysis](https://job-market-insights-analysis.streamlit.app)
 
-## 1. Organize Your Work
+---
 
-- Create a folder named `notebooks` in the root directory.
-- Place all Jupyter Notebook files `.ipynb` that you are working on inside the `notebooks` folder.
+## 📑 **Project Overview**
 
-## 2. Sync Before Starting
+This project provides comprehensive insights into the job markets of **Egypt** and **Saudi Arabia** using data analysis and visualization tools. It allows users to explore various aspects of the job market, including job distribution, top employers, industry trends, and experience requirements. Built with **Streamlit**, **Pandas**, and **Matplotlib**, this application offers an interactive, user-friendly experience for professionals, job seekers, and data enthusiasts.
 
-Before you begin working, always pull the latest changes from the remote repository:
+## 🎯 **Key Features**
 
-```bash
-git pull origin main
-```
+* **Data Cleaning and Transformation:** In-depth preprocessing of job listings for accurate analysis.
+* **Interactive Visualizations:** 12 key plots for each market, including:
 
-## 3. Convert Python Files to Jupyter Notebooks
+  * Job Distribution by City
+  * Jobs by Company
+  * Top Job Titles
+  * Work Type Distribution
+  * Job Levels and Experience
+* **Market Comparison:** Side-by-side analysis of Egypt and Saudi Arabia job markets.
+* **Team Profiles:** Meet the project contributors.
 
-If you need to work on a Python file `.py`, convert it to a Jupyter Notebook `.ipynb` first:
+## 🚀 **Getting Started**
 
-1. Move the Python file to the `notebooks` folder.
-2. Open it as a Jupyter Notebook.
+### Prerequisites
 
-## 4. Save Your Work Back to Python
+* Python 3.10+
+* Streamlit
+* Pandas
+* Matplotlib
 
-After finishing your work in the Jupyter Notebook, convert it back to a Python file `.py`:
+### Installation
 
-1. Convert the notebook to a Python file.
-2. Return the Python file to its original location in the `python_notebooks` folder.
-
-## 5. Commit Your Changes
-
-Once your work is complete, stage and commit your changes with a clear and descriptive message:
-
-```bash
-git commit -m "Your descriptive commit message"
-```
-
-## 6. Sync Again
-
-Before pushing your changes, pull the latest updates from the remote repository to ensure no new changes have been made by others:
+Clone the repository:
 
 ```bash
-git pull origin main
+git clone https://github.com/EzzAl-Din/Job_Market_Insights.git
+cd Job_Market_Insights
 ```
 
-## 7. Push Your Changes
-
-Finally, push your committed changes to the remote repository:
+Install dependencies:
 
 ```bash
-git push origin main
+pip install -r requirements.txt
 ```
 
-**Important Notes:**
+Run the app locally:
 
-- Always follow this workflow to avoid conflicts and ensure consistency.
-- If you encounter any issues during the process, communicate with the team immediately.
+```bash
+streamlit run app.py
+```
 
+## 🛠️ **Modules and Functions**
+
+### **Data Processing (scripts/preprocessing.py)**
+
+* Data cleaning, feature engineering, and transformation.
+
+### **Analysis Functions (scripts/analysis.py)**
+
+* Plotting and data exploration functions.
+
+## 📊 **Visualizations Included**
+
+* Job Distribution by City
+* Jobs by Company
+* Top Job Titles
+* Work Type Distribution
+* Job Levels
+* Job Trends Over Time
+* Industry Distribution
+* Job Type Distribution
+* Experience Requirements
+* Heatmaps
+* Word Clouds
+
+## 📢 **Contributors**
+
+* **Ezz Al-Din Emad** - Machine Learning Engineer
+* **Sarah Ali** - Data Analyst
+* **Omar El-Sayed** - ML Engineer
+* **Mona Ibrahim** - Business Analyst
+
+## 🌐 **Links**
+
+* **Live App:** [Job Market Insights Analysis](https://job-market-insights-analysis.streamlit.app)
+* **Team Portfolio:** [DataMentes Team](https://team-portfolio.streamlit.app)
+* **GitHub Repository:** [EzzAl-Din/Job\_Market\_Insights](https://github.com/EzzAl-Din/Job_Market_Insights)
+
+---
+
+## 📌 **License**
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

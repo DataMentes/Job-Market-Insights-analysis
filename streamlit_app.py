@@ -13,7 +13,7 @@ df_egypt_before = pd.read_csv('data/raw/egypt_raw.csv')
 df_saudi_before = pd.read_csv('data/raw/saudi-arabia_raw.csv')
 
 # Assuming 'database.db' is in the same directory or accessible
-conn = sqlite3.connect('database.db')
+conn = sqlite3.connect('data/database.db')
 df_egypt = pd.read_sql('SELECT * FROM EGYPT', conn)
 
 df_saudi = pd.read_sql('SELECT * FROM [saudi-arabia]', conn)
