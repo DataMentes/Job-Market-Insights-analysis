@@ -9,12 +9,14 @@ import streamlit as st
 # ---------------------------
 # Import Data
 # ---------------------------
-# Assuming 'database.db' is in the same directory or accessible
-conn_egypt = sqlite3.connect('database.db')
-df_egypt = pd.read_sql('SELECT * FROM EGYPT', conn_egypt)
+df_egypt_before = pd.read_csv('data/raw/egypt_raw.csv')
+df_saudi_before = pd.read_csv('data/raw/saudi-arabia_raw.csv')
 
-conn_saudi = sqlite3.connect('database.db')
-df_saudi = pd.read_sql('SELECT * FROM [saudi-arabia]', conn_saudi)
+# Assuming 'database.db' is in the same directory or accessible
+conn = sqlite3.connect('database.db')
+df_egypt = pd.read_sql('SELECT * FROM EGYPT', conn)
+
+df_saudi = pd.read_sql('SELECT * FROM [saudi-arabia]', conn)
 
 # ---------------------------
 # Import Plots
@@ -114,6 +116,17 @@ def main():
             This app helps you analyze and compare the job markets in Egypt and Saudi Arabia.
             Use the sidebar to navigate between different sections.
         """)
+
+        st.markdown("Egypt Dataset Before Preprocessing")
+        st.dataframe(df_egypt_before)
+        st.markdown("Saudi Arabia Dataset Before Preprocessing")
+        st.dataframe(df_saudi_before)
+        st.subheader("Preprocessing Explanations")
+        st.write("")
+        st.markdown("Egypt Dataset After Preprocessing")
+        st.dataframe(df_egypt)
+        st.markdown("Saudi Arabia Dataset After Preprocessing")
+        st.dataframe(df_saudi)
 
     elif page == "Egypt Market":
         st.header("Egypt Job Market")
@@ -276,22 +289,25 @@ def main():
         ]
 
         # Use st.columns to create two columns for each comparison
-        col1, col2 = st.columns([1, 1])
         for i in range(len(egypt_figs)):
             st.subheader(f"Comparison: {plot_names[i]}")
-            st.write(f"{comparison_explanations[i]} (Egypt)")
+            st.write(f"{comparison_explanations[i]}")
+            col1, col2 = st.columns([1, 1])
             with col1:
                 st.markdown(f"Egypt: {plot_names[i]}")
                 st.pyplot(egypt_figs[i])
             with col2:
                 st.markdown(f"Saudi Arabia: {plot_names[i]}")
                 st.pyplot(saudi_figs[i])
+    elif page == 'Team Members Profile':
+        st.header(f"Team Members Profile")
 
     # ---------------------------
     # Footer or Credits
     # ---------------------------
     st.markdown("---")
     st.markdown("Created by DataMentes Team | Job Market Analysis Tool")
+    st.page_link('http://localhost:8501/',label='Team Members Profile')
 
 
 if __name__ == "__main__":
