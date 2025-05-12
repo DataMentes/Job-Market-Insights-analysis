@@ -112,17 +112,46 @@ def main():
 
     if page == "Home":
         st.header("Welcome to the Job Market Analysis App")
-        st.write("""
-            This app helps you analyze and compare the job markets in Egypt and Saudi Arabia.
-            Use the sidebar to navigate between different sections.
-        """)
-
+        st.write(
+            """**Home section displays Data Cleaning and Transformation related to the Egyptian & Saudi Arabia Datasets.**""")
         st.markdown("Egypt Dataset Before Preprocessing")
         st.dataframe(df_egypt_before)
         st.markdown("Saudi Arabia Dataset Before Preprocessing")
         st.dataframe(df_saudi_before)
-        st.subheader("Preprocessing Explanations")
-        st.write("")
+        st.write(
+            """## Data Cleaning and Transformation Summary
+            
+            ### 1. **Initial Column Splitting**
+               - **Location**: Extracted `city` by splitting the `location` column using the separator `·`.
+               - **Career Level**: Divided `career_level` into `type`, `exp`, and `no_exp` columns.
+            
+            ### 2. **Handling Missing Values**
+               - Replaced "Unknown" values in `exp` and `no_exp` with `NaN`.
+               - Combined similar columns (`experience` & `exp`, `num_of_exp` & `no_exp`) into new columns (`experience_`, `num_of_exp_years`).
+               - Filled missing values in categorical columns (`remote`, `age`, `sex`, etc.) with default values like "لا تفضيل" (no preference).
+            
+            ### 3. **Dropping Unnecessary Columns**
+               - Removed irrelevant columns such as `age`, `salary`, `qualification`, and others that were not needed for analysis.
+            
+            ### 4. **Standardizing Job Titles**
+               - Removed leading numbers, periods, and unwanted terms (e.g., "sr", "junior") from job titles.
+               - Mapped job titles to standardized names using predefined mappings.
+            
+            ### 5. **Manual Adjustments and Translation**
+               - Manually cleaned and translated the `title` column for consistency.
+               - Removed rows containing specific keywords like "سعودية", "saudi".
+            
+            ### 6. **Updating Experience Information**
+               - Updated rows where `type` included "تدريب" to set `experience_` to "خريج جديد" (New Graduate).
+            
+            ### 7. **Extracting Additional Information**
+               - Extracted gender and remote work information from text columns (`title`, `description`, `skills`).
+            
+            ### 8. **Final Adjustments**
+               - Dropped unnecessary columns like `description` and `skills`.
+               - Processed and cleaned the `num_of_exp_years` column."""
+        )
+
         st.markdown("Egypt Dataset After Preprocessing")
         st.dataframe(df_egypt)
         st.markdown("Saudi Arabia Dataset After Preprocessing")
@@ -130,7 +159,7 @@ def main():
 
     elif page == "Egypt Market":
         st.header("Egypt Job Market")
-        st.write("This section displays analysis related to the Egyptian job market.")
+        st.write("**This section displays analysis related to the Egyptian job market.**")
         egypt_explanations = [
             "- Bar chart showing the top 10 cities in Egypt based on the number of jobs available.\n"
             "- Cairo dominates with over 2,000 jobs, followed by Alexandria (~100 jobs) and other cities like New Cairo and Sharm El-Sheikh with fewer than 50 jobs each.\n",
@@ -177,7 +206,7 @@ def main():
 
     elif page == "Saudi Market":
         st.header("Saudi Arabia Job Market")
-        st.write("This section displays analysis related to the Saudi Arabian job market.")
+        st.write("**This section displays analysis related to the Saudi Arabian job market.**")
         saudi_explanations = [
             "- Bar chart showing the top 10 cities in Saudi Arabia based on the number of jobs available.\n"
             "- Riyadh dominates with over 2,000 jobs, followed by Jeddah (~500 jobs) and other cities like Dammam and Khobar with moderate numbers (100-300 jobs).\n",
@@ -307,7 +336,7 @@ def main():
     # ---------------------------
     st.markdown("---")
     st.markdown("Created by DataMentes Team | Job Market Analysis Tool")
-    st.page_link('http://localhost:8501/',label='Team Members Profile')
+    st.page_link('https://team-portfolio.streamlit.app', label='Team Members Profile')
 
 
 if __name__ == "__main__":
