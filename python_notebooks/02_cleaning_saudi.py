@@ -1,6 +1,5 @@
 #%% md
 # ### Import required libraries
-# 
 # - Import `clean_data` module from `scripts`.
 # - Import `sqlite3` for database interaction.
 # - Import `warnings` and disable warnings.
@@ -10,40 +9,38 @@ from scripts.clean_data import *
 import sqlite3
 import warnings
 import pandas as pd
+
 warnings.filterwarnings("ignore")
 #%% md
 # ### Load and preview data
-# 
 # - Load CSV file `saudi-arabia_raw.csv` from `../data/raw/` into DataFrame.
-# - Display first 15 rows of the DataFrame.
+# - Display first 5 rows of the DataFrame.
 #%%
-df = pd.read_csv('../data/raw/saudi-arabia_raw.csv')
-df.head(15)
+df_saudi = pd.read_csv('../data/raw/saudi-arabia_raw.csv')
+df_saudi.head()
 #%% md
 # ### Split location and career_level columns
-# 
 # - Split `location` column by separator `·`, keep index 1 as `city`.
+# - Split `career_level` column by separator `·`, keep indexes 0, 1, 2 as `type`, `exp`, and `no_exp`.
 # - Further process `career_level` column using `split_career_level` function.
 #%%
-split_column(df, 'location', [1], '·', ['city'], reverse=True)
-split_career_level(df)
-df.head(15)
+split_column(df_saudi, 'location', [1], '·', ['city'], reverse=True)
+split_career_level(df_saudi)
+df_saudi.head(15)
 #%% md
 # ### Clean and combine experience columns
-# 
 # - Replace 'Unknown' values in `exp` column with `NaN`.
 # - Combine `experience` column with `exp` column into a new column `experience_` using `combine_first`.
 # - Replace 'Unknown' values in `no_exp` column with `NaN`.
 # - Combine `num_of_exp` column with `no_exp` column into a new column `num_of_exp_years` using `combine_first`.
 #%%
-df['exp'].replace('Unknown', np.nan, inplace=True)
-df['experience_'] = df['experience'].combine_first(df['exp'])
-df['no_exp'].replace('Unknown', np.nan, inplace=True)
-df['num_of_exp_years'] = df['num_of_exp'].combine_first(df['no_exp'])
-df.head(15)
+df_saudi['exp'].replace('Unknown', np.nan, inplace=True)
+df_saudi['experience_'] = df_saudi['experience'].combine_first(df_saudi['exp'])
+df_saudi['no_exp'].replace('Unknown', np.nan, inplace=True)
+df_saudi['num_of_exp_years'] = df_saudi['num_of_exp'].combine_first(df_saudi['no_exp'])
+df_saudi.head(15)
 #%% md
 # ### Split and Clean Columns
-# 
 # 1. **Split `industry` column** using the `split_industry` function.
 # 2. **Split `location` column**:
 #    - Extract the city from the `location` column by splitting at '·'.
@@ -52,151 +49,131 @@ df.head(15)
 #    - Extract the number of vacancies by splitting at a space (' ').
 #    - Fill missing values with `1` if no vacancies are specified.
 #%%
-split_industry(df)
-split_column(df, 'location', index=[1], split_char='·', names=['city'],reverse=True)
-split_column(df, 'num_of_vacancies', index=[3], split_char=' ', names=['num_of_vacancies'], fill_value=1)
-df.head(15)
+split_industry(df_saudi)
+split_column(df_saudi, 'location', index=[1], split_char='·', names=['city'], reverse=True)
+split_column(df_saudi, 'num_of_vacancies', index=[3], split_char=' ', names=['num_of_vacancies'], fill_value=1)
+df_saudi.head(15)
 #%% md
 # ### Fill Missing Values in Columns
-# 
 # 1. **Fill missing values in the `remote` column** with `'من المقر'` to indicate office-based positions.
 # 2. **Fill missing values in the `age` column** with `'لا تفضيل'` to represent no preference regarding age.
 # 3. **Fill missing values in the `sex` column** with `'لا تفضيل'` to represent no preference regarding sex.
 # 4. **Fill missing values in the `experience_` column** with `'لا تفضيل'` to represent no preference regarding experience.
 # 5. **Fill missing values in the `num_of_exp_years` column** with `'لا تفضيل'` to represent no preference regarding years of experience.
 #%%
-df['remote'].fillna('من المقر', inplace=True)
-df['age'].fillna('لا تفضيل', inplace=True)
-df['sex'].fillna('لا تفضيل', inplace=True)
-df['experience_'].fillna('لا تفضيل', inplace=True)
-df['num_of_exp_years'].fillna('لا تفضيل', inplace=True)
-df.head(15)
+df_saudi['remote'].fillna('من المقر', inplace=True)
+df_saudi['age'].fillna('لا تفضيل', inplace=True)
+df_saudi['sex'].fillna('لا تفضيل', inplace=True)
+df_saudi['experience_'].fillna('لا تفضيل', inplace=True)
+df_saudi['num_of_exp_years'].fillna('لا تفضيل', inplace=True)
+df_saudi.head(15)
 #%% md
 # ### Drop Unnecessary Columns
-# 
 #  * **Remove columns** from the DataFrame that are not needed for further analysis:
 #    - `age`, `exp`, `no_exp`, `num_of_exp`, `experience`, `career_level`, `industry`, `location`, `link`, `Unnamed: 0`, `salary`, `nationality`, `residence_area`, `qualification`, `specialization`.
 #%%
-df.drop(columns=['age', 'exp', 'no_exp', 'num_of_exp', 'exp', 'experience', 'career_level', 'industry', 'location', 'link','Unnamed: 0','salary', 'nationality', 'residence_area', 'qualification', 'specialization'],
-        inplace=True)
-df.head(15)
+df_saudi.drop(
+    columns=['age', 'exp', 'no_exp', 'num_of_exp', 'exp', 'experience', 'career_level', 'industry', 'location', 'link',
+             'Unnamed: 0', 'salary', 'nationality', 'residence_area', 'qualification', 'specialization'],
+    inplace=True)
+df_saudi.head(15)
 #%% md
 # ### Analyze Date Data
-# 
 # * **Call `analyses_date()` function** to analyze the date data in the DataFrame (`df`):
 #    - Parameter `num_days=120` specifies the number of days to consider for analysis.
 #%%
-analyses_date(df, num_days = 120)
-df.head(15)
+analyses_date(df_saudi, num_days=120)
+df_saudi.head(15)
 #%% md
 # ### Sort and Save Data
-# 
 # 1. **Sort the DataFrame** by the 'title' column in descending order:
 #    - The `ascending=False` argument sorts the data in descending order.
-# 
 # 2. **Save the DataFrame to an SQLite database** (commented-out code)
-# 
 #%%
-df.sort_values(by=['title'], ascending=False, inplace=True)
+df_saudi.sort_values(by=['title'], ascending=False, inplace=True)
 # sqlite_version = sqlite3.connect('../database.db')
 # df.to_sql('saudi-arabia', con=sqlite_version, if_exists='replace', index=False)
 #%% md
 # ### Manual Data Cleaning and Translation
-# 
 # 1. **Manual Cleaning of 'title' Column**:
 #    - Some manual adjustments were made to the 'title' column before starting the translation.
-# 
 # 2. **Translate the 'title' Column**:
 #    - After the manual cleaning, the translation was applied to the 'title' column for the first 400 rows using the `apply_translation` function.
-# 
 # 3. **Save the Data**
 #%%
-conn = sqlite3.connect('../data/database.db')
-df = pd.read_sql('SELECT * FROM [saudi-arabia]', conn)
-df.sort_values(by=['title'], ascending=False, inplace=True)
-apply_translation(df, 'title', rows=df.iloc[:400, :].index.tolist())
-# df.to_sql('saudi-arabia', con=conn, if_exists='replace', index=True)
-conn.close()
+df_saudi = pd.read_csv('../data/processed/saudi_arabia.csv')
+df_saudi.sort_values(by=['title'], ascending=False, inplace=True)
+apply_translation(df_saudi, 'title', rows=df_saudi.iloc[:400, :].index.tolist())
 #%% md
 # ### Data Transformation Process
-# 
 # 1. **Manual Update on 'experience_' Column**:
 #    - Updated rows where 'type' contains the word "تدريب" to set 'experience_' to 'خريج جديد' (New Graduate).
-# 
 # 2. **Translation**:
 #    - Translated 'experience_', 'type', 'sex', and 'remote' using respective translation functions.
-# 
 # 3. **Gender Extraction**:
 #    - Extracted gender information from 'title', 'description', and 'skills'.
-# 
 # 4. **Remote Work Extraction**:
 #    - Extracted remote work information from 'title', 'description', and 'skills'.
-# 
 # 5. **Drop Irrelevant Columns**:
 #    - Dropped 'description' and 'skills' columns.
-# 
 # 6. **Split 'num_of_exp_years' Column**:
 #    - Split and processed the 'num_of_exp_years' column.
-# 
 # 7. **Save the Data**
 #%%
-conn = sqlite3.connect('../data/database.db')
-df = pd.read_sql('SELECT * FROM [saudi-arabia]', conn)
-index = df.type.str.contains(r'تدريب', regex=True)
-df.loc[index, 'experience_'] = 'خريج جديد'
-translate_experience(df)
-translate_type(df)
-translate_sex(df)
-translate_remote(df)
-extract_job_grade(df)
-extract_gender(df,'title')
-extract_gender(df,'description')
-extract_gender(df,'skills')
-extract_remotely(df,'title')
-extract_remotely(df,'description')
-extract_remotely(df,'skills')
-df.drop(columns=['description', 'skills'], inplace=True)
-split_num_of_exp_years(df)
+df_saudi = pd.read_csv('../data/processed/saudi_arabia.csv')
+#%%
+index = df_saudi.type.str.contains(r'تدريب', regex=True)
+df_saudi.loc[index, 'experience_'] = 'خريج جديد'
+#%%
+translate_experience(df_saudi)
+translate_type(df_saudi)
+translate_sex(df_saudi)
+translate_remote(df_saudi)
+#%%
+extract_job_grade(df_saudi)
+extract_gender(df_saudi, 'title')
+extract_gender(df_saudi, 'description')
+extract_gender(df_saudi, 'skills')
+extract_remotely(df_saudi, 'title')
+extract_remotely(df_saudi, 'description')
+extract_remotely(df_saudi, 'skills')
+#%%
+df_saudi.drop(columns=['description', 'skills'], inplace=True)
+split_num_of_exp_years(df_saudi)
 conn = sqlite3.connect('../data/database.db')
 # df.to_sql('saudi-arabia', con=conn, if_exists='replace', index=False)
 conn.close()
-df
+df_saudi.head(15)
 #%% md
 # ### Data Transformation Steps for 'title' Column
-# 
 # 1. **Remove Leading Numbers**:
 #    - Removed leading numbers and periods (e.g., "1.", "2."), and stripped any leading or trailing spaces.
-# 
 # 2. **Remove Leading "a"**:
 #    - Removed any instance of the letter "a" at the beginning of the title followed by a space.
-# 
 # 3. **Convert to Lowercase**:
 #    - Converted all titles to lowercase for consistency.
-# 
 # 4. **Sort Titles**:
 #    - Sorted the titles alphabetically in ascending order.
 #%%
 conn = sqlite3.connect('../data/database.db')
-df = pd.read_sql('SELECT * FROM [saudi-arabia]', conn)
-df['title'] = df['title'].str.replace(r'^\d+\.', '', regex=True).str.strip()
-df['title'] = df['title'].str.replace(r'^a\s\b', '', regex=True).str.strip()
-df.title = df.title.str.lower()
-df.sort_values(by=['title'], inplace=True)
-df
+df_saudi = pd.read_sql('SELECT * FROM [saudi-arabia]', conn)
+#%%
+df_saudi['title'] = df_saudi['title'].str.replace(r'^\d+\.', '', regex=True).str.strip()
+df_saudi['title'] = df_saudi['title'].str.replace(r'^a\s\b', '', regex=True).str.strip()
+df_saudi.title = df_saudi.title.str.lower()
+df_saudi.sort_values(by=['title'], inplace=True)
+df_saudi.head(15)
 #%% md
 # ### Job Title Cleaning Process
-# 
 # 1. **Pattern Replacement**:
 #    - Applied a regular expression pattern to remove unwanted terms like "sr", "ssr", "senior", "junior", "staff", gender-related terms (e.g., "male", "female"), and specific job rank indicators (e.g., "trainee", "graduate").
 #    - Cleaned up job titles to ensure they follow the correct format without extra symbols, spaces, or unnecessary words.
-# 
 # 2. **Title Editing**:
 #    - Applied a predefined title mapping (`edite_title_mapping`) to standardize job titles, ensuring consistency across the dataset (e.g., "cashier" becomes "cashier", "driller" becomes "drilling operator").
-# 
 # 3. **Save the Data**:
 #    - The cleaned titles were saved back into the database for further analysis, ensuring all records follow the standardized format.
 #%%
-edite_title_mapping = {
+final_mapping_title_saudi = {
     r'cashier': 'cashier',
     r'driller': 'drilling Operator',
     r'marketing manager': 'marketing manager',
@@ -214,7 +191,7 @@ edite_title_mapping = {
     r'^account director': 'account director',
     r'account executive': 'account executive',
     r'account management': 'account management',
-    r'sales manager / account manager':'sales manager / account manager',
+    r'sales manager / account manager': 'sales manager / account manager',
     r'(?<!sales manager / )account manager': 'account manager',
     r'account receivable': 'account receivable',
     r'account solutions engineer': 'account solutions engineer',
@@ -532,7 +509,7 @@ edite_title_mapping = {
     r'solution(s)? architect': 'solutions architect',
     r'solar pv engineer': 'solar pv engineer',
     r'site manager': 'site manager',
-    r'^(?!.*(?:supervisor)).*service sales' : 'service sales engineer',
+    r'^(?!.*(?:supervisor)).*service sales': 'service sales engineer',
     r'^(?!.*(?:support|administrative|field)).*service (level )?manager': 'service manager',
     r'service engineer': 'service engineer',
     r'^service advisor': 'service advisor',
@@ -588,18 +565,17 @@ edite_title_mapping = {
     r'web developer': 'web developer',
     r'waiter': "waiter",
 }
+df_saudi.title.value_counts()
 #%%
-df.title.value_counts()
+pattern_replace = r'(^((sr(\b|\s)|\ssr(\b|\s))|senior|junior|staff|female|\bmen\b|\bmale\b|women(\'s)|tpe (iv|iii|ii|i|v)(\s)?(-|/)?)( (senior|graduate))?|^graduate|^trainee\b( -)?)(\s)?(\.|-|/|\\)?|(\.|\-|/|\,|\\)$'
+df_saudi.title = df_saudi.title.str.replace(pattern_replace, '', regex=True).str.strip()
+df_saudi = df_saudi.sort_values(by="title", ascending=False, key=lambda col: col.str.lower()).reset_index(drop=True)
 #%%
-pattern_replace =r'(^((sr(\b|\s)|\ssr(\b|\s))|senior|junior|staff|female|\bmen\b|\bmale\b|women(\'s)|tpe (iv|iii|ii|i|v)(\s)?(-|/)?)( (senior|graduate))?|^graduate|^trainee\b( -)?)(\s)?(\.|-|/|\\)?|(\.|\-|/|\,|\\)$'
-df.title = df.title.str.replace(pattern_replace,'',regex=True).str.strip()
+review_matches(df_saudi, final_mapping_title_saudi)
 #%%
-review_matches(df,edite_title_mapping)
-#%%
-edit_title(df,edite_title_mapping)
-df.title.value_counts()
+edit_title(df_saudi, final_mapping_title_saudi)
+df_saudi.title.value_counts()
 #%%
 conn = sqlite3.connect('../data/database.db')
-# df.to_sql('saudi-arabia', con=conn, if_exists='replace', index=False)
-conn.close()
-df.title
+# df.to_sql('saudi-arabia', con=conn, if_exists='replace')
+# conn.close()

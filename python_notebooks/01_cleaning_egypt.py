@@ -1,6 +1,5 @@
 #%% md
 # ### Import required libraries
-# 
 # - Import `clean_data` module from `scripts`.
 # - Import `sqlite3` for database interaction.
 # - Import `warnings` and disable warnings.
@@ -14,38 +13,34 @@ import pandas as pd
 warnings.filterwarnings("ignore")
 #%% md
 # ### Load and preview data
-# 
 # - Load CSV file `egypt_raw.csv` from `../data/raw/` into DataFrame.
-# - Display first 15 rows of the DataFrame.
+# - Display first 5 rows of the DataFrame.
 #%%
-df = df = pd.read_csv('../data/raw/egypt_raw.csv')
-df.head(15)
+df_egypt = pd.read_csv('../data/raw/egypt_raw.csv')
+df_egypt.head()
 #%% md
 # ### Split location and career_level columns
-# 
 # - Split `location` column by separator `·`, keep index 1 as `city`.
 # - Split `career_level` column by separator `·`, keep indexes 0, 1, 2 as `type`, `exp`, and `no_exp`.
 # - Further process `career_level` column using `split_career_level` function.
 #%%
-split_column(df, 'location', [1], '·', ['city'], reverse=True)
-split_career_level(df)
-df.head(15)
+split_column(df_egypt, 'location', [1], '·', ['city'], reverse=True)
+split_career_level(df_egypt)
+df_egypt.head(15)
 #%% md
 # ### Clean and combine experience columns
-# 
 # - Replace 'Unknown' values in `exp` column with `NaN`.
 # - Combine `experience` column with `exp` column into a new column `experience_` using `combine_first`.
 # - Replace 'Unknown' values in `no_exp` column with `NaN`.
 # - Combine `num_of_exp` column with `no_exp` column into a new column `num_of_exp_years` using `combine_first`.
 #%%
-df['exp'].replace('Unknown', np.nan, inplace=True)
-df['experience_'] = df['experience'].combine_first(df['exp'])
-df['no_exp'].replace('Unknown', np.nan, inplace=True)
-df['num_of_exp_years'] = df['num_of_exp'].combine_first(df['no_exp'])
-df.head(15)
+df_egypt['exp'].replace('Unknown', np.nan, inplace=True)
+df_egypt['experience_'] = df_egypt['experience'].combine_first(df_egypt['exp'])
+df_egypt['no_exp'].replace('Unknown', np.nan, inplace=True)
+df_egypt['num_of_exp_years'] = df_egypt['num_of_exp'].combine_first(df_egypt['no_exp'])
+df_egypt.head(15)
 #%% md
 # ### Split and Clean Columns
-# 
 # 1. **Split `industry` column** using the `split_industry` function.
 # 2. **Split `location` column**:
 #    - Extract the city from the `location` column by splitting at '·'.
@@ -54,157 +49,132 @@ df.head(15)
 #    - Extract the number of vacancies by splitting at a space (' ').
 #    - Fill missing values with `1` if no vacancies are specified.
 #%%
-split_industry(df)
-split_column(df, 'location', index=[1], split_char='·', names=['city'], reverse=True)
-split_column(df, 'num_of_vacancies', index=[3], split_char=' ', names=['num_of_vacancies'], fill_value=1)
-df.head(15)
+split_industry(df_egypt)
+split_column(df_egypt, 'location', index=[1], split_char='·', names=['city'], reverse=True)
+split_column(df_egypt, 'num_of_vacancies', index=[3], split_char=' ', names=['num_of_vacancies'], fill_value=1)
+df_egypt.head(15)
 #%% md
 # ### Fill Missing Values in Columns
-# 
 # 1. **Fill missing values in the `remote` column** with `'من المقر'` to indicate office-based positions.
 # 2. **Fill missing values in the `age` column** with `'لا تفضيل'` to represent no preference regarding age.
 # 3. **Fill missing values in the `sex` column** with `'لا تفضيل'` to represent no preference regarding sex.
 # 4. **Fill missing values in the `experience_` column** with `'لا تفضيل'` to represent no preference regarding experience.
 # 5. **Fill missing values in the `num_of_exp_years` column** with `'لا تفضيل'` to represent no preference regarding years of experience.
 #%%
-df['remote'].fillna('من المقر', inplace=True)
-df['age'].fillna('لا تفضيل', inplace=True)
-df['sex'].fillna('لا تفضيل', inplace=True)
-df['experience_'].fillna('لا تفضيل', inplace=True)
-df['num_of_exp_years'].fillna('لا تفضيل', inplace=True)
-df.head(15)
+df_egypt['remote'].fillna('من المقر', inplace=True)
+df_egypt['age'].fillna('لا تفضيل', inplace=True)
+df_egypt['sex'].fillna('لا تفضيل', inplace=True)
+df_egypt['experience_'].fillna('لا تفضيل', inplace=True)
+df_egypt['num_of_exp_years'].fillna('لا تفضيل', inplace=True)
+df_egypt.head(15)
 #%% md
 # ### Drop Unnecessary Columns
-# 
 #  * **Remove columns** from the DataFrame that are not needed for further analysis:
 #    - `age`, `exp`, `no_exp`, `num_of_exp`, `experience`, `career_level`, `industry`, `location`, `link`, `Unnamed: 0`, `salary`, `nationality`, `residence_area`, `qualification`, `specialization`.
 #%%
-df.drop(
+df_egypt.drop(
     columns=['age', 'exp', 'no_exp', 'num_of_exp', 'exp', 'experience', 'career_level', 'industry', 'location', 'link',
              'Unnamed: 0', 'salary', 'nationality', 'residence_area', 'qualification', 'specialization'],
     inplace=True)
-df.head(15)
+df_egypt.head(15)
 #%% md
 # ### Analyze Date Data
-# 
 # * **Call `analyses_date()` function** to analyze the date data in the DataFrame (`df`):
 #    - Parameter `num_days=120` specifies the number of days to consider for analysis.
 #%%
-analyses_date(df, num_days=120)
-df.head(15)
+analyses_date(df_egypt, num_days=120)
+df_egypt.head(15)
 #%% md
 # ### Sort and Save Data
-# 
 # 1. **Sort the DataFrame** by the 'title' column in descending order:
 #    - The `ascending=False` argument sorts the data in descending order.
-# 
 # 2. **Save the DataFrame to an SQLite database** (commented-out code)
-# 
 #%%
-df.sort_values(by=['title'], ascending=False, inplace=True)
+df_egypt.sort_values(by=['title'], ascending=False, inplace=True)
 # conn = sqlite3.connect('../database.db')
 # df.to_sql('EGYPT', con=conn, if_exists='replace', index=False)
 #%% md
 # ### Manual Data Cleaning and Translation
-# 
 # 1. **Manual Cleaning of 'title' Column**:
 #    - Some manual adjustments were made to the 'title' column before starting the translation.
-# 
 # 2. **Translate the 'title' Column**:
 #    - After the manual cleaning, the translation was applied to the 'title' column for the first 400 rows using the `apply_translation` function.
-# 
 # 3. **Save the Data**
 #%%
-df = pd.read_csv('../data/processed/egypt_clean.csv')
-df.sort_values(by=['title'], ascending=False, inplace=True)
-apply_translation(df, 'title', rows=df.iloc[:40, :].index.tolist())
+df_egypt = pd.read_csv('../data/processed/egypt_clean.csv')
+df_egypt.sort_values(by=['title'], ascending=False, inplace=True)
+apply_translation(df_egypt, 'title', rows=df_egypt.iloc[:40, :].index.tolist())
 #%%
-df = df[~df['title'].str.contains('سعودية', na=False)]
-df = df[~df['title'].str.contains('سعوديه', na=False)]
-df = df[~df['title'].str.contains('سعوية', na=False)]
-df = df[~df['title'].str.contains('saudi arabia', na=False)]
-df = df[~df['title'].str.contains('saudi', na=False)]
+df_egypt = df_egypt[~df_egypt['title'].str.contains('سعودية', na=False)]
+df_egypt = df_egypt[~df_egypt['title'].str.contains('سعوديه', na=False)]
+df_egypt = df_egypt[~df_egypt['title'].str.contains('سعوية', na=False)]
+df_egypt = df_egypt[~df_egypt['title'].str.contains('saudi arabia', na=False)]
+df_egypt = df_egypt[~df_egypt['title'].str.contains('saudi', na=False)]
 #%% md
 # ### Data Transformation Process
-# 
-# 1. **Manual Update on 'experience_' Column**:
-#    - Updated rows where 'type' contains the word "تدريب" to set 'experience_' to 'خريج جديد' (New Graduate).
-# 
-# 2. **Translation**:
+# 1. **Translation**:
 #    - Translated 'experience_', 'type', 'sex', and 'remote' using respective translation functions.
-# 
-# 3. **Gender Extraction**:
+# 2. **Gender Extraction**:
 #    - Extracted gender information from 'title', 'description', and 'skills'.
-# 
-# 4. **Remote Work Extraction**:
+# 3. **Remote Work Extraction**:
 #    - Extracted remote work information from 'title', 'description', and 'skills'.
-# 
-# 5. **Drop Irrelevant Columns**:
+# 4. **Drop Irrelevant Columns**:
 #    - Dropped 'description' and 'skills' columns.
-# 
-# 6. **Split 'num_of_exp_years' Column**:
+# 5. **Split 'num_of_exp_years' Column**:
 #    - Split and processed the 'num_of_exp_years' column.
-# 
-# 7. **Save the Data**
+# 6. **Save the Data**
 #%%
-df = pd.read_csv('../data/processed/egypt_clean.csv')
+df_egypt = pd.read_csv('../data/processed/egypt_clean.csv')
 #%%
-translate_experience(df)
-translate_type(df)
-translate_sex(df)
-translate_remote(df)
+translate_experience(df_egypt)
+translate_type(df_egypt)
+translate_sex(df_egypt)
+translate_remote(df_egypt)
 #%%
-extract_job_grade(df)
-extract_gender(df, 'title')
-extract_gender(df, 'description')
-extract_gender(df, 'skills')
-extract_remotely(df, 'title')
-extract_remotely(df, 'description')
-extract_remotely(df, 'skills')
+extract_job_grade(df_egypt)
+extract_gender(df_egypt, 'title')
+extract_gender(df_egypt, 'description')
+extract_gender(df_egypt, 'skills')
+extract_remotely(df_egypt, 'title')
+extract_remotely(df_egypt, 'description')
+extract_remotely(df_egypt, 'skills')
 #%%
-df.drop(columns=['description', 'skills'], inplace=True)
-split_num_of_exp_years(df)
+df_egypt.drop(columns=['description', 'skills'], inplace=True)
+split_num_of_exp_years(df_egypt)
 conn = sqlite3.connect('../data/database.db')
 # df.to_sql('EGYPT', con=conn, if_exists='replace', index=False)
 conn.close()
-df.head(15)
+df_egypt.head(15)
 #%% md
 # ### Data Transformation Steps for 'title' Column
-# 
 # 1. **Remove Leading Numbers**:
 #    - Removed leading numbers and periods (e.g., "1.", "2."), and stripped any leading or trailing spaces.
-# 
 # 2. **Remove Leading "a"**:
 #    - Removed any instance of the letter "a" at the beginning of the title followed by a space.
-# 
 # 3. **Convert to Lowercase**:
 #    - Converted all titles to lowercase for consistency.
-# 
 # 4. **Sort Titles**:
 #    - Sorted the titles alphabetically in ascending order.
 #%%
 conn = sqlite3.connect('../data/database.db')
-df = pd.read_sql('SELECT * FROM EGYPT', conn)
+df_egypt = pd.read_sql('SELECT * FROM EGYPT', conn)
 #%%
-df['title'] = df['title'].str.replace(r'^\d+\.', '', regex=True).str.strip()
-df['title'] = df['title'].str.replace(r'^a\s\b', '', regex=True).str.strip()
-df.title = df.title.str.lower()
-df.sort_values(by=['title'], inplace=True)
-df.head(15)
+df_egypt['title'] = df_egypt['title'].str.replace(r'^\d+\.', '', regex=True).str.strip()
+df_egypt['title'] = df_egypt['title'].str.replace(r'^a\s\b', '', regex=True).str.strip()
+df_egypt.title = df_egypt.title.str.lower()
+df_egypt.sort_values(by=['title'], inplace=True)
+df_egypt.head(15)
 #%% md
 # ### Job Title Cleaning Process
-# 
 # 1. **Pattern Replacement**:
 #    - Applied a regular expression pattern to remove unwanted terms like "sr", "ssr", "senior", "junior", "staff", gender-related terms (e.g., "male", "female"), and specific job rank indicators (e.g., "trainee", "graduate").
 #    - Cleaned up job titles to ensure they follow the correct format without extra symbols, spaces, or unnecessary words.
-# 
 # 2. **Title Editing**:
 #    - Applied a predefined title mapping (`edite_title_mapping`) to standardize job titles, ensuring consistency across the dataset (e.g., "cashier" becomes "cashier", "driller" becomes "drilling operator").
-# 
 # 3. **Save the Data**:
 #    - The cleaned titles were saved back into the database for further analysis, ensuring all records follow the standardized format.
 #%%
-final_mapping_title = {
+final_mapping_title_egypt = {
     r'3d designer': '3d designer',
     r'^account director': 'account director',
     r'account executive': 'account executive',
@@ -249,7 +219,7 @@ final_mapping_title = {
     r'assistant sales manager': 'assistant sales manager',
     r'ar accountant': 'accountant',
     r'arabic english interpreter': 'arabic english interpreter',
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     r'backend developer': 'backend developer',
     r'(?=.*(developer))(?=.*backend)^(?!.*(?:lead|manager|test automation)).*': 'backend developer',
     r'^web developer$': 'fullstack developer',
@@ -270,7 +240,7 @@ final_mapping_title = {
     r'(?=.*(research))(?=.*(business))^(?!.*(?:manager|lead)).*': 'business research',
     r'(?=.*(research))(?=.*(business))^(?=.*(manager))': 'business research manager',
     r'(?=.*(research))(?=.*(business))^(?=.*(lead))': 'business research lead',
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     r'(?=.*(call))(?=.*(center))^(?!.*(?:manager|lead)).*': 'call center agent',
     r'(?=.*(call))(?=.*(center))^(?=.*(lead))': 'call center lead',
     r'(?=.*(call))(?=.*(center|centre))^(?=.*(manager))': 'call center manager',
@@ -337,7 +307,7 @@ final_mapping_title = {
     r'demi coding instructor physical': 'demi coding instructor physical',
     r'(?=.*(digital))(?=.*(marketing))(?=.*(specialist))': 'digital marketing specialist',
     'draftsman': 'draftsman',
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     r'(?=.*(operations|operation))(?=.*(manager|senior manager|area manager))(?=.*(ecommerce|b2b))': 'ecommerce operations manager',
     r'(?=.*(electrical))(?=.*(design))(?=.*(engineer))': 'electrical design engineer',
     r'(?=.*(electrical))(?=.*(engineer))^(?!.*(?:lead|design|support|office|maintenance)).*': 'electrical design engineer',
@@ -354,7 +324,7 @@ final_mapping_title = {
     r'(?=.*executive)(?=.*chef)^(?!.*(?:pastry|sous)).*': 'executive chef',
     r'(?=.*expeditor)': 'expeditor',
     r'engineer \(r\&d\)': 'engineer',
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     r'(?=.*finance controller)': 'finance controller',
     r'(?=.*^finance)(?=.*manager)': 'finance manager',
     r'(?=.*(operations|operation))(?=.*(manager|senior manager|area manager))(?=.*(finance))': 'finance operations manager',
@@ -375,13 +345,13 @@ final_mapping_title = {
     r'food and beverage manager': 'food and beverage manager',
     r'fp&a analyst': 'fp&a analyst',
     r'(?=.*(front))(?=.*(desk))^(?!.*(?:manager|officer|supervisor|clerk|receptionist)).*': 'front desk agent',
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     r'(?=.*government)(?=.*(relation))(?=.*officer)^(?!.*&).*': 'government relation officer',
     r'(?=.*graphic)(?=.*(design))^(?!.*(?:and|manager|concept|specialist)).*': 'graphic design',
     r'(?=.*guest)(?=.*(experience))(?=.*agent)': 'guest experience agent',
     r'general accountant': 'general accountant',
     r'global procurement associate analyst': 'global procurement associate analyst',
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     r'(?=.*(hr))(?=.*(account\\s+manager))': 'hr account manager',
     r'(?=.*(hr\b|humanresources|humansresources|human\s*resources|humans\s*resources))(?=.*(specialist))(?=.*(admin|payroll))': 'hr admin & payroll specialist',
     r'(?=.*(hr\b|humanresources|humansresources|human\s*resources|humans\s*resources))(?=.*(analyst))': 'hr analyst',
@@ -403,7 +373,7 @@ final_mapping_title = {
     r'(?=.*(hr))(?=.*(partner))(?=.*(talent|performance))': 'hr talent partner',
     r'(?=.*(hub))(?=.*(operations))(?=.*(coordinator))^(?!.*(?:section head|manager)).*': 'hub operations coordinator',
     r'a427-esg': 'hvac technician',
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     r'(?=.*(information))(?=.*(security))^(?!.*(?:section head|manager)).*': 'information security',
     r'(?=.*(integration))(?=.*(developer))': 'integration developer',
     r'(?=.*(interior))(?=.*(designer))': 'interior designer',
@@ -411,14 +381,14 @@ final_mapping_title = {
     r'(?=.*(audit))(?=.*(internal))': 'internal auditor',
     r'(?=.*(operations|operation))(?=.*(manager|senior manager|area manager))(?=.*(technology|it))': 'it operations manager',
     r'it operations': 'it support',
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     r'(?=.*(java))(?=.*(developer))': 'java developer',
     r'(?=.*(java))(?=.*(engineer))': 'java engineer',
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     r'7pqe\\+ dispute resolution associate': 'legal counsel',
     r'(?=.*(logistics))(?=.*(coordinator))^(?!.*(?:section head|manager)).*': 'logistics coordinator',
     r'(?=.*(logistics))(?=.*(coordintor|coordinatoor|coordinator))': 'logistics coordinator',
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     r'maintenance technician': 'maintenance technician',
     r'marketing manager': 'marketing manager',
     r'(?=.*(marketing))(?=.*(manager))': 'marketing manager',
@@ -438,7 +408,7 @@ final_mapping_title = {
     r'(?=.*(engineer))(?=.*mobile)(?=.*lead)': 'mobile engineer lead',
     r'(?=.*(engineer))(?=.*mobile)(?=.*manager)': 'mobile engineer manager',
     r'(?=.*(engineer))(?=.*mobile)(?=.*test automation)': 'mobile engineer test automation',
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     r'odoo developer': 'odoo developer',
     r'^(?!.*\\b(architecture|electrical|mechanical)\\b).*office engineer.*': 'office engineer',
     r'(?=.*(manager))(?=.*(office))^(?!.*(?:assistant)).*': 'office manager',
@@ -447,7 +417,7 @@ final_mapping_title = {
     r'(?=.*(operations|operation))(?=.*(manager|senior manager|area manager))^(?!.*(sales|strategic|data|lost|live|hardware|hub|finance|financial|mall|retail|product|strategy|planning|technology|it|security|soc|merchant|customer|ad|ecommerce|b2b|gym|fitness|procurement)).*': 'operations manager',
     r'(?=.*(operations|operation))(?=.*(specialist|coordinator|associate))^(?!.*(sales|strategic|data|lost|live|hardware|hub|finance|financial|mall|retail|product|strategy|planning|technology|it|security|soc|merchant|customer|ad|ecommerce|b2b|gym|fitness|procurement)).*': 'operations specialist',
     r'data collection': 'operations specialist data collection',
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     r'people operations specialist': 'people operations specialist',
     r'(?=.*(personal))(?=.*(assistant))': 'personal assistant',
     r'(?=.*(personal))(?=.*(banker))^(?!.*(?:payroll)).*': 'personal banker',
@@ -459,12 +429,12 @@ final_mapping_title = {
     r'product owner (vois)': 'product owner',
     r'project manager (architect or civil engineer)': 'project manager engineer',
     r'(?=.*(purchase|purchasing))(?=.*(specialist))': 'purchasing specialist',
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     r'qa engineer': 'qa engineer',
     r'quality engineer': 'quality engineer',
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     r'(?=.*(operations|operation))(?=.*(manager|senior manager|area manager))(?=.*(retail))': 'retail operations manager',
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     r'sales and business development manager': 'sales & business development manager',
     r'sales account manager': 'sales account manager',
     r'sales assistant(?!.*analyst)': 'sales assistant',
@@ -501,7 +471,7 @@ final_mapping_title = {
     r'system administrator.*': 'system administrator',
     r'system(s)? engineer.*': 'system engineer',
     r'(?=.*(Account))(?=.*(Manager))(?=.*(Sale))': 'Sales Account Manager',
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     r'^talent acquisition .*(manager|head).*': 'talent acquisition manager',
     r'talent acquisition (specialist|partner|&).*': 'talent acquisition specialist',
     r'^talent acquisition and learning and development specialist': 'talent acquisition specialist',
@@ -515,24 +485,22 @@ final_mapping_title = {
     r'^treasury (section|head).*': 'treasury lead',
     r'^treasurer$': 'treasury specialist',
     r'^treasur(y|er)\\s?(specialist|senior specialist|and| - emea).*': 'treasury specialist',
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     r'(?=.*(designer))(?=.*(ux/ui|ui/ux|ux|ui))': 'ux/ui designer',
     r'(?=.*(developer))(?=.*(ux/ui|ui/ux|ux|ui))': 'ux/ui developer',
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
 }
-df.title.value_counts()
+df_egypt.title.value_counts()
 #%%
 pattern_replace = r'(^((sr(\b|\s)|\ssr(\b|\s))|senior|junior|staff|female|\bmen\b|\bmale\b|women(\'s)|tpe (iv|iii|ii|i|v)(\s)?(-|/)?)( (senior|graduate))?|^graduate|^trainee\b( -)?)(\s)?(\.|-|/|\\)?|(\.|\-|/|\,|\\)$'
-df.title = df.title.str.replace(pattern_replace, '', regex=True).str.strip()
-df.title = df.title.str.replace(r'^(\.|\-|/|\,|\\)', '', regex=True).str.strip()
-df.title = df.title.str.replace(r'(\.|\-|/|\,|\\)+$', '', regex=True).str.strip()
-df = df.sort_values(by="title", ascending=False, key=lambda col: col.str.lower()).reset_index(drop=True)
+df_egypt.title = df_egypt.title.str.replace(pattern_replace, '', regex=True).str.strip()
+df_egypt = df_egypt.sort_values(by="title", ascending=False, key=lambda col: col.str.lower()).reset_index(drop=True)
 #%%
-review_matches(df, final_mapping_title)
+review_matches(df_egypt, final_mapping_title_egypt)
 #%%
-edit_title(df, final_mapping_title)
-df.title.value_counts()
+edit_title(df_egypt, final_mapping_title_egypt)
+df_egypt.title.value_counts()
 #%%
 conn = sqlite3.connect('../data/database.db')
 # df.to_sql('EGYPT', con=conn, if_exists='replace')
-conn.close()
+# conn.close()

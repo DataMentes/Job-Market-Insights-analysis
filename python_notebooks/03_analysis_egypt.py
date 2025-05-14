@@ -1,338 +1,310 @@
+#%% md
+# ### Import required libraries
+# - Import `all analysis functions` module from `scripts`.
+# - Import `sqlite3` for database interaction.
+# - Import `warnings` and disable warnings.
+# - Import `pandas` for data manipulation.
 #%%
 from scripts.analysis import *
 import sqlite3
 import warnings
-warnings.filterwarnings("ignore", category=FutureWarning)
+import pandas as pd
+
+warnings.filterwarnings("ignore")
 #%% md
-# ### Loading data from the SQLite database
-# 
-# In this cell:
-# - A connection is created to the SQLite database file (`database.db`).
-# - A SQL query is used to read all data from the table named `EGYPT` into a pandas DataFrame.
-# 
-# 
+# # Analysis and Explanation of Plots
 #%%
 conn = sqlite3.connect('../data/database.db')
-df = pd.read_sql('SELECT * FROM EGYPT', conn)
-
+df_egy = pd.read_sql('SELECT * FROM EGYPT', conn)
+#%%
+df_egy.head()
+#%%
+df_egy['title'].nunique()
+#%%
+df_egy['city'].unique()
+#%%
+df_egy['city'].value_counts().head()
+#%%
+df_egy['title'].value_counts().head()
 #%% md
-# ### Viewing the First Few Rows of the DataFrame
-# 
-# The `df.head()` function is used to display the first 5 rows of the DataFrame `df`
-# 
+# ### **Plot 1: Top 10 Cities by Number of Jobs**
+# #### **Description**
+# - This bar chart shows the top 10 cities in Egypt based on the number of jobs available.
+# - The x-axis represents the names of the cities, while the y-axis represents the number of jobs.
+# - The cities are listed from left to right in descending order of job availability.
+# #### **Key Observations**
+# 1. **Cairo** has the highest number of jobs, with over 2,000 jobs, making it the dominant city.
+# 2. **Alexandria** follows as the second city with approximately 100 jobs.
+# 3. Other cities such as **New Cairo**, **Sharm El-Sheikh**, **Matrouh**, **Aswan**, **Luxor**, **Giza**, and **Suez** have very low job availability, with most having fewer than 50 jobs.
+# #### **Meaning**
+# - Cairo is the capital and largest city in Egypt, serving as the country's political, economic, and cultural center, which explains its high job availability.
+# - Alexandria, as the second-largest city, offers some job opportunities but is far behind Cairo.
+# - Smaller cities like Sharm El-Sheikh, Matrouh, and Aswan have minimal job opportunities, likely due to their smaller populations and more specialized economies (e.g., tourism).
 #%%
-df.head()
-
-#%%
-df['title'].nunique()
-
-#%%
-df['title'].duplicated().sum()
-
-
-#%%
-titles_df=df[df['title'].duplicated()]
-
-#%%
-titles_df['title'].unique().view()
-
-#%%
-print(df['city'])
-
-#%%
-print(df['city'].unique())
-
-#%%
-print(df['city'].value_counts())
-
-
-#%%
-print(df['title'].value_counts())
-
+fig1 = job_distribution_by_city(df_egy[df_egy['city'] != 'Unknown'],
+                                plot_name="job_distribution_by_city_egypt", folder='egypt', top_n=10)
 #%% md
-# ##  Visualization 1: Top 10 Cities by Number of Jobs
-# 
-# ### Description:
-# A vertical bar chart displaying the number of job listings in the top 10 Egyptian cities.
-# 
-# ###  Key Insights:
-# 
-# 1. **Cairo is the Undisputed Hub:**
-#    - Cairo alone accounts for the vast majority of job postings (over 2,000).
-#    - Reflects its status as the economic and business capital of Egypt.
-# 
-# 2. **Limited Opportunities in Other Cities:**
-#    - Alexandria comes second, but with a significantly lower count (~100+).
-#    - All other cities (like New Alamein, Sharm El Sheikh, Luxor, etc.) have minimal job postings.
-#    - Suggests a high centralization of employment opportunities in the capital.
-# 
-# 3. **Implications:**
-#    - Indicates potential internal migration toward Cairo for job seekers.
-#    - May signal the need for investment in decentralizing job markets and regional development.
-# 
-# ###  Overall Takeaway:
-# > Cairo dominates the job market in Egypt, with a steep drop-off in job availability in other cities, highlighting urban centralization and regional imbalance in employment opportunities.
-# 
+# ### **Plot 2: Number of Jobs by Company**
+# #### **Description**
+# - This bar chart shows the number of jobs offered by different companies in Egypt.
+# - The x-axis represents the names of the companies, while the y-axis represents the number of jobs.
+# - The companies are listed from left to right in descending order of job availability.
+# #### **Key Observations**
+# 1. **Talent 360** has the highest number of jobs, with over 290 jobs, making it the dominant employer.
+# 2. **SSC - Egypt** follows as the second company with approximately 180 jobs.
+# 3. **Vodafone - Egypt**, **Giza Systems**, and **Orange - Other locations** have moderate numbers of jobs, ranging from 100 to 120.
+# 4. Other companies such as **Raya Holding for Financial Investments**, **swatX Solutions**, and **ProjectGrowth** offer around 50 to 100 jobs.
+# 5. Smaller companies like **RAWAJ**, **Delivery Hero SE**, **ElsewedyElectric**, and **Tagaddod** have relatively low job availability, with most having fewer than 50 jobs.
+# #### **Meaning**
+# - **Talent 360** appears to be a major player in the Egyptian job market, possibly due to its focus on recruitment or staffing services.
+# - Companies like **SSC - Egypt** and **Vodafone - Egypt** are significant employers, reflecting the importance of technology and telecommunications in Egypt's economy.
+# - The presence of international brands (e.g., Vodafone) and local companies (e.g., Giza Systems) highlights a diverse job market.
+# - Smaller companies have limited job offerings, indicating a fragmented job landscape outside the top employers.
 #%%
-job_distribution_by_city = job_distribution_by_city(df[df['city'] != 'Unknown'], plot_name="job_distribution_by_city_egypt", folder='egypt', top_n=10)
-print(job_distribution_by_city)
+fig2 = analyze_jobs_by_company(df_egy, plot_name="analyze_jobs_by_company_egypt", folder='egypt')
 #%% md
-# ## Visualization 2: Top 10 Most Frequent Job Titles
-# 
-# ### Description:
-# A horizontal bar chart showing the most commonly listed job titles in the dataset based on the number of occurrences.
-# 
-# ### Key Insights:
-# 
-# 1. **Strong Demand for Accounting Roles:**
-#    - 5 of the top 10 job titles are finance/accounting-related:
-#      - Accountant
-#      - Senior Accountant
-#      - Finance Manager
-#      - Junior Accountant
-#      - Chief Accountant
-#    - Indicates a significant demand in the job market for financial expertise.
-# 
-# 2. **Data and Analytics Roles Are Rising:**
-#    - Positions like Senior Business Analyst and Data Engineer appear in the top 10.
-#    - Shows increasing importance of data-driven decision-making.
-# 
-# 3. **Support and Creative Roles Are Present:**
-#    - Executive Assistant and Graphic Designer made the list.
-#    - Suggests administrative and creative skills are still needed, though in smaller volumes.
-# 
-# ### Overall Takeaway:
-# > The job market is currently dominated by finance-related positions, with a growing interest in data and analytics, and a continuing (but smaller) need for creative and support roles.
-# 
+# ### **Plot 3: Top 10 Most Frequent Job Titles**
+# #### **Description**
+# - This horizontal bar chart shows the top 10 most frequent job titles in Egypt based on the number of occurrences.
+# - The y-axis represents the job titles, while the x-axis represents the number of occurrences.
+# - The job titles are listed from top to bottom in descending order of frequency.
+# #### **Key Observations**
+# 1. **Accountant** is the most frequent job title, with over 80 occurrences.
+# 2. **Business Analyst** follows closely with approximately 65 occurrences.
+# 3. **Account Manager** is the third most frequent job title, with around 60 occurrences.
+# 4. **Support Engineer** and **Graphic Design** have moderate frequencies, with around 40 and 38 occurrences, respectively.
+# 5. Other job titles such as **Software Engineer**, **Customer Service**, **Sales Manager**, **Product Manager**, and **Marketing Manager** have relatively lower frequencies, ranging from 27 to 35 occurrences.
+# #### **Meaning**
+# - **Accounting roles** (e.g., Accountant, Account Manager) are highly prevalent, indicating a strong demand for financial expertise in the Egyptian job market.
+# - **Business Analyst** and **Support Engineer** roles suggest a focus on data analysis and technical support, reflecting the growing importance of technology and analytics.
+# - The presence of graphic design and software engineering roles highlights the significance of creative and IT sectors in Egypt.
+# - Customer service and sales roles indicate a focus on client interaction and relationship management.
 #%%
-analyze_jobs_by_company = analyze_jobs_by_company(df, plot_name="analyze_jobs_by_company_egypt", folder='egypt')
-print(analyze_jobs_by_company)
+fig3 = get_top_job_titles_with_plot(df_egy, plot_name="get_top_job_titles_with_plot_egypt", folder='egypt')
 #%% md
-# ## Visualization 3: Number of Jobs by Company
-# 
-# ### Description:
-# A vertical bar chart illustrating how many job postings come from each company.
-# 
-# ### Key Insights:
-# 
-# 1. **Talent 360 Dominates the Market:**
-#    - Over 250 job postings — far ahead of any other company.
-#    - Likely a recruitment firm or aggregator serving multiple clients.
-# 
-# 2. **High Activity from Tech and Telecom Firms:**
-#    - Notable companies include Vodafone Egypt, Giza Systems, Orange, and Accenture.
-#    - Reflects strong demand for digital and telecom roles.
-# 
-# 3. **Diverse but Uneven Sector Representation:**
-#    - Other sectors also visible:
-#      - Real Estate: Palm Hills, Arabia Group
-#      - Tourism: Grand Rotana Resort
-#      - Industrial: Siemens, Schneider Electric
-#    - Shows a variety of industries are hiring, but the majority of roles are concentrated in tech and recruitment.
-# 
-# ### Overall Takeaway:
-# > Tech and staffing companies are leading job providers, while other sectors like real estate, tourism, and manufacturing contribute modestly to the hiring landscape.
-# 
+# ### **Plot 4: Job Distribution by Work Type**
+# #### **Description**
+# - This pie chart shows the distribution of job types based on work arrangements in Egypt.
+# - The chart is divided into three segments:
+#   - **On-site**: Jobs that require physical presence at a workplace.
+#   - **Remote**: Jobs that can be performed entirely from a remote location.
+#   - **Hybrid**: Jobs that combine both on-site and remote work.
+# #### **Key Observations**
+# 1. **On-site** jobs dominate the distribution, accounting for **86.5%** of the total jobs.
+# 2. **Remote** jobs make up **9.9%** of the total jobs.
+# 3. **Hybrid** jobs have the smallest share, representing only **3.6%** of the total jobs.
+# #### **Meaning**
+# - The overwhelming majority of jobs in Egypt are **on-site**, indicating that most employers prefer or require employees to work physically at a workplace.
+# - **Remote** jobs represent a small but notable portion of the job market, suggesting some flexibility in work arrangements but not as prevalent as on-site roles.
+# - **Hybrid** jobs are minimal, reflecting limited adoption of flexible work models that combine both on-site and remote work.
 #%%
-get_top_job_titles_with_plot = get_top_job_titles_with_plot(df, plot_name="get_top_job_titles_with_plot_egypt", folder='egypt')
-print(get_top_job_titles_with_plot)
+fig4 = analyze_jobs_by_work_type(df_egy, plot_name="analyze_jobs_by_work_type_egypt", folder='egypt')
 #%% md
-# ##  Visualization 4: Job Distribution by Work Type
-# 
-# ### Description:
-# A pie chart showing the percentage distribution of jobs based on their work format (On-site, Remote, Hybrid).
-# 
-# ###  Key Insights:
-# 
-# 1. **Overwhelming Majority are On-site Jobs:**
-#    - 88.6% of listings are for on-site positions.
-#    - Implies that traditional office presence is still dominant in Egypt.
-# 
-# 2. **Remote and Hybrid Work Are Very Limited:**
-#    - Only 7.4% remote and 4.0% hybrid roles.
-#    - Indicates slow adoption of flexible work models.
-# 
-# 3. **Implications:**
-#    - May be due to lack of infrastructure, cultural preferences, or the nature of jobs requiring physical presence.
-#    - A gap exists compared to global trends favoring hybrid and remote work, especially post-COVID.
-# 
-# ### Overall Takeaway:
-# > The job market in Egypt is still heavily reliant on on-site roles, with minimal adoption of remote or hybrid work formats, highlighting a lag in workplace flexibility.
-# 
+# ### **Plot 5: Job Distribution by Gender**
+# #### **Description**
+# - This bar chart shows the job distribution based on gender in Egypt.
+# - The x-axis represents the gender categories: **No Preference**, **Female**, and **Male**.
+# - The y-axis represents the number of jobs.
+# #### **Key Observations**
+# 1. **No Preference**:
+#    - Dominates the distribution with **3,815 jobs**, indicating that most job postings do not specify a gender preference.
+# 2. **Female**:
+#    - Has a very small share with **130 jobs**.
+# 3. **Male**:
+#    - Has an even smaller share with **64 jobs**.
+# #### **Meaning**
+# - The vast majority of job postings in Egypt are **gender-neutral** (No Preference), suggesting that employers are open to hiring candidates regardless of gender.
+# - The extremely low numbers for **Female** and **Male** indicate that gender-specific job postings are rare in Egypt.
 #%%
-analyze_jobs_by_work_type = analyze_jobs_by_work_type(df, plot_name="analyze_jobs_by_work_type_egypt", folder='egypt')
-print(analyze_jobs_by_work_type)
+fig5 = analyze_jobs_by_gender(df_egy, plot_name="analyze_jobs_by_gender_egypt", folder='egypt')
 #%% md
-# ##  Visualization 5: Job Distribution by Month
-# 
-# ###  Key Insights:
-# 
-# * April (Month 4) and March (Month 3) show the highest number of job postings, with 839 and 738 jobs respectively.
-# 
-# * There is a sharp decline after March, with February (403 jobs) and January (228 jobs) showing significantly lower2 counts.
-# 
-# * The last three months (December, November) show very low activity, especially November with only 23 job postings.
-# 
-# ###  Overall Takeaway:
-# - Hiring peaks in March and April, indicating a strong seasonal hiring trend during spring. Planning job campaigns or applications in these months could yield better results.
-# 
+# ### **Plot 6: Job Distribution by Job Level**
+# #### **Description**
+# - This bar chart shows the distribution of jobs based on job levels in Egypt.
+# - The x-axis represents the job levels: **Senior**, **Management**, **Junior**, **Senior Management**, **Graduate**, **Mid Level**, and **C-Suite**.
+# - The y-axis represents the number of jobs.
+# #### **Key Observations**
+# 1. **Senior**:
+#    - Dominates the distribution with **843 jobs**, indicating that senior-level positions are the most prevalent.
+# 2. **Management**:
+#    - Is the second most common job level with **679 jobs**.
+# 3. **Junior**:
+#    - Has **79 jobs**, representing a moderate share.
+# 4. **Senior Management**:
+#    - Has **67 jobs**, which is relatively low compared to other levels.
+# 5. **Graduate**:
+#    - Has **52 jobs**, indicating a small but present share.
+# 6. **Mid Level**:
+#    - Has **28 jobs**, showing a very low occurrence.
+# 7. **C-Suite**:
+#    - Has only **4 jobs**, reflecting an extremely small presence.
+# #### **Meaning**
+# - The majority of job opportunities in Egypt are concentrated at the **Senior** and **Management** levels, suggesting a strong demand for experienced professionals and managers.
+# - Entry-level positions (**Junior**, **Graduate**) and higher executive roles (**C-Suite**) are less common, indicating a limited number of opportunities for both fresh graduates and top-tier executives.
+# - Mid-level positions (**Mid Level**) also have a low representation, highlighting a potential gap in mid-career opportunities.
 #%%
-analyze_jobs_by_time = analyze_jobs_by_time(df, plot_name="analyze_jobs_by_time_egypt", folder='egypt')
-print(analyze_jobs_by_time)
+fig6 = analyze_jobs_by_job_level(df_egy[df_egy['job_level'] != 'No Preference'],
+                                 plot_name="analyze_jobs_by_job_level_egypt",
+                                 folder='egypt')
 #%% md
-# ##  Visualization 6: Job Distribution by Month
-# 
-# ###  Key Insights:
-# 
-# - A dominant majority (2253 jobs) have no gender preference.
-# - Female-targeted roles are 97, while male-targeted roles are just 55.
-# 
-# ###  Overall Takeaway:
-# - The job market is largely gender-neutral in job listings, which may reflect a trend toward inclusivity or a focus on qualifications over demographics
-# 
+# ### **Plot 7: Number of Job Entries Over Time**
+# #### **Description**
+# - This line chart shows the trend in the number of job entries over time in Egypt.
+# - The x-axis represents the date, spanning from November 2025 to April 2025.
+# - The y-axis represents the number of job entries.
+# #### **Key Observations**
+# 1. **Initial Phase (November 2025)**:
+#    - The number of job entries starts at a very low value, close to zero.
+# 2. **Gradual Increase**:
+#    - From November to December 2025, there is a steady increase in job entries.
+# 3. **Significant Growth**:
+#    - Between January and February 2025, the number of job entries grows more rapidly.
+# 4. **Peak in March 2025**:
+#    - The highest number of job entries is observed in March 2025, reaching approximately **1,200 jobs**.
+# 5. **Slight Decline in April 2025**:
+#    - There is a minor decline in April 2025, but the number of job entries remains high, around **1,200 jobs**.
+# #### **Meaning**
+# - The chart indicates a consistent upward trend in job entries over the six-month period, suggesting increasing job opportunities in Egypt.
+# - The rapid growth between January and March 2025 could be due to seasonal factors, economic improvements, or specific industry developments.
+# - The slight dip in April 2025 might indicate a temporary slowdown or stabilization after the peak.
 #%%
-analyze_jobs_by_gender = analyze_jobs_by_gender(df, plot_name="analyze_jobs_by_gender_egypt", folder='egypt')
-print(analyze_jobs_by_gender)
+fig7 = plot_job_trend_over_time(df_egy, plot_name="plot_job_trend_over_time_egypt", folder='egypt')
 #%% md
-# ##  visualization 7 :Job Level Distribution Analysis
-# 
-# ###  Key Insights:
-# 
-# **"No Preference" Dominates**
-#   - 1,312 job postings have no specified job level.
-#   - This may indicate flexibility in hiring or a lack of clarity in role definitions.
-# 
-# - **Strong Demand for Experienced Talent**
-#   - Senior-level: 544 jobs
-#   - Management: 409 jobs
-#   - These figures highlight a clear demand for experienced and leadership-level professionals.
-# 
-# - **Limited Entry-Level Opportunities**
-#   - Junior: 54
-#   - Graduate: 27
-#   - Mid Level: 21
-#   - Opportunities for early-career candidates are noticeably fewer.
-# 
-# - **Minimal Executive-Level Roles**
-#   - C-Suite positions: 2
-#   - These roles are naturally scarce due to their seniority and selectiveness.
-# 
-# ### Overall Takeaway:
-# - The job market is heavily skewed toward senior and management-level positions, with a surprising number of listings having no specified level. This may reflect a broad hiring strategy or incomplete data entry. Entry-level and executive roles are limited, indicating that companies are prioritizing experienced professionals over new graduates or top-tier executives.
-# 
+# ### **Plot 8: The Highest 10 Areas Declared for Business Opportunities**
+# #### **Description**
+# - This bar chart shows the top 10 domains with the highest number of business opportunities in Egypt.
+# - The x-axis represents the domains, while the y-axis represents the number of jobs.
+# #### **Key Observations**
+# 1. **خدمات الدعم التجاري الأخرى (Other Commercial Support Services)**:
+#    - Dominates the chart with **3,240 jobs**, indicating it is the most significant area for business opportunities.
+# 2. **الاستشارات الهندسية العامة (General Engineering Consultancy)**:
+#    - Has **97 jobs**, making it the second-highest domain.
+# 3. **الاستشارات الإدارية (Management Consultancy)**:
+#    - Follows with **85 jobs**.
+# 4. **الاستعانة بالمصادر الخارجية المبيعات (Outsourcing Sales Resources)**:
+#    - Has **65 jobs**.
+# 5. **التعليم العالي (Higher Education)**:
+#    - Shows **58 jobs**.
+# 6. **الضيافة والسكن (Hospitality and Accommodation)**:
+#    - Also has **58 jobs**.
+# 7. **التسوق (Retail)**:
+#    - Has **43 jobs**.
+# 8. **Unknown**:
+#    - Shows **36 jobs**.
+# 9. **البناء والتشييد (Construction)**:
+#    - Has **35 jobs**.
+# 10. **البيع بالتجزئة وبالجملة (Wholesale and Retail Trade)**:
+#     - Has **30 jobs**.
+# #### **Meaning**
+# - **Other Commercial Support Services** is the leading domain, suggesting a strong demand for services that support commercial activities.
+# - **General Engineering Consultancy** and **Management Consultancy** also show significant activity, indicating a focus on professional services.
+# - Domains like **Higher Education**, **Hospitality and Accommodation**, and **Retail** have moderate job opportunities, reflecting their importance in the Egyptian economy.
+# - The presence of "Unknown" suggests some data may not be categorized, but even so, it indicates limited opportunities compared to other sectors.
 #%%
-analyze_jobs_by_job_level = analyze_jobs_by_job_level(df, plot_name="analyze_jobs_by_job_level_egypt", folder='egypt')
-print(analyze_jobs_by_job_level)
+fig8 = plot_job_postings_by_industry(df_egy, plot_name="plot_job_postings_by_industry_egypt", folder='egypt')
 #%% md
-# ## Visualization 8 : M-Level Job Entries Over Time
-# 
-# This line chart tracks the number of job postings for **Management-level (M-level)** roles from **November 2024 to April 2025**.
-# 
-# ### Key Insights
-# 
-# - **Consistent Growth**:
-#   The number of M-level job postings increased steadily each month, showing sustained demand.
-# 
-# - **Sharp Growth Between Feb–Mar 2025**:
-#   - February: ~400 jobs
-#   - March: ~740 jobs
-#   - This marks the most significant month-over-month growth.
-# 
-# - **Early Acceleration (Nov–Jan)**:
-#   - Job entries started at a low point (~30 in Nov) and grew gradually through Jan (~230), indicating the early stages of hiring momentum.
-# 
-# - **Stabilization in April**:
-#   - April saw continued growth (~840 jobs), but at a slower rate compared to the March surge.
-# 
-# 
-# ### Overall Takeaway
-# 
-# The hiring trend for management-level roles has shown strong upward momentum over the past six months, particularly peaking in early 2025. This suggests increasing organizational needs for mid-to-senior management talent, likely driven by business expansion or restructuring initiatives.
-# 
-# 
-# 
+# ### **Plot 9: Job Distribution by Type**
+# #### **Description**
+# - This pie chart shows the distribution of job types in Egypt.
+# - The chart is divided into several segments representing different job types:
+#   - **Unknown**: 76.48%
+#   - **Management**: 18.68%
+#   - **Full-Time**: 3.14%
+#   - **Intern**: 1.47%
+#   - **Part-Time**: 0.10%
+#   - **Contracts**: 0.10%
+#   - **Temporary**: 0.02%
+# #### **Key Observations**
+# 1. **Unknown**:
+#    - Dominates the distribution with **76.48%**, indicating that a significant portion of job listings do not specify the job type.
+# 2. **Management**:
+#    - Is the second-largest segment with **18.68%**, showing a notable presence of management roles.
+# 3. **Full-Time**:
+#    - Represents **3.14%** of the jobs, indicating a moderate number of full-time positions.
+# 4. **Intern**:
+#    - Accounts for **1.47%**, suggesting a small but present number of internship opportunities.
+# 5. **Part-Time**, **Contracts**, and **Temporary**:
+#    - Have very low percentages (**0.10%, 0.10%, and 0.02%**, respectively), indicating minimal occurrences of these job types.
+# #### **Meaning**
+# - The overwhelming majority of job listings in Egypt are categorized as **Unknown**, which could imply incomplete data or a lack of detailed job type information.
+# - **Management** roles are the next most common, reflecting a strong demand for leadership and managerial positions.
+# - Full-time positions are moderately prevalent, while internships, part-time roles, contracts, and temporary jobs are relatively rare.
 #%%
-plot_job_trend_over_time = plot_job_trend_over_time(df, plot_name="plot_job_trend_over_time_egypt", folder='egypt')
-print(plot_job_trend_over_time)
+fig9 = analyze_job_type_distribution(df_egy, plot_name="analyze_job_type_distribution_egypt", folder='egypt')
 #%% md
-# ## Visualization 9: Distribution of Job Entries by Month
-# 
-# This boxplot illustrates the **daily distribution of job entries** for each month, highlighting variability, medians, and outliers across time.
-# 
-# ### Key Insights
-# 
-# - **Clear Upward Trend (Jan–Apr)**:
-#   - Each month from January to April shows an **increase in the median** number of jobs posted per day.
-#   - The interquartile range (IQR) also widens, indicating **greater day-to-day variability** in job postings.
-# 
-# - **April Stands Out**:
-#   - April has the **widest spread** of data and the **highest number of outliers**, including some days with more than **200 jobs posted**.
-#   - This suggests a **surge in recruitment activity** or possibly batch job uploads.
-# 
-# - **Consistent Low Activity (Nov–Dec)**:
-#   - Very low median values and tight boxplots indicate **minimal hiring activity** during these months, possibly due to year-end slowdowns.
-# 
-# - **Outliers as Activity Spikes**:
-#   - Multiple months exhibit high outliers, particularly March and April, reflecting **short bursts of high hiring days**.
-# 
-# ---
-# 
-# ### Overall Takeaway
-# 
-# - The data reveals a **seasonal hiring pattern**, with job entry volumes **peaking sharply in April** and remaining low in the final months of the year. This suggests that companies significantly ramp up hiring in Q1 and Q2, with April being a strategic month for recruitment efforts.
+# ### **Plot 10: Comparison of Min & Max Experience Requirements**
+# #### **Description**
+# - This box plot compares the minimum (`min_num_of_years`) and maximum (`max_num_of_years`) years of experience required for jobs in Egypt.
+# - The y-axis represents the number of years of experience.
+# - The x-axis has two categories: `min_num_of_years` and `max_num_of_years`.
+# #### **Key Observations**
+# 1. **Minimum Years of Experience (`min_num_of_years`)**:
+#    - The median value is around **3 years**.
+#    - The interquartile range (IQR) spans from approximately **0 to 6 years**, indicating that most job postings require between 0 and 6 years of experience.
+#    - There are a few outliers with higher minimum requirements, reaching up to **10 years**.
+# 2. **Maximum Years of Experience (`max_num_of_years`)**:
+#    - The median value is around **8 years**.
+#    - The IQR spans from approximately **5 to 15 years**, showing that most job postings have a maximum requirement between 5 and 15 years.
+#    - There are several outliers with very high maximum requirements, reaching up to **20 years**.
+# #### **Meaning**
+# - **Minimum Experience**:
+#   - Most job postings in Egypt do not require extensive experience, with a median of 3 years. However, there are some roles that demand more, such as those requiring 10 years or more.
+# - **Maximum Experience**:
+#   - The majority of job postings have a maximum experience requirement of around 8 years, but there is significant variability, with some roles accepting candidates with up to 20 years of experience.
+#   - The presence of outliers suggests that certain specialized or senior-level positions may have much higher experience requirements.
 #%%
-plot_monthly_job_boxplot = plot_monthly_job_boxplot(df, plot_name="plot_monthly_job_boxplot_egypt", folder='egypt')
-print(plot_monthly_job_boxplot)
+fig10 = compare_experience_requirements(df_egy, plot_name="compare_experience_requirements_egypt", folder='egypt')
 #%% md
-# ## Visualization 10: The Highest 10 Areas Declared for Business Opportunities
-# 
-# This bar chart illustrates the distribution of business opportunities across different domains, highlighting the most prominent areas based on the number of jobs declared. The chart provides insights into which sectors are currently experiencing the highest demand for business opportunities.
-# 
-# ### Key Insights
-# 
-# - **Dominance of "خدمات الدعم التجاري الأخرى" (Other Commercial Support Services)**:
-#   - This domain leads by a significant margin with **3,240 job opportunities**, far exceeding all other sectors.
-#   - This suggests that businesses in this area are actively seeking support services, possibly due to high operational needs or expansion plans.
-# 
-# - **Engineering Consultancy and Administrative Consulting**:
-#   - Both "الاستشارات الهندسية العامة" (General Engineering Consultancy) and "الاستشارات الإدارية" (Administrative Consulting) show moderate activity, with **97** and **85** job opportunities, respectively.
-#   - These sectors indicate a steady demand for professional advisory services, likely driven by infrastructure projects or organizational restructuring.
-# 
-# - **Low Activity in Traditional Sectors**:
-#   - Traditional sectors such as "البناء والتشييد" (Construction and Building) and "التail بالتجزئة والجملة" (Retail and Wholesale Trade) have relatively low job counts (**35** and **30**, respectively).
-#   - This could imply that these industries are either saturated or facing challenges in attracting new business opportunities.
-# 
-# - **Miscellaneous Categories**:
-#   - Domains like "Unknown" and "التسويق" (Marketing) have minimal activity, indicating either limited data availability or less focus on these areas.
-#   - "التعليم العالي" (Higher Education) and "الصحة والسكن" (Healthcare and Housing) also show low engagement, suggesting they might not be prioritized in current business strategies.
-# 
-# ### Overall Takeaway
-# 
-# The data reveals a **clear preference for service-oriented sectors**, particularly in *"Other Commercial Support Services"*, which dominates the landscape with over **3,000 job opportunities**.
-# 
-# Professional consulting services (*engineering* and *administrative*) remain active but at a much lower scale compared to the leading sector.
-# 
-# Traditional sectors such as *construction* and *retail* appear to be less attractive for business opportunities, potentially due to economic shifts or industry-specific challenges.
-# 
-# The dominance of support services highlights a trend toward outsourcing and specialized expertise, reflecting modern business practices focused on efficiency and scalability.
-# 
-# ### Recommendations
-# 
-# - **Focus on High-Demand Sectors**: Businesses should prioritize exploring opportunities in *"Other Commercial Support Services"* due to its overwhelming dominance.
-# - **Diversify Investment**: While traditional sectors show low activity, they may present long-term growth potential. Companies can consider strategic investments in these areas for future expansion.
-# - **Data Collection and Analysis**: Further investigation is needed to understand why certain sectors, like marketing and higher education, have minimal activity. This could involve analyzing market trends, regulatory factors, or industry-specific challenges.
-# 
-# ### Visual Summary
-# 
-# | Sector                                 | Arabic Name                             | Job Count |
-# |----------------------------------------|------------------------------------------|-----------|
-# | Other Commercial Support Services      | خدمات الدعم التجاري الأخرى               | 3,240     |
-# | General Engineering Consultancy        | الاستشارات الهندسية العامة                | 97        |
-# | Administrative Consulting              | الاستشارات الإدارية                      | 85        |
-# | Construction and Building              | البناء والتشييد                          | 35        |
-# | Retail and Wholesale Trade             | التجزئة والجملة                          | 30        |
-# 
-# This visualization underscores the importance of understanding sector-specific dynamics to identify lucrative business opportunities effectively.
+# ### **Plot 11: Heatmap of Job Count by City and Job Level**
+# #### **Description**
+# - This heatmap shows the distribution of job counts across different cities in Egypt, categorized by job levels.
+# - The x-axis represents the job levels: **C-Suite**, **Graduate**, **Junior**, **Management**, **Mid Level**, **No Preference**, **Senior**, and **Senior Management**.
+# - The y-axis represents the cities in Egypt.
+# - The color intensity indicates the number of jobs, with darker shades representing higher job counts.
+# #### **Key Observations**
+# 1. **Most Prominent Cities**:
+#    - **القاهرة (Cairo)** has the highest job counts across multiple job levels:
+#      - **No Preference**: 1,160 jobs.
+#      - **Mid Level**: 509 jobs.
+#      - **Management**: 377 jobs.
+#      - Other levels have moderate to low job counts.
+#    - **الإسكندرية (Alexandria)** also shows significant job counts:
+#      - **No Preference**: 62 jobs.
+#      - **Mid Level**: 21 jobs.
+#      - Other levels have minimal job counts.
+# 2. **Job Levels with High Demand**:
+#    - **No Preference** consistently shows the highest job counts across most cities.
+#    - **Mid Level** and **Management** also have notable job counts in major cities like Cairo and Alexandria.
+# 3. **Cities with Low Job Counts**:
+#    - Many smaller cities (e.g., أسوان, الجونة, السويس) have very low or zero job counts across all levels.
+#    - Only a few cities (e.g., القاهرة, الإسكندرية) contribute significantly to the job market.
+# #### **Meaning**
+# - **Cairo** is the dominant city in terms of job opportunities, offering a wide range of roles at various levels, particularly in **No Preference** and **Mid Level** positions.
+# - **Alexandria** is the second-largest contributor but with significantly fewer job opportunities compared to Cairo.
+# - Smaller cities have limited job availability, indicating that the majority of job opportunities are concentrated in major urban centers.
+# - The high count of **No Preference** jobs suggests that many employers are open to hiring candidates regardless of specific job level preferences.
 #%%
-plot_job_postings_by_industry = plot_job_postings_by_industry(df, plot_name="plot_job_postings_by_industry_egypt", folder='egypt')
-print(plot_job_postings_by_industry)
+fig11 = jobs_heatmap_by_city_and_job_level(df_egy, plot_name="jobs_heatmap_by_city_and_job_level_egypt", folder='egypt')
+#%% md
+# ### **Plot 12: Most Common Job Titles (Wordcloud)t**
+# #### **Description**
+# - This word cloud visualizes the most common job titles in Egypt.
+# - The size of each word represents its frequency in the dataset, with larger words indicating more frequent job titles.
+# - Words like **Account Manager**, **Manager**, **Senior**, **Lead**, **Specialist**, and **Accountant** are prominently displayed.
+# #### **Key Observations**
+# 1. **Prominent Job Titles**:
+#    - **Account Manager**: One of the most frequently occurring job titles.
+#    - **Manager**: A very common role, reflecting a strong demand for managerial positions.
+#    - **Senior**, **Lead**, and **Specialist**: These terms indicate higher-level or specialized roles.
+#    - **Accountant**: Another prominent title, suggesting a significant demand for financial expertise.
+# 2. **Other Common Roles**:
+#    - Words like **Engineer**, **Software**, **Project**, and **Sales** appear frequently, indicating roles in engineering, software development, project management, and sales.
+#    - Terms such as **Business Analyst**, **Support**, and **Coordinator** also appear, showing a mix of analytical, support, and coordination roles.
+# 3. **Industry-Specific Roles**:
+#    - Words like **Data Analyst**, **Design Engineer**, and **Customer Service** suggest a diverse range of industries, including technology, engineering, and customer service.
+# #### **Meaning**
+# - The word cloud highlights a strong emphasis on **management** and **specialized roles** in Egypt, with a particular focus on **accounting** and **managerial positions**.
+# - The presence of technical roles (e.g., **Software Engineer**, **Project Manager**) indicates a growing demand for skills in technology and project management.
+# - The inclusion of **Sales** and **Customer Service** roles suggests a focus on client-facing and business development activities.
+#%%
+fig12 = plot_top_job_titles_wordcloud(df_egy, plot_name="plot_top_job_titles_wordcloud_egypt", folder='egypt')

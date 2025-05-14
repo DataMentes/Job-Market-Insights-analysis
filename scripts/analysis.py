@@ -1,3 +1,5 @@
+import os
+
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -51,7 +53,6 @@ def job_distribution_by_city(df, plot_name, folder: Literal['egypt', 'saudi', 'c
     job_counts.columns = ['City', 'Number of Jobs']
     top_cities = job_counts.head(top_n)
 
-    fig = None
     # Prepare Arabic text
     reshaped_labels = [get_display(arabic_reshaper.reshape(city)) for city in top_cities['City']]
 
@@ -65,8 +66,11 @@ def job_distribution_by_city(df, plot_name, folder: Literal['egypt', 'saudi', 'c
     
 
     if save:
-        path = '../visualizations/' + folder + '/' + plot_name + '.png'
-        fig.savefig(path)
+        folder_path = '../visualizations/' + folder
+        os.makedirs(folder_path, exist_ok=True)
+
+        path = folder_path + '/' + plot_name + '.png'
+        fig.savefig(path, bbox_inches='tight')
 
     return fig
 
@@ -134,8 +138,11 @@ def analyze_jobs_by_company(data, plot_name, folder: Literal['egypt', 'saudi', '
     
 
     if save:
-        path = '../visualizations/' + folder + '/' + plot_name + '.png'
-        fig.savefig(path)
+        folder_path = '../visualizations/' + folder
+        os.makedirs(folder_path, exist_ok=True)
+
+        path = folder_path + '/' + plot_name + '.png'
+        fig.savefig(path, bbox_inches='tight')
 
     return fig
 
@@ -196,8 +203,11 @@ def get_top_job_titles_with_plot(data, plot_name, folder: Literal['egypt', 'saud
     
 
     if save:
-        path = '../visualizations/' + folder + '/' + plot_name + '.png'
-        fig.savefig(path)
+        folder_path = '../visualizations/' + folder
+        os.makedirs(folder_path, exist_ok=True)
+
+        path = folder_path + '/' + plot_name + '.png'
+        fig.savefig(path, bbox_inches='tight')
 
     return fig
 
@@ -263,8 +273,11 @@ def analyze_jobs_by_work_type(data, plot_name, folder: Literal['egypt', 'saudi',
     
 
     if save:
-        path = '../visualizations/' + folder + '/' + plot_name + '.png'
-        fig.savefig(path)
+        folder_path = '../visualizations/' + folder
+        os.makedirs(folder_path, exist_ok=True)
+
+        path = folder_path + '/' + plot_name + '.png'
+        fig.savefig(path, bbox_inches='tight')
 
     return fig
 
@@ -329,8 +342,11 @@ def analyze_jobs_by_gender(data, plot_name, folder: Literal['egypt', 'saudi', 'c
     
 
     if save:
-        path = '../visualizations/' + folder + '/' + plot_name + '.png'
-        fig.savefig(path)
+        folder_path = '../visualizations/' + folder
+        os.makedirs(folder_path, exist_ok=True)
+
+        path = folder_path + '/' + plot_name + '.png'
+        fig.savefig(path, bbox_inches='tight')
 
     return fig
 
@@ -396,8 +412,11 @@ def analyze_jobs_by_job_level(data, plot_name, folder: Literal['egypt', 'saudi',
     
 
     if save:
-        path = '../visualizations/' + folder + '/' + plot_name + '.png'
-        fig.savefig(path)
+        folder_path = '../visualizations/' + folder
+        os.makedirs(folder_path, exist_ok=True)
+
+        path = folder_path + '/' + plot_name + '.png'
+        fig.savefig(path, bbox_inches='tight')
 
     return fig
 
@@ -475,8 +494,11 @@ def plot_job_trend_over_time(data, plot_name, folder: Literal['egypt', 'saudi', 
     
 
     if save:
-        path = '../visualizations/' + folder + '/' + plot_name + '.png'
-        fig.savefig(path)
+        folder_path = '../visualizations/' + folder
+        os.makedirs(folder_path, exist_ok=True)
+
+        path = folder_path + '/' + plot_name + '.png'
+        fig.savefig(path, bbox_inches='tight')
 
     return fig
 
@@ -558,8 +580,11 @@ def plot_job_postings_by_industry(df, plot_name, folder: Literal['egypt', 'saudi
     
 
     if save:
-        path = '../visualizations/' + folder + '/' + plot_name + '.png'
-        fig.savefig(path)
+        folder_path = '../visualizations/' + folder
+        os.makedirs(folder_path, exist_ok=True)
+
+        path = folder_path + '/' + plot_name + '.png'
+        fig.savefig(path, bbox_inches='tight')
 
     return fig
 
@@ -610,7 +635,10 @@ def analyze_job_type_distribution(data, plot_name, folder: Literal['egypt', 'sau
     
 
     if save:
-        path = '../visualizations/' + folder + '/' + plot_name + '.png'
+        folder_path = '../visualizations/' + folder
+        os.makedirs(folder_path, exist_ok=True)
+
+        path = folder_path + '/' + plot_name + '.png'
         fig.savefig(path, bbox_inches='tight')
 
     return fig
@@ -654,8 +682,11 @@ def compare_experience_requirements(data, plot_name, folder: Literal['egypt', 's
     
 
     if save:
-        path = '../visualizations/' + folder + '/' + plot_name + '.png'
-        fig.savefig(path)
+        folder_path = '../visualizations/' + folder
+        os.makedirs(folder_path, exist_ok=True)
+
+        path = folder_path + '/' + plot_name + '.png'
+        fig.savefig(path, bbox_inches='tight')
 
     return fig
 
@@ -700,8 +731,11 @@ def jobs_heatmap_by_city_and_job_level(data, plot_name, folder: Literal['egypt',
     
 
     if save:
-        path = '../visualizations/' + folder + '/' + plot_name + '.png'
-        fig.savefig(path)
+        folder_path = '../visualizations/' + folder
+        os.makedirs(folder_path, exist_ok=True)
+
+        path = folder_path + '/' + plot_name + '.png'
+        fig.savefig(path, bbox_inches='tight')
 
     return fig
 
@@ -745,7 +779,10 @@ def plot_top_job_titles_wordcloud(data, stopwords_list=[], save=False, plot_name
     
 
     if save:
-        path = '../visualizations/' + folder + '/' + plot_name + '.png'
-        fig.savefig(path)
+        folder_path = '../visualizations/' + folder
+        os.makedirs(folder_path, exist_ok=True)
+
+        path = folder_path + '/' + plot_name + '.png'
+        fig.savefig(path, bbox_inches='tight')
 
     return fig
