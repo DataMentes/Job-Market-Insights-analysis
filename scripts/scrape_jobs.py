@@ -4,8 +4,8 @@ import time
 import pandas as pd
 
 countries = {
-    'saudi-arabia': 276,
     'egypt': 205,
+    'saudi-arabia': 276,
 }
 
 
@@ -14,7 +14,7 @@ def scrapping(country, total_pages):
     all_jobs = []
     for page in range(1, total_pages + 1):
         url = f"https://www.bayt.com/ar/{country}/jobs/?page={page}"
-        print(f"⏳ بيتم معالجة الصفحة: {page} / {total_pages}")
+        print(f"Scrapping data from {page} / {total_pages} is processing...")
 
         response = requests.get(url)
         html = response.text
@@ -112,6 +112,11 @@ def scrapping(country, total_pages):
                 'experience': experience
 
             })
+        pd.DataFrame(all_jobs).to_csv(f'../data/{country}_raw.csv', encoding='uft-8-sig', index=False)
         time.sleep(1)
     print(f"Scraping {len(all_jobs)} jobs in {total_pages} pages, success")
     return pd.DataFrame(all_jobs)
+
+
+scrapping(countries['egypt'], countries['total_pages'])
+scrapping(countries['saudi-arabia'], countries['total_pages'])
