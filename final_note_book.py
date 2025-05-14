@@ -1,11 +1,11 @@
-#%% md
+# %% md
 # ### Import required libraries
 # 
 # - Import `clean_data` module from `scripts`.
 # - Import `sqlite3` for database interaction.
 # - Import `warnings` and disable warnings.
 # - Import `pandas` for data manipulation.
-#%%
+# %%
 from scripts.clean_data import *
 from scripts.analysis import *
 import sqlite3
@@ -13,51 +13,51 @@ import warnings
 import pandas as pd
 
 warnings.filterwarnings("ignore")
-#%% md
+# %% md
 # ### Load and preview data
 # 
 # - Load CSV file `egypt_raw.csv`,`saudi-arabia_raw.csv` from `../data/raw/` into DataFrame.
 # - Display first 5 rows of the DataFrame.
-#%%
+# %%
 df_egypt = pd.read_csv('data/raw/egypt_raw.csv')
 df_egypt.head()
-#%%
+# %%
 df_saudi = pd.read_csv('data/raw/saudi-arabia_raw.csv')
 df_saudi.head()
-#%% md
+# %% md
 # ### Split location and career_level columns
 # 
 # - Split `location` column by separator `·`, keep index 1 as `city`.
 # - Split `career_level` column by separator `·`, keep indexes 0, 1, 2 as `type`, `exp`, and `no_exp`.
 # - Further process `career_level` column using `split_career_level` function.
-#%%
+# %%
 split_column(df_egypt, 'location', [1], '·', ['city'], reverse=True)
 split_career_level(df_egypt)
 df_egypt.head(15)
-#%%
+# %%
 split_column(df_saudi, 'location', [1], '·', ['city'], reverse=True)
 split_career_level(df_saudi)
 df_saudi.head(15)
-#%% md
+# %% md
 # ### Clean and combine experience columns
 # 
 # - Replace 'Unknown' values in `exp` column with `NaN`.
 # - Combine `experience` column with `exp` column into a new column `experience_` using `combine_first`.
 # - Replace 'Unknown' values in `no_exp` column with `NaN`.
 # - Combine `num_of_exp` column with `no_exp` column into a new column `num_of_exp_years` using `combine_first`.
-#%%
+# %%
 df_egypt['exp'].replace('Unknown', np.nan, inplace=True)
 df_egypt['experience_'] = df_egypt['experience'].combine_first(df_egypt['exp'])
 df_egypt['no_exp'].replace('Unknown', np.nan, inplace=True)
 df_egypt['num_of_exp_years'] = df_egypt['num_of_exp'].combine_first(df_egypt['no_exp'])
 df_egypt.head(15)
-#%%
+# %%
 df_saudi['exp'].replace('Unknown', np.nan, inplace=True)
 df_saudi['experience_'] = df_saudi['experience'].combine_first(df_saudi['exp'])
 df_saudi['no_exp'].replace('Unknown', np.nan, inplace=True)
 df_saudi['num_of_exp_years'] = df_saudi['num_of_exp'].combine_first(df_saudi['no_exp'])
 df_saudi.head(15)
-#%% md
+# %% md
 # ### Split and Clean Columns
 # 
 # 1. **Split `industry` column** using the `split_industry` function.
@@ -67,17 +67,17 @@ df_saudi.head(15)
 # 3. **Split `num_of_vacancies` column**:
 #    - Extract the number of vacancies by splitting at a space (' ').
 #    - Fill missing values with `1` if no vacancies are specified.
-#%%
+# %%
 split_industry(df_egypt)
 split_column(df_egypt, 'location', index=[1], split_char='·', names=['city'], reverse=True)
 split_column(df_egypt, 'num_of_vacancies', index=[3], split_char=' ', names=['num_of_vacancies'], fill_value=1)
 df_egypt.head(15)
-#%%
+# %%
 split_industry(df_saudi)
 split_column(df_saudi, 'location', index=[1], split_char='·', names=['city'], reverse=True)
 split_column(df_saudi, 'num_of_vacancies', index=[3], split_char=' ', names=['num_of_vacancies'], fill_value=1)
 df_saudi.head(15)
-#%% md
+# %% md
 # ### Fill Missing Values in Columns
 # 
 # 1. **Fill missing values in the `remote` column** with `'من المقر'` to indicate office-based positions.
@@ -85,49 +85,49 @@ df_saudi.head(15)
 # 3. **Fill missing values in the `sex` column** with `'لا تفضيل'` to represent no preference regarding sex.
 # 4. **Fill missing values in the `experience_` column** with `'لا تفضيل'` to represent no preference regarding experience.
 # 5. **Fill missing values in the `num_of_exp_years` column** with `'لا تفضيل'` to represent no preference regarding years of experience.
-#%%
+# %%
 df_egypt['remote'].fillna('من المقر', inplace=True)
 df_egypt['age'].fillna('لا تفضيل', inplace=True)
 df_egypt['sex'].fillna('لا تفضيل', inplace=True)
 df_egypt['experience_'].fillna('لا تفضيل', inplace=True)
 df_egypt['num_of_exp_years'].fillna('لا تفضيل', inplace=True)
 df_egypt.head(15)
-#%%
+# %%
 df_saudi['remote'].fillna('من المقر', inplace=True)
 df_saudi['age'].fillna('لا تفضيل', inplace=True)
 df_saudi['sex'].fillna('لا تفضيل', inplace=True)
 df_saudi['experience_'].fillna('لا تفضيل', inplace=True)
 df_saudi['num_of_exp_years'].fillna('لا تفضيل', inplace=True)
 df_saudi.head(15)
-#%% md
+# %% md
 # ### Drop Unnecessary Columns
 # 
 #  * **Remove columns** from the DataFrame that are not needed for further analysis:
 #    - `age`, `exp`, `no_exp`, `num_of_exp`, `experience`, `career_level`, `industry`, `location`, `link`, `Unnamed: 0`, `salary`, `nationality`, `residence_area`, `qualification`, `specialization`.
-#%%
+# %%
 df_egypt.drop(
     columns=['age', 'exp', 'no_exp', 'num_of_exp', 'exp', 'experience', 'career_level', 'industry', 'location', 'link',
              'Unnamed: 0', 'salary', 'nationality', 'residence_area', 'qualification', 'specialization'],
     inplace=True)
 df_egypt.head(15)
-#%%
+# %%
 df_saudi.drop(
     columns=['age', 'exp', 'no_exp', 'num_of_exp', 'exp', 'experience', 'career_level', 'industry', 'location', 'link',
              'Unnamed: 0', 'salary', 'nationality', 'residence_area', 'qualification', 'specialization'],
     inplace=True)
 df_saudi.head(15)
-#%% md
+# %% md
 # ### Analyze Date Data
 # 
 # * **Call `analyses_date()` function** to analyze the date data in the DataFrame (`df`):
 #    - Parameter `num_days=120` specifies the number of days to consider for analysis.
-#%%
+# %%
 analyses_date(df_egypt, num_days=120)
 df_egypt.head(15)
-#%%
+# %%
 analyses_date(df_saudi, num_days=120)
 df_saudi.head(15)
-#%% md
+# %% md
 # ### Sort and Save Data
 # 
 # 1. **Sort the DataFrame** by the 'title' column in descending order:
@@ -135,15 +135,15 @@ df_saudi.head(15)
 # 
 # 2. **Save the DataFrame to an SQLite database** (commented-out code)
 # 
-#%%
+# %%
 df_egypt.sort_values(by=['title'], ascending=False, inplace=True)
 # conn = sqlite3.connect('../database.db')
 # df.to_sql('EGYPT', con=conn, if_exists='replace', index=False)
-#%%
+# %%
 df_saudi.sort_values(by=['title'], ascending=False, inplace=True)
 # sqlite_version = sqlite3.connect('../database.db')
 # df.to_sql('saudi-arabia', con=sqlite_version, if_exists='replace', index=False)
-#%% md
+# %% md
 # ### Manual Data Cleaning and Translation
 # 
 # 1. **Manual Cleaning of 'title' Column**:
@@ -153,21 +153,21 @@ df_saudi.sort_values(by=['title'], ascending=False, inplace=True)
 #    - After the manual cleaning, the translation was applied to the 'title' column for the first 400 rows using the `apply_translation` function.
 # 
 # 3. **Save the Data**
-#%%
+# %%
 df_egypt = pd.read_csv('data/processed/egypt_clean.csv')
 df_egypt.sort_values(by=['title'], ascending=False, inplace=True)
 apply_translation(df_egypt, 'title', rows=df_egypt.iloc[:40, :].index.tolist())
-#%%
+# %%
 df_egypt = df_egypt[~df_egypt['title'].str.contains('سعودية', na=False)]
 df_egypt = df_egypt[~df_egypt['title'].str.contains('سعوديه', na=False)]
 df_egypt = df_egypt[~df_egypt['title'].str.contains('سعوية', na=False)]
 df_egypt = df_egypt[~df_egypt['title'].str.contains('saudi arabia', na=False)]
 df_egypt = df_egypt[~df_egypt['title'].str.contains('saudi', na=False)]
-#%%
+# %%
 df_saudi = pd.read_csv('data/processed/saudi_arabia.csv')
 df_saudi.sort_values(by=['title'], ascending=False, inplace=True)
 apply_translation(df_saudi, 'title', rows=df_saudi.iloc[:400, :].index.tolist())
-#%% md
+# %% md
 # ### Data Transformation Process
 # 
 # 1. **Manual Update on 'experience_' Column**:
@@ -189,15 +189,15 @@ apply_translation(df_saudi, 'title', rows=df_saudi.iloc[:400, :].index.tolist())
 #    - Split and processed the 'num_of_exp_years' column.
 # 
 # 7. **Save the Data**
-#%%
+# %%
 df_egypt = pd.read_csv('data/processed/egypt_clean.csv')
 df_saudi = pd.read_csv('data/processed/saudi_arabia.csv')
-#%%
+# %%
 translate_experience(df_egypt)
 translate_type(df_egypt)
 translate_sex(df_egypt)
 translate_remote(df_egypt)
-#%%
+# %%
 extract_job_grade(df_egypt)
 extract_gender(df_egypt, 'title')
 extract_gender(df_egypt, 'description')
@@ -205,22 +205,22 @@ extract_gender(df_egypt, 'skills')
 extract_remotely(df_egypt, 'title')
 extract_remotely(df_egypt, 'description')
 extract_remotely(df_egypt, 'skills')
-#%%
+# %%
 df_egypt.drop(columns=['description', 'skills'], inplace=True)
 split_num_of_exp_years(df_egypt)
 conn = sqlite3.connect('../database.db')
 # df.to_sql('EGYPT', con=conn, if_exists='replace', index=False)
 conn.close()
 df_egypt.head(15)
-#%%
+# %%
 index = df_saudi.type.str.contains(r'تدريب', regex=True)
 df_saudi.loc[index, 'experience_'] = 'خريج جديد'
-#%%
+# %%
 translate_experience(df_saudi)
 translate_type(df_saudi)
 translate_sex(df_saudi)
 translate_remote(df_saudi)
-#%%
+# %%
 extract_job_grade(df_saudi)
 extract_gender(df_saudi, 'title')
 extract_gender(df_saudi, 'description')
@@ -228,14 +228,14 @@ extract_gender(df_saudi, 'skills')
 extract_remotely(df_saudi, 'title')
 extract_remotely(df_saudi, 'description')
 extract_remotely(df_saudi, 'skills')
-#%%
+# %%
 df_saudi.drop(columns=['description', 'skills'], inplace=True)
 split_num_of_exp_years(df_saudi)
 conn = sqlite3.connect('../database.db')
 # df.to_sql('saudi-arabia', con=conn, if_exists='replace', index=False)
 conn.close()
 df_saudi.head(15)
-#%% md
+# %% md
 # ### Data Transformation Steps for 'title' Column
 # 
 # 1. **Remove Leading Numbers**:
@@ -249,23 +249,23 @@ df_saudi.head(15)
 # 
 # 4. **Sort Titles**:
 #    - Sorted the titles alphabetically in ascending order.
-#%%
+# %%
 conn = sqlite3.connect('data/database.db')
 df_egypt = pd.read_sql('SELECT * FROM EGYPT', conn)
 df_saudi = pd.read_sql('SELECT * FROM [saudi-arabia]', conn)
-#%%
+# %%
 df_egypt['title'] = df_egypt['title'].str.replace(r'^\d+\.', '', regex=True).str.strip()
 df_egypt['title'] = df_egypt['title'].str.replace(r'^a\s\b', '', regex=True).str.strip()
 df_egypt.title = df_egypt.title.str.lower()
 df_egypt.sort_values(by=['title'], inplace=True)
 df_egypt.head(15)
-#%%
+# %%
 df_saudi['title'] = df_saudi['title'].str.replace(r'^\d+\.', '', regex=True).str.strip()
 df_saudi['title'] = df_saudi['title'].str.replace(r'^a\s\b', '', regex=True).str.strip()
 df_saudi.title = df_saudi.title.str.lower()
 df_saudi.sort_values(by=['title'], inplace=True)
 df_saudi.head(15)
-#%% md
+# %% md
 # ### Job Title Cleaning Process
 # 
 # 1. **Pattern Replacement**:
@@ -277,7 +277,7 @@ df_saudi.head(15)
 # 
 # 3. **Save the Data**:
 #    - The cleaned titles were saved back into the database for further analysis, ensuring all records follow the standardized format.
-#%%
+# %%
 final_mapping_title_egypt = {
     r'3d designer': '3d designer',
     r'^account director': 'account director',
@@ -323,7 +323,7 @@ final_mapping_title_egypt = {
     r'assistant sales manager': 'assistant sales manager',
     r'ar accountant': 'accountant',
     r'arabic english interpreter': 'arabic english interpreter',
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     r'backend developer': 'backend developer',
     r'(?=.*(developer))(?=.*backend)^(?!.*(?:lead|manager|test automation)).*': 'backend developer',
     r'^web developer$': 'fullstack developer',
@@ -344,7 +344,7 @@ final_mapping_title_egypt = {
     r'(?=.*(research))(?=.*(business))^(?!.*(?:manager|lead)).*': 'business research',
     r'(?=.*(research))(?=.*(business))^(?=.*(manager))': 'business research manager',
     r'(?=.*(research))(?=.*(business))^(?=.*(lead))': 'business research lead',
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     r'(?=.*(call))(?=.*(center))^(?!.*(?:manager|lead)).*': 'call center agent',
     r'(?=.*(call))(?=.*(center))^(?=.*(lead))': 'call center lead',
     r'(?=.*(call))(?=.*(center|centre))^(?=.*(manager))': 'call center manager',
@@ -411,7 +411,7 @@ final_mapping_title_egypt = {
     r'demi coding instructor physical': 'demi coding instructor physical',
     r'(?=.*(digital))(?=.*(marketing))(?=.*(specialist))': 'digital marketing specialist',
     'draftsman': 'draftsman',
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     r'(?=.*(operations|operation))(?=.*(manager|senior manager|area manager))(?=.*(ecommerce|b2b))': 'ecommerce operations manager',
     r'(?=.*(electrical))(?=.*(design))(?=.*(engineer))': 'electrical design engineer',
     r'(?=.*(electrical))(?=.*(engineer))^(?!.*(?:lead|design|support|office|maintenance)).*': 'electrical design engineer',
@@ -428,7 +428,7 @@ final_mapping_title_egypt = {
     r'(?=.*executive)(?=.*chef)^(?!.*(?:pastry|sous)).*': 'executive chef',
     r'(?=.*expeditor)': 'expeditor',
     r'engineer \(r\&d\)': 'engineer',
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     r'(?=.*finance controller)': 'finance controller',
     r'(?=.*^finance)(?=.*manager)': 'finance manager',
     r'(?=.*(operations|operation))(?=.*(manager|senior manager|area manager))(?=.*(finance))': 'finance operations manager',
@@ -449,13 +449,13 @@ final_mapping_title_egypt = {
     r'food and beverage manager': 'food and beverage manager',
     r'fp&a analyst': 'fp&a analyst',
     r'(?=.*(front))(?=.*(desk))^(?!.*(?:manager|officer|supervisor|clerk|receptionist)).*': 'front desk agent',
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     r'(?=.*government)(?=.*(relation))(?=.*officer)^(?!.*&).*': 'government relation officer',
     r'(?=.*graphic)(?=.*(design))^(?!.*(?:and|manager|concept|specialist)).*': 'graphic design',
     r'(?=.*guest)(?=.*(experience))(?=.*agent)': 'guest experience agent',
     r'general accountant': 'general accountant',
     r'global procurement associate analyst': 'global procurement associate analyst',
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     r'(?=.*(hr))(?=.*(account\\s+manager))': 'hr account manager',
     r'(?=.*(hr\b|humanresources|humansresources|human\s*resources|humans\s*resources))(?=.*(specialist))(?=.*(admin|payroll))': 'hr admin & payroll specialist',
     r'(?=.*(hr\b|humanresources|humansresources|human\s*resources|humans\s*resources))(?=.*(analyst))': 'hr analyst',
@@ -477,7 +477,7 @@ final_mapping_title_egypt = {
     r'(?=.*(hr))(?=.*(partner))(?=.*(talent|performance))': 'hr talent partner',
     r'(?=.*(hub))(?=.*(operations))(?=.*(coordinator))^(?!.*(?:section head|manager)).*': 'hub operations coordinator',
     r'a427-esg': 'hvac technician',
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     r'(?=.*(information))(?=.*(security))^(?!.*(?:section head|manager)).*': 'information security',
     r'(?=.*(integration))(?=.*(developer))': 'integration developer',
     r'(?=.*(interior))(?=.*(designer))': 'interior designer',
@@ -485,14 +485,14 @@ final_mapping_title_egypt = {
     r'(?=.*(audit))(?=.*(internal))': 'internal auditor',
     r'(?=.*(operations|operation))(?=.*(manager|senior manager|area manager))(?=.*(technology|it))': 'it operations manager',
     r'it operations': 'it support',
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     r'(?=.*(java))(?=.*(developer))': 'java developer',
     r'(?=.*(java))(?=.*(engineer))': 'java engineer',
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     r'7pqe\\+ dispute resolution associate': 'legal counsel',
     r'(?=.*(logistics))(?=.*(coordinator))^(?!.*(?:section head|manager)).*': 'logistics coordinator',
     r'(?=.*(logistics))(?=.*(coordintor|coordinatoor|coordinator))': 'logistics coordinator',
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     r'maintenance technician': 'maintenance technician',
     r'marketing manager': 'marketing manager',
     r'(?=.*(marketing))(?=.*(manager))': 'marketing manager',
@@ -512,7 +512,7 @@ final_mapping_title_egypt = {
     r'(?=.*(engineer))(?=.*mobile)(?=.*lead)': 'mobile engineer lead',
     r'(?=.*(engineer))(?=.*mobile)(?=.*manager)': 'mobile engineer manager',
     r'(?=.*(engineer))(?=.*mobile)(?=.*test automation)': 'mobile engineer test automation',
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     r'odoo developer': 'odoo developer',
     r'^(?!.*\\b(architecture|electrical|mechanical)\\b).*office engineer.*': 'office engineer',
     r'(?=.*(manager))(?=.*(office))^(?!.*(?:assistant)).*': 'office manager',
@@ -521,7 +521,7 @@ final_mapping_title_egypt = {
     r'(?=.*(operations|operation))(?=.*(manager|senior manager|area manager))^(?!.*(sales|strategic|data|lost|live|hardware|hub|finance|financial|mall|retail|product|strategy|planning|technology|it|security|soc|merchant|customer|ad|ecommerce|b2b|gym|fitness|procurement)).*': 'operations manager',
     r'(?=.*(operations|operation))(?=.*(specialist|coordinator|associate))^(?!.*(sales|strategic|data|lost|live|hardware|hub|finance|financial|mall|retail|product|strategy|planning|technology|it|security|soc|merchant|customer|ad|ecommerce|b2b|gym|fitness|procurement)).*': 'operations specialist',
     r'data collection': 'operations specialist data collection',
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     r'people operations specialist': 'people operations specialist',
     r'(?=.*(personal))(?=.*(assistant))': 'personal assistant',
     r'(?=.*(personal))(?=.*(banker))^(?!.*(?:payroll)).*': 'personal banker',
@@ -533,12 +533,12 @@ final_mapping_title_egypt = {
     r'product owner (vois)': 'product owner',
     r'project manager (architect or civil engineer)': 'project manager engineer',
     r'(?=.*(purchase|purchasing))(?=.*(specialist))': 'purchasing specialist',
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     r'qa engineer': 'qa engineer',
     r'quality engineer': 'quality engineer',
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     r'(?=.*(operations|operation))(?=.*(manager|senior manager|area manager))(?=.*(retail))': 'retail operations manager',
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     r'sales and business development manager': 'sales & business development manager',
     r'sales account manager': 'sales account manager',
     r'sales assistant(?!.*analyst)': 'sales assistant',
@@ -575,7 +575,7 @@ final_mapping_title_egypt = {
     r'system administrator.*': 'system administrator',
     r'system(s)? engineer.*': 'system engineer',
     r'(?=.*(Account))(?=.*(Manager))(?=.*(Sale))': 'Sales Account Manager',
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     r'^talent acquisition .*(manager|head).*': 'talent acquisition manager',
     r'talent acquisition (specialist|partner|&).*': 'talent acquisition specialist',
     r'^talent acquisition and learning and development specialist': 'talent acquisition specialist',
@@ -589,13 +589,13 @@ final_mapping_title_egypt = {
     r'^treasury (section|head).*': 'treasury lead',
     r'^treasurer$': 'treasury specialist',
     r'^treasur(y|er)\\s?(specialist|senior specialist|and| - emea).*': 'treasury specialist',
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     r'(?=.*(designer))(?=.*(ux/ui|ui/ux|ux|ui))': 'ux/ui designer',
     r'(?=.*(developer))(?=.*(ux/ui|ui/ux|ux|ui))': 'ux/ui developer',
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
 }
 df_egypt.title.value_counts()
-#%%
+# %%
 final_mapping_title_saudi = {
     r'cashier': 'cashier',
     r'driller': 'drilling Operator',
@@ -989,57 +989,55 @@ final_mapping_title_saudi = {
     r'waiter': "waiter",
 }
 df_saudi.title.value_counts()
-#%%
+# %%
 pattern_replace = r'(^((sr(\b|\s)|\ssr(\b|\s))|senior|junior|staff|female|\bmen\b|\bmale\b|women(\'s)|tpe (iv|iii|ii|i|v)(\s)?(-|/)?)( (senior|graduate))?|^graduate|^trainee\b( -)?)(\s)?(\.|-|/|\\)?|(\.|\-|/|\,|\\)$'
 df_egypt.title = df_egypt.title.str.replace(pattern_replace, '', regex=True).str.strip()
 df_saudi.title = df_saudi.title.str.replace(pattern_replace, '', regex=True).str.strip()
 df_egypt = df_egypt.sort_values(by="title", ascending=False, key=lambda col: col.str.lower()).reset_index(drop=True)
 df_saudi = df_saudi.sort_values(by="title", ascending=False, key=lambda col: col.str.lower()).reset_index(drop=True)
-#%%
+# %%
 review_matches(df_egypt, final_mapping_title_egypt)
-#%%
+# %%
 review_matches(df_saudi, final_mapping_title_saudi)
-#%%
+# %%
 edit_title(df_egypt, final_mapping_title_egypt)
 df_egypt.title.value_counts()
-#%%
+# %%
 edit_title(df_saudi, final_mapping_title_saudi)
 df_saudi.title.value_counts()
-#%%
+# %%
 conn = sqlite3.connect('data/database.db')
 # df.to_sql('EGYPT', con=conn, if_exists='replace')
 # df.to_sql('saudi-arabia', con=conn, if_exists='replace')
-#conn.close()
-#%% md
-# ## Analysis
-# 
-#%%
+# conn.close()
+# %% md
+# # Analysis and Explanation of Plots
+#
+# %%
 conn = sqlite3.connect('data/database.db')
 df_egy = pd.read_sql('SELECT * FROM EGYPT', conn)
 df_saudi = pd.read_sql('SELECT * FROM [saudi-arabia]', conn)
-#%%
+# %%
 df_egy.head()
-#%%
+# %%
 df_saudi.head()
-#%%
+# %%
 df_egy['title'].nunique()
-#%%
+# %%
 df_saudi['title'].nunique()
-#%%
+# %%
 df_egy['city'].unique()
-#%%
+# %%
 df_saudi['city'].unique()
-#%%
+# %%
 df_egy['city'].value_counts().head()
-#%%
+# %%
 df_saudi['city'].value_counts().head()
-#%%
+# %%
 df_egy['title'].value_counts().head()
-#%%
+# %%
 df_saudi['title'].value_counts().head()
-#%% md
-# # Analysis and Explanation of Plots
-#%% md
+# %% md
 # ### **Plot 1: Top 10 Cities by Number of Jobs (Egypt)**
 # 
 # #### **Description**
@@ -1102,14 +1100,14 @@ df_saudi['title'].value_counts().head()
 # #### **Conclusion**
 # - Both Saudi Arabia and Egypt exhibit a strong concentration of jobs in their capital cities, reflecting their economic and political significance.
 # - However, Saudi Arabia shows a slightly more diversified job market across multiple cities, while Egypt's job market is heavily centralized in Cairo, with minimal opportunities elsewhere.
-#%%
+# %%
 fig11 = job_distribution_by_city(df_egy[df_egy['city'] != 'Unknown'],
                                  plot_name="job_distribution_by_city_egypt", folder='egypt',
                                  top_n=10, save=False)
 fig12 = job_distribution_by_city(df_saudi[df_saudi['city'] != 'Unknown'],
                                  plot_name="job_distribution_by_city_saudi", folder='saudi',
                                  top_n=10, save=False)
-#%% md
+# %% md
 # ### **Plot 1: Number of Jobs by Company (Egypt)**
 # 
 # #### **Description**
@@ -1179,12 +1177,12 @@ fig12 = job_distribution_by_city(df_saudi[df_saudi['city'] != 'Unknown'],
 # - Both Saudi Arabia and Egypt exhibit a strong concentration of jobs in a few leading companies, reflecting their economic significance.
 # - However, Saudi Arabia shows a slightly more diversified job market across multiple companies, while Egypt's job market is heavily centralized in a few large employers, with minimal opportunities elsewhere.
 # 
-#%%
+# %%
 fig21 = analyze_jobs_by_company(df_egy, plot_name="analyze_jobs_by_company_egypt", folder='egypt',
                                 save=False)
 fig22 = analyze_jobs_by_company(df_saudi, plot_name="analyze_jobs_by_company_saudi", folder='saudi',
                                 save=False)
-#%% md
+# %% md
 # ### **Plot 1: Top 10 Most Frequent Job Titles (Egypt)**
 # 
 # #### **Description**
@@ -1253,12 +1251,12 @@ fig22 = analyze_jobs_by_company(df_saudi, plot_name="analyze_jobs_by_company_sau
 # - Both Saudi Arabia and Egypt exhibit a strong demand for accounting and sales roles, reflecting their importance across various industries.
 # - However, Saudi Arabia shows a more pronounced focus on engineering and sales, likely due to its industrial and economic structure.
 # - Egypt, on the other hand, demonstrates a greater emphasis on technology, analytics, and creative roles, indicating a different set of industry priorities.
-#%%
+# %%
 fig31 = get_top_job_titles_with_plot(df_egy, plot_name="get_top_job_titles_with_plot_egypt",
                                      folder='egypt', save=False)
 fig32 = get_top_job_titles_with_plot(df_saudi, plot_name="get_top_job_titles_with_plot_saudi",
                                      folder='saudi', save=False)
-#%% md
+# %% md
 # ### **Plot 1: Job Distribution by Work Type (Egypt)**
 # 
 # #### **Description**
@@ -1325,12 +1323,12 @@ fig32 = get_top_job_titles_with_plot(df_saudi, plot_name="get_top_job_titles_wit
 # - However, Egypt shows a slightly higher prevalence of **remote** jobs, while Saudi Arabia demonstrates a marginally higher adoption of **hybrid** work models.
 # - Overall, both countries have limited flexibility in work arrangements, with a strong reliance on physical workplace attendance.
 # 
-#%%
+# %%
 fig41 = analyze_jobs_by_work_type(df_egy, plot_name="analyze_jobs_by_work_type_egypt",
                                   folder='egypt', save=False)
 fig42 = analyze_jobs_by_work_type(df_saudi, plot_name="analyze_jobs_by_work_type_saudi",
                                   folder='saudi', save=False)
-#%% md
+# %% md
 # ### **Plot 1: Job Distribution by Gender (Egypt)**
 # 
 # #### **Description**
@@ -1393,12 +1391,12 @@ fig42 = analyze_jobs_by_work_type(df_saudi, plot_name="analyze_jobs_by_work_type
 # - Both Egypt and Saudi Arabia exhibit a strong preference for gender-neutral job postings, with the majority of jobs falling under the **No Preference** category.
 # - However, Saudi Arabia shows a slightly higher prevalence of gender-specific job postings (both Male and Female) compared to Egypt, although these numbers remain relatively low overall.
 # - This indicates a general trend toward inclusive hiring practices in both countries, with Saudi Arabia showing a marginally higher level of gender-specific job opportunities.
-#%%
+# %%
 fig51 = analyze_jobs_by_gender(df_egy, plot_name="analyze_jobs_by_gender_egypt", folder='egypt',
                                save=False)
 fig52 = analyze_jobs_by_gender(df_saudi, plot_name="analyze_jobs_by_gender_saudi", folder='saudi',
                                save=False)
-#%% md
+# %% md
 # ### **Plot 1: Job Distribution by Job Level (Egypt)**
 # 
 # #### **Description**
@@ -1485,14 +1483,14 @@ fig52 = analyze_jobs_by_gender(df_saudi, plot_name="analyze_jobs_by_gender_saudi
 # - Both Egypt and Saudi Arabia prioritize hiring experienced professionals, with Egypt focusing more on **Senior** roles and Saudi Arabia emphasizing **Mid Level** positions.
 # - There is a general scarcity of **C-Suite** and **Senior Management** roles in both countries, indicating a limited number of top executive opportunities.
 # - While entry-level positions exist in both countries, they are not as dominant as higher-level roles, reflecting a stronger demand for experienced talent.
-#%%
+# %%
 fig61 = analyze_jobs_by_job_level(df_egy[df_egy['job_level'] != 'No Preference'],
                                   plot_name="analyze_jobs_by_job_level_egypt",
                                   folder='egypt', save=False)
 fig62 = analyze_jobs_by_job_level(df_saudi[df_saudi['job_level'] != 'No Preference'],
                                   plot_name="analyze_jobs_by_job_level_saudi",
                                   folder='saudi', save=False)
-#%% md
+# %% md
 # ### **Plot 1: Number of Job Entries Over Time (Egypt)**
 # 
 # #### **Description**
@@ -1568,12 +1566,12 @@ fig62 = analyze_jobs_by_job_level(df_saudi[df_saudi['job_level'] != 'No Preferen
 # - Both Egypt and Saudi Arabia exhibit positive trends in job entries over the six-month period, reflecting improving job markets.
 # - However, Saudi Arabia demonstrates a stronger job market overall, with consistently higher job entry numbers and a more pronounced peak in March 2025.
 # - The slight declines in April 2025 for both countries suggest potential temporary adjustments or seasonal fluctuations, but the overall upward trajectory remains strong.
-#%%
+# %%
 fig71 = plot_job_trend_over_time(df_egy, plot_name="plot_job_trend_over_time_egypt", folder='egypt',
                                  save=False)
 fig72 = plot_job_trend_over_time(df_saudi, plot_name="plot_job_trend_over_time_saudi", folder='saudi',
                                  save=False)
-#%% md
+# %% md
 # ### **Plot 1: The Highest 10 Areas Declared for Business Opportunities (Egypt)**
 # 
 # #### **Description**
@@ -1671,12 +1669,12 @@ fig72 = plot_job_trend_over_time(df_saudi, plot_name="plot_job_trend_over_time_s
 # - Both Egypt and Saudi Arabia exhibit a strong demand for **Other Commercial Support Services**, indicating a common trend in the need for services that support commercial activities.
 # - However, Saudi Arabia shows a larger overall job market and a stronger focus on sectors like **Construction**, **Oil and Gas**, and **Healthcare Services**, reflecting its economic diversification efforts.
 # - Egypt, on the other hand, has a more balanced distribution of opportunities across domains such as **General Engineering Consultancy**, **Management Consultancy**, and **Retail**, highlighting a different set of priorities in its economy.
-#%%
+# %%
 fig81 = plot_job_postings_by_industry(df_egy, plot_name="plot_job_postings_by_industry_egypt",
-                                       folder='egypt', save=False)
+                                      folder='egypt', save=False)
 fig82 = plot_job_postings_by_industry(df_saudi, plot_name="plot_job_postings_by_industry_saudi",
-                                       folder='saudi', save=False)
-#%% md
+                                      folder='saudi', save=False)
+# %% md
 # ### **Plot 1: Job Distribution by Type (Egypt)**
 # 
 # #### **Description**
@@ -1762,12 +1760,12 @@ fig82 = plot_job_postings_by_industry(df_saudi, plot_name="plot_job_postings_by_
 # - Both Egypt and Saudi Arabia face a challenge with a large proportion of job listings being categorized as **Unknown**, highlighting a need for more detailed job descriptions.
 # - Saudi Arabia shows a stronger focus on **Full-Time** employment compared to Egypt, while Egypt has a significantly higher demand for **Management** roles.
 # - Overall, both countries exhibit a limited availability of part-time, contract, and temporary jobs, with internships also being relatively rare but more prevalent in Egypt.
-#%%
+# %%
 fig91 = analyze_job_type_distribution(df_egy, plot_name="analyze_job_type_distribution_egypt",
                                       folder='egypt', save=False)
 fig92 = analyze_job_type_distribution(df_saudi, plot_name="analyze_job_type_distribution_saudi",
                                       folder='saudi', save=False)
-#%% md
+# %% md
 # ### **Plot 1: Comparison of Min & Max Experience Requirements (Egypt)**
 # 
 # #### **Description**
@@ -1850,12 +1848,12 @@ fig92 = analyze_job_type_distribution(df_saudi, plot_name="analyze_job_type_dist
 # - Both Egypt and Saudi Arabia exhibit similar patterns in terms of minimum and maximum experience requirements, with most job postings targeting professionals with 3–9 years of experience.
 # - However, Saudi Arabia shows a slightly higher demand for experienced professionals, as indicated by the higher median maximum experience requirement and the broader range of experience levels.
 # - Both countries have a mix of entry-level, mid-level, and senior-level roles, with some specialized positions requiring significantly more experience.
-#%%
+# %%
 fig101 = compare_experience_requirements(df_egy, plot_name="compare_experience_requirements_egypt",
                                          folder='egypt', save=False)
 fig102 = compare_experience_requirements(df_saudi, plot_name="compare_experience_requirements_saudi",
                                          folder='saudi', save=False)
-#%% md
+# %% md
 # ### **Plot 1: Heatmap of Job Count by City and Job Level (Egypt)**
 # 
 # #### **Description**
@@ -1950,12 +1948,12 @@ fig102 = compare_experience_requirements(df_saudi, plot_name="compare_experience
 # - Both Egypt and Saudi Arabia exhibit a strong concentration of job opportunities in major urban centers, with Cairo and Riyadh being the primary hubs for employment.
 # - The high count of **No Preference** jobs in both countries reflects a trend toward flexible hiring practices.
 # - Saudi Arabia shows a larger overall job market, with higher job counts across major cities, while Egypt has a more focused job market centered around Cairo and Alexandria.
-#%%
+# %%
 fig111 = jobs_heatmap_by_city_and_job_level(df_egy, plot_name="jobs_heatmap_by_city_and_job_level_egypt",
                                             folder='egypt', save=False)
 fig112 = jobs_heatmap_by_city_and_job_level(df_saudi, plot_name="jobs_heatmap_by_city_and_job_level_saudi",
                                             folder='saudi', save=False)
-#%% md
+# %% md
 # ### **Plot 1: Most Common Job Titles (Wordcloud) - Egypt**
 # 
 # #### **Description**
@@ -2034,7 +2032,7 @@ fig112 = jobs_heatmap_by_city_and_job_level(df_saudi, plot_name="jobs_heatmap_by
 # - Both Egypt and Saudi Arabia exhibit a strong demand for **managerial** and **specialized roles**, with a focus on **technical** and **analytical** skills.
 # - However, Egypt shows a stronger emphasis on **accounting** and **sales**, while Saudi Arabia highlights **consulting**, **engineering**, and **leadership** roles.
 # - The differences reflect variations in industry priorities and economic structures between the two countries, with Egypt leaning toward services and sales, and Saudi Arabia focusing on engineering and strategic development.
-#%%
+# %%
 fig121 = plot_top_job_titles_wordcloud(df_egy, plot_name="plot_top_job_titles_wordcloud_egypt",
                                        folder='egypt', save=False)
 fig122 = plot_top_job_titles_wordcloud(df_saudi, plot_name="plot_top_job_titles_wordcloud_saudi",
