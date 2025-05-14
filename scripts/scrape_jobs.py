@@ -2,10 +2,13 @@ import requests
 from bs4 import BeautifulSoup
 import time
 import pandas as pd
+
 countries = {
     'saudi-arabia': 276,
     'egypt': 205,
 }
+
+
 # Web scraping logic here
 def scrapping(country, total_pages):
     all_jobs = []
@@ -21,7 +24,7 @@ def scrapping(country, total_pages):
         for job in job_cards:
             link_tag = job.find('a', {'data-js-aid': 'jobID'})
             if not link_tag or not link_tag.get('href'):
-                print("❌ خطأ في الرابط")
+                print("Link not found")
                 continue
             link = 'https://www.bayt.com' + link_tag.get('href')
             content = requests.get(link).text
@@ -110,6 +113,5 @@ def scrapping(country, total_pages):
 
             })
         time.sleep(1)
-    print(f"\n✅ تم سحب {len(all_jobs)} وظيفة من {total_pages} صفحة.")
+    print(f"Scraping {len(all_jobs)} jobs in {total_pages} pages, success")
     return pd.DataFrame(all_jobs)
-
