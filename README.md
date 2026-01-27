@@ -78,14 +78,15 @@ streamlit run app.py
 
 ## 📢 **Contributors**
 
-* **Ezz Al-Din Emad** - Machine Learning Engineer 
+* **Ezz Al-Din Emad** - Data Scientist
   - `Data Cleaning`
 * **Abdallah Mohamed** - Data Scientist
   - `Data Cleaning`
-* **Adel Maher** - Data Analyst
-  - `Data Analysis`
 * **Ali Ahmed** - Data Scientist
   - `Data Analysis`
+* **Adel Maher** - Data Analyst
+  - `Data Analysis`
+
 
 
 ## 🌐 **Links**
