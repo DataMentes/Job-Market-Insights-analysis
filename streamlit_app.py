@@ -1,338 +1,441 @@
-# ---------------------------
-# Import Libraries & Packages
-# ---------------------------
-from scripts.analysis import *
+"""Job Market Analysis — Egypt & Saudi Arabia.
+
+Reads the cleaned tables from data/database.db, renders one page at a time and
+caches every aggregation, so switching pages does not recompute the whole app.
+"""
 import sqlite3
+from pathlib import Path
+
+import numpy as np
 import pandas as pd
+import plotly.express as px
+import plotly.graph_objects as go
 import streamlit as st
-
-# ---------------------------
-# Import Data
-# ---------------------------
-df_egypt_before = pd.read_csv('data/raw/egypt_raw.csv')
-df_saudi_before = pd.read_csv('data/raw/saudi-arabia_raw.csv')
-
-# Assuming 'database.db' is in the same directory or accessible
-conn = sqlite3.connect('data/database.db')
-df_egypt = pd.read_sql('SELECT * FROM EGYPT', conn)
-
-df_saudi = pd.read_sql('SELECT * FROM [saudi-arabia]', conn)
-
-# ---------------------------
-# Import Plots
-# ---------------------------
-fig1_egypt = job_distribution_by_city(df_egypt[df_egypt['city'] != 'Unknown'],
-                                      plot_name="job_distribution_by_city_egypt", folder='egypt',
-                                      top_n=10, save=False)
-fig2_egypt = analyze_jobs_by_company(df_egypt, plot_name="analyze_jobs_by_company_egypt", folder='egypt',
-                                     save=False)
-fig3_egypt = get_top_job_titles_with_plot(df_egypt, plot_name="get_top_job_titles_with_plot_egypt",
-                                          folder='egypt', save=False)
-fig4_egypt = analyze_jobs_by_work_type(df_egypt, plot_name="analyze_jobs_by_work_type_egypt",
-                                       folder='egypt', save=False)
-fig5_egypt = analyze_jobs_by_gender(df_egypt, plot_name="analyze_jobs_by_gender_egypt", folder='egypt',
-                                    save=False)
-fig6_egypt = analyze_jobs_by_job_level(df_egypt[df_egypt['job_level'] != 'No Preference'],
-                                       plot_name="analyze_jobs_by_job_level_egypt",
-                                       folder='egypt', save=False)
-fig7_egypt = plot_job_trend_over_time(df_egypt, plot_name="plot_job_trend_over_time_egypt", folder='egypt',
-                                      save=False)
-fig8_egypt = plot_job_postings_by_industry(df_egypt, plot_name="plot_job_postings_by_industry_egypt",
-                                           folder='egypt', save=False)
-fig9_egypt = analyze_job_type_distribution(df_egypt, plot_name="analyze_job_type_distribution_egypt",
-                                           folder='egypt', save=False)
-fig10_egypt = compare_experience_requirements(df_egypt, plot_name="compare_experience_requirements_egypt",
-                                              folder='egypt', save=False)
-fig11_egypt = jobs_heatmap_by_city_and_job_level(df_egypt, plot_name="jobs_heatmap_by_city_and_job_level_egypt",
-                                                 folder='egypt', save=False)
-fig12_egypt = plot_top_job_titles_wordcloud(df_egypt, plot_name="plot_top_job_titles_wordcloud_egypt",
-                                            folder='egypt', save=False)
-
-fig1_saudi = job_distribution_by_city(df_saudi[df_saudi['city'] != 'Unknown'],
-                                      plot_name="job_distribution_by_city_saudi", folder='saudi',
-                                      top_n=10, save=False)
-fig2_saudi = analyze_jobs_by_company(df_saudi, plot_name="analyze_jobs_by_company_saudi", folder='saudi',
-                                     save=False)
-fig3_saudi = get_top_job_titles_with_plot(df_saudi, plot_name="get_top_job_titles_with_plot_saudi",
-                                          folder='saudi', save=False)
-fig4_saudi = analyze_jobs_by_work_type(df_saudi, plot_name="analyze_jobs_by_work_type_saudi",
-                                       folder='saudi', save=False)
-fig5_saudi = analyze_jobs_by_gender(df_saudi, plot_name="analyze_jobs_by_gender_saudi", folder='saudi',
-                                    save=False)
-fig6_saudi = analyze_jobs_by_job_level(df_saudi[df_saudi['job_level'] != 'No Preference'],
-                                       plot_name="analyze_jobs_by_job_level_saudi",
-                                       folder='saudi', save=False)
-fig7_saudi = plot_job_trend_over_time(df_saudi, plot_name="plot_job_trend_over_time_saudi", folder='saudi',
-                                      save=False)
-fig8_saudi = plot_job_postings_by_industry(df_saudi, plot_name="plot_job_postings_by_industry_saudi",
-                                           folder='saudi', save=False)
-fig9_saudi = analyze_job_type_distribution(df_saudi, plot_name="analyze_job_type_distribution_saudi",
-                                           folder='saudi', save=False)
-fig10_saudi = compare_experience_requirements(df_saudi, plot_name="compare_experience_requirements_saudi",
-                                              folder='saudi', save=False)
-fig11_saudi = jobs_heatmap_by_city_and_job_level(df_saudi, plot_name="jobs_heatmap_by_city_and_job_level_saudi",
-                                                 folder='saudi', save=False)
-fig12_saudi = plot_top_job_titles_wordcloud(df_saudi, plot_name="plot_top_job_titles_wordcloud_saudi",
-                                            folder='saudi', save=False)
+from wordcloud import WordCloud
 
 
-# ---------------------------
-# Streamlit App
-# ---------------------------
-def main():
-    # ---------------------------
-    # Sidebar Navigation
-    # ---------------------------
-    plot_names = [
-        "Job Distribution by City",
-        "Jobs by Company",
-        "Top Job Titles",
-        "Jobs by Work Type",
-        "Jobs by Gender",
-        "Jobs by Job Level",
-        "Job Trend Over Time",
-        "Job Postings by Industry",
-        "Job Type Distribution",
-        "Experience Requirements",
-        "Heatmap by City and Job Level",
-        "Top Job Titles Word Cloud"
-    ]
-    egypt_figs = [fig1_egypt, fig2_egypt, fig3_egypt, fig4_egypt, fig5_egypt, fig6_egypt,
-                  fig7_egypt, fig8_egypt, fig9_egypt, fig10_egypt, fig11_egypt, fig12_egypt]
-    saudi_figs = [fig1_saudi, fig2_saudi, fig3_saudi, fig4_saudi, fig5_saudi, fig6_saudi,
-                  fig7_saudi, fig8_saudi, fig9_saudi, fig10_saudi, fig11_saudi, fig12_saudi]
+def _database_path() -> Path:
+    """Locate data/database.db regardless of the directory the app is started from."""
+    for parent in Path(__file__).resolve().parents:
+        candidate = parent / "data" / "database.db"
+        if candidate.exists():
+            return candidate
+    raise FileNotFoundError("data/database.db not found")
 
-    st.sidebar.title("Navigation")
-    page = st.sidebar.selectbox("Select Page", ["Home", "Egypt Market", "Saudi Market", "Comparison"])
 
-    # ---------------------------
-    # Page Content
-    # ---------------------------
+DB_PATH = _database_path()
+RAW_ROWS = {"Egypt": 4094, "Saudi Arabia": 5520}
+
+PAGES = ["Home", "Egypt Market", "Saudi Market", "Comparison"]
+
+SCHEMA_MAP = pd.DataFrame(
+    [
+        ("location", "city", "split on ·"),
+        ("career_level", "type / exp / no_exp", "split into three columns"),
+        ("title", "title", "numbers and level markers stripped, mapped to standard titles"),
+        ("experience", "experience_", "merged with exp"),
+        ("num_of_exp", "num_of_exp_years", "merged with no_exp, converted to numeric"),
+        ("sex", "gender", "No Preference as the default"),
+        ("remote", "remote", "On-site / Remote / Hybrid"),
+        ("salary, age, qualification, description, skills", "—", "dropped"),
+    ],
+    columns=["raw column", "clean column", "rule"],
+)
+
+DISPLAY_COLUMNS = ["title", "company_name", "city", "remote", "job_level", "gender"]
+
+st.set_page_config(page_title="Job Market Analysis", layout="wide")
+
+
+# ---------------------------------------------------------------- data access
+@st.cache_data(show_spinner="Loading data…")
+def load_markets() -> dict[str, pd.DataFrame]:
+    con = sqlite3.connect(DB_PATH)
+    try:
+        return {
+            "Egypt": pd.read_sql("SELECT * FROM EGYPT", con),
+            "Saudi Arabia": pd.read_sql("SELECT * FROM [saudi-arabia]", con),
+        }
+    finally:
+        con.close()
+
+
+@st.cache_data
+def data_quality(df: pd.DataFrame) -> pd.DataFrame:
+    rows = []
+    for column in df.columns:
+        if column == "index":
+            continue
+        values = df[column]
+        rows.append(
+            {
+                "column": column,
+                "type": str(values.dtype),
+                "missing %": round(100 * values.isna().mean(), 1),
+                "unknown %": round(100 * values.astype(str).eq("Unknown").mean(), 1),
+                "distinct": int(values.nunique(dropna=True)),
+            }
+        )
+    return pd.DataFrame(rows)
+
+
+@st.cache_data
+def top_counts(df: pd.DataFrame, column: str, n: int = 8) -> pd.DataFrame:
+    counts = df[column].replace("Unknown", pd.NA).dropna().value_counts().head(n)
+    return counts.rename_axis(column).reset_index(name="postings")
+
+
+@st.cache_data
+def full_counts(df: pd.DataFrame, column: str) -> pd.DataFrame:
+    counts = df[column].value_counts()
+    return counts.rename_axis(column).reset_index(name="postings")
+
+
+@st.cache_data
+def monthly_postings(df: pd.DataFrame) -> pd.DataFrame:
+    dates = pd.to_datetime(df["date"], errors="coerce")
+    counts = dates.dropna().dt.to_period("M").value_counts().sort_index()
+    return pd.DataFrame(
+        {"month": counts.index.to_timestamp(), "postings": counts.to_numpy()}
+    )
+
+
+@st.cache_data
+def city_level_matrix(df: pd.DataFrame, cities: int = 8) -> pd.DataFrame:
+    top = df["city"].replace("Unknown", pd.NA).value_counts().head(cities).index
+    subset = df[df["city"].isin(top)]
+    return subset.pivot_table(
+        index="city", columns="job_level", values="index", aggfunc="count", fill_value=0
+    )
+
+
+@st.cache_data
+def experience_frame(df: pd.DataFrame) -> pd.DataFrame:
+    min_years = pd.to_numeric(df["min_num_of_years"], errors="coerce")
+    max_years = pd.to_numeric(df["max_num_of_years"], errors="coerce")
+    return pd.DataFrame(
+        {
+            "requirement": ["minimum"] * min_years.notna().sum()
+            + ["maximum"] * max_years.notna().sum(),
+            "years": pd.concat([min_years.dropna(), max_years.dropna()]).to_numpy(),
+        }
+    )
+
+
+@st.cache_data
+def wordcloud_image(df: pd.DataFrame) -> np.ndarray:
+    text = " ".join(df["title"].dropna().astype(str))
+    cloud = WordCloud(width=1200, height=600, background_color="white").generate(text)
+    return cloud.to_array()
+
+
+@st.cache_data
+def summary(df: pd.DataFrame) -> pd.Series:
+    top_city = df["city"].replace("Unknown", pd.NA).dropna().value_counts()
+    experience = pd.to_numeric(df["min_num_of_years"], errors="coerce")
+    return pd.Series(
+        {
+            "postings": len(df),
+            "top city": top_city.index[0] if len(top_city) else "—",
+            "top city share": top_city.iloc[0] / len(df) if len(top_city) else 0.0,
+            "on-site share": df["remote"].eq("On-site").mean(),
+            "remote share": df["remote"].eq("Remote").mean(),
+            "no gender preference": df["gender"].eq("No Preference").mean(),
+            "level stated": (~df["job_level"].eq("No Preference")).mean(),
+            "unknown job type": df["type"].eq("Unknown").mean(),
+            "experience stated": experience.notna().mean(),
+            "median min experience": experience.median(),
+        }
+    )
+
+
+DATA = load_markets()
+
+
+# ------------------------------------------------------------------ UI parts
+def kpi_row(market: str) -> None:
+    s = summary(DATA[market])
+    c1, c2, c3, c4 = st.columns(4)
+    c1.metric("Postings", f"{int(s['postings']):,}")
+    c2.metric(
+        f"{s['top city']} share",
+        f"{s['top city share']:.0%}",
+        help=f"share of all {market} postings",
+    )
+    c3.metric("On-site", f"{s['on-site share']:.0%}")
+    c4.metric(
+        "Remote",
+        f"{s['remote share']:.0%}",
+        help="fully remote roles",
+    )
+
+
+def market_charts(frame: pd.DataFrame) -> None:
+    cities = top_counts(frame, "city")
+    remote = frame["remote"].value_counts().reset_index()
+    levels = top_counts(frame, "job_level", 6)
+
+    c1, c2, c3 = st.columns(3)
+    with c1:
+        fig = px.bar(cities, x="postings", y="city", orientation="h", title="Top cities")
+        fig.update_layout(yaxis_title="", height=340, margin=dict(l=0, r=0, t=40, b=0))
+        st.plotly_chart(fig, use_container_width=True)
+    with c2:
+        fig = px.pie(
+            remote, names="remote", values="count", hole=0.55, title="Work arrangement"
+        )
+        fig.update_layout(height=340, margin=dict(l=0, r=0, t=40, b=0))
+        st.plotly_chart(fig, use_container_width=True)
+    with c3:
+        fig = px.bar(levels, x="job_level", y="postings", title="Job level")
+        fig.update_layout(xaxis_title="", height=340, margin=dict(l=0, r=0, t=40, b=0))
+        st.plotly_chart(fig, use_container_width=True)
+
+
+# --------------------------------------------------------------------- pages
+def home() -> None:
     st.title("Job Market Analysis")
+    st.caption("Egypt and Saudi Arabia · postings collected 2024-11-18 → 2025-04-15")
+
+    egypt, saudi = summary(DATA["Egypt"]), summary(DATA["Saudi Arabia"])
+    combined = pd.concat([DATA["Egypt"], DATA["Saudi Arabia"]], ignore_index=True)
+    c1, c2, c3, c4 = st.columns(4)
+    c1.metric("Postings cleaned", f"{int(egypt['postings'] + saudi['postings']):,}")
+    c2.metric("Highest volume city", f"{egypt['top city']} / {saudi['top city']}")
+    c3.metric("On-site", f"{combined['remote'].eq('On-site').mean():.0%}")
+    c4.metric(
+        "Unknown job type",
+        f"{combined['type'].eq('Unknown').mean():.0%}",
+        help="documentation gap shared by both markets",
+    )
+
+    st.divider()
+    left, middle, right = st.columns([1, 1.15, 1.2], gap="large")
+
+    with left:
+        st.subheader("Cleaning funnel")
+        st.write("Almost every posting survives cleaning; the work happens in the columns.")
+        for market, df in DATA.items():
+            st.metric(
+                f"{market}: rows kept",
+                f"{len(df):,}",
+                delta=f"{len(df) - RAW_ROWS[market]:,} vs raw",
+                delta_color="off",
+            )
+            st.progress(len(df) / RAW_ROWS[market])
+
+    with middle:
+        st.subheader("Columns before and after")
+        st.dataframe(SCHEMA_MAP, hide_index=True, height=300)
+
+    with right:
+        st.subheader("Data quality")
+        market = st.radio("Market", list(DATA), horizontal=True, label_visibility="collapsed")
+        st.dataframe(
+            data_quality(DATA[market]).sort_values("distinct", ascending=False),
+            hide_index=True,
+            height=300,
+        )
+
+    st.divider()
+    st.subheader("Inspect the data")
+    st.write("Browse a sample here; download the full table when you need all rows.")
+
+    c1, c2, c3 = st.columns([1, 1, 2])
+    market = c1.selectbox("Market", list(DATA), key="sample_market")
+    rows = c2.slider("Rows", 20, 300, 40, step=20)
+    columns = c3.multiselect(
+        "Columns",
+        list(DATA[market].columns),
+        default=[c for c in DISPLAY_COLUMNS if c in DATA[market].columns],
+    )
+    st.dataframe(DATA[market][columns].head(rows), height=360, hide_index=True)
+    st.download_button(
+        f"Download {market} ({len(DATA[market]):,} rows, CSV)",
+        DATA[market].to_csv(index=False).encode("utf-8"),
+        file_name=f"{market.lower().replace(' ', '_')}_clean.csv",
+        mime="text/csv",
+    )
+
+
+def market_page(market: str) -> None:
+    st.title(f"{market} job market")
+    kpi_row(market)
+
+    level = st.multiselect(
+        "Filter by job level",
+        sorted(DATA[market]["job_level"].unique()),
+        placeholder="All levels",
+    )
+    frame = DATA[market]
+    if level:
+        frame = frame[frame["job_level"].isin(level)]
+
+    market_charts(frame)
+
+    s = summary(frame)
+    st.divider()
+    st.subheader("What the numbers say")
+    bullets = [
+        f"**{s['top city']}** accounts for **{s['top city share']:.0%}** of postings; the market "
+        f"is capital-heavy rather than spread across cities.",
+        f"**{s['on-site share']:.0%}** of roles are on-site, **{s['remote share']:.0%}** are "
+        f"fully remote.",
+        f"**{s['no gender preference']:.0%}** of postings state no gender preference.",
+        f"Job type is **Unknown** for **{s['unknown job type']:.0%}** of postings, so it cannot "
+        f"be used to compare contract types.",
+    ]
+    st.markdown("\n".join(f"- {bullet}" for bullet in bullets))
+
+
+def _bar_chart(df: pd.DataFrame, column: str, n: int, horizontal: bool) -> go.Figure:
+    data = top_counts(df, column, n)
+    if horizontal:
+        fig = px.bar(data, x="postings", y=column, orientation="h")
+        fig.update_layout(yaxis_title="")
+    else:
+        fig = px.bar(data, x=column, y="postings")
+        fig.update_layout(xaxis_title="")
+    return fig
+
+
+def _donut(df: pd.DataFrame, column: str) -> go.Figure:
+    data = full_counts(df, column)
+    return px.pie(data, names=column, values="postings", hole=0.55)
+
+
+def _paired(builder, title: str, note: str | None = None) -> None:
+    st.subheader(title)
+    if note:
+        st.caption(note)
+    left, right = st.columns(2)
+    for column, market in ((left, "Egypt"), (right, "Saudi Arabia")):
+        fig = builder(DATA[market])
+        fig.update_layout(height=340, margin=dict(l=0, r=0, t=30, b=0), title=market)
+        column.plotly_chart(fig, use_container_width=True)
+
+
+def comparison() -> None:
+    st.title("Comparison: Egypt vs Saudi Arabia")
+    st.caption("Same 9,514 cleaned postings, same collection window, same columns.")
+
+    egypt, saudi = summary(DATA["Egypt"]), summary(DATA["Saudi Arabia"])
+
+    rows = [
+        ("Postings", f"{int(egypt['postings']):,}", f"{int(saudi['postings']):,}"),
+        ("Top city", egypt["top city"], saudi["top city"]),
+        ("Top city share", f"{egypt['top city share']:.0%}", f"{saudi['top city share']:.0%}"),
+        ("On-site", f"{egypt['on-site share']:.0%}", f"{saudi['on-site share']:.0%}"),
+        ("Remote", f"{egypt['remote share']:.0%}", f"{saudi['remote share']:.0%}"),
+        (
+            "No gender preference",
+            f"{egypt['no gender preference']:.0%}",
+            f"{saudi['no gender preference']:.0%}",
+        ),
+        (
+            "Job level stated",
+            f"{egypt['level stated']:.0%}",
+            f"{saudi['level stated']:.0%}",
+        ),
+        ("Unknown job type", f"{egypt['unknown job type']:.0%}", f"{saudi['unknown job type']:.0%}"),
+        (
+            "Experience stated",
+            f"{egypt['experience stated']:.0%}",
+            f"{saudi['experience stated']:.0%}",
+        ),
+        (
+            "Median min. experience",
+            f"{egypt['median min experience']:.0f} yrs",
+            f"{saudi['median min experience']:.0f} yrs",
+        ),
+    ]
+    st.dataframe(
+        pd.DataFrame(rows, columns=["metric", "Egypt", "Saudi Arabia"]),
+        hide_index=True,
+        height=390,
+    )
+
+    st.divider()
+    _paired(lambda df: _bar_chart(df, "city", 8, True), "Job distribution by city")
+    _paired(lambda df: _bar_chart(df, "company_name", 10, True), "Postings by company")
+    _paired(lambda df: _bar_chart(df, "title", 10, True), "Most common job titles")
+    _paired(lambda df: _donut(df, "remote"), "Work arrangement")
+    _paired(lambda df: _bar_chart(df, "gender", 3, False), "Gender preference")
+    _paired(lambda df: _bar_chart(df, "job_level", 8, False), "Job level")
+
+    st.subheader("Postings over time")
+    left, right = st.columns(2)
+    for column, market in ((left, "Egypt"), (right, "Saudi Arabia")):
+        fig = px.line(monthly_postings(DATA[market]), x="month", y="postings", markers=True)
+        fig.update_layout(
+            height=340, margin=dict(l=0, r=0, t=30, b=0), title=market, xaxis_title=""
+        )
+        column.plotly_chart(fig, use_container_width=True)
+
+    _paired(lambda df: _bar_chart(df, "industry_", 8, True), "Postings by industry")
+    _paired(lambda df: _donut(df, "type"), "Job type")
+    _paired(
+        lambda df: px.box(experience_frame(df), x="requirement", y="years"),
+        "Experience requirements",
+        "Only a minority of postings state a number, so read the boxes as a sample.",
+    )
+
+    st.subheader("Jobs by city and job level")
+    left, right = st.columns(2)
+    for column, market in ((left, "Egypt"), (right, "Saudi Arabia")):
+        fig = px.imshow(
+            city_level_matrix(DATA[market]),
+            aspect="auto",
+            text_auto=True,
+            color_continuous_scale="Blues",
+        )
+        fig.update_layout(
+            height=360, margin=dict(l=0, r=0, t=30, b=0), title=market, coloraxis_showscale=False
+        )
+        column.plotly_chart(fig, use_container_width=True)
+
+    st.subheader("Most common job titles")
+    market = st.radio("Word cloud market", ["Egypt", "Saudi Arabia"], horizontal=True)
+    if st.toggle("Render word cloud"):
+        st.image(wordcloud_image(DATA[market]), use_container_width=True)
+
+    st.divider()
+    st.subheader("Where the two markets differ")
+    onsite_gap = saudi["on-site share"] - egypt["on-site share"]
+    bullets = [
+        f"**Both markets are capital-heavy**, but Riyadh spreads wider than Cairo: "
+        f"{egypt['top city share']:.0%} of Egyptian postings are in {egypt['top city']}, "
+        f"against {saudi['top city share']:.0%} of Saudi postings in {saudi['top city']}.",
+        f"**Saudi Arabia is more office-bound**: {onsite_gap:+.0%} on-site than Egypt "
+        f"({saudi['on-site share']:.0%} against {egypt['on-site share']:.0%}).",
+        f"**Egypt publishes seniority far more often**: job level is stated in "
+        f"{egypt['level stated']:.0%} of Egyptian postings but only {saudi['level stated']:.0%} "
+        f"of Saudi ones, so a seniority comparison would mostly measure missing data.",
+        f"**Job type is unusable in both**: Unknown for {egypt['unknown job type']:.0%} and "
+        f"{saudi['unknown job type']:.0%} of postings, which rules out a contract-type comparison.",
+        f"**Experience is too sparse to compare**: only {egypt['experience stated']:.0%} and "
+        f"{saudi['experience stated']:.0%} of postings state a minimum, so the medians "
+        f"({egypt['median min experience']:.0f} and {saudi['median min experience']:.0f} years) "
+        f"describe a small subset rather than each market.",
+    ]
+    st.markdown("\n".join(f"- {bullet}" for bullet in bullets))
+
+
+def main() -> None:
+    st.sidebar.title("Navigation")
+    page = st.sidebar.selectbox("Select Page", PAGES)
 
     if page == "Home":
-        st.header("Welcome to the Job Market Analysis App")
-        st.write(
-            """**Home section displays Data Cleaning and Transformation related to the Egyptian & Saudi Arabia Datasets.**""")
-        st.markdown("Egypt Dataset Before Preprocessing")
-        st.dataframe(df_egypt_before)
-        st.markdown("Saudi Arabia Dataset Before Preprocessing")
-        st.dataframe(df_saudi_before)
-        st.write("""## Data Cleaning and Transformation Summary
-            
-### 1. **Initial Column Splitting**
-   - **Location**: Extracted `city` by splitting the `location` column using the separator `·`.
-   - **Career Level**: Divided `career_level` into `type`, `exp`, and `no_exp` columns.
-
-### 2. **Handling Missing Values**
-   - Replaced "Unknown" values in `exp` and `no_exp` with `NaN`.
-   - Combined similar columns (`experience` & `exp`, `num_of_exp` & `no_exp`) into new columns (`experience_`, `num_of_exp_years`).
-   - Filled missing values in categorical columns (`remote`, `age`, `sex`, etc.) with default values like "لا تفضيل" (no preference).
-
-### 3. **Dropping Unnecessary Columns**
-   - Removed irrelevant columns such as `age`, `salary`, `qualification`, and others that were not needed for analysis.
-
-### 4. **Standardizing Job Titles**
-   - Removed leading numbers, periods, and unwanted terms (e.g., "sr", "junior") from job titles.
-   - Mapped job titles to standardized names using predefined mappings.
-
-### 5. **Manual Adjustments and Translation**
-   - Manually cleaned and translated the `title` column for consistency.
-   - Removed rows containing specific keywords like "سعودية", "saudi".
-
-### 6. **Updating Experience Information**
-   - Updated rows where `type` included "تدريب" to set `experience_` to "خريج جديد" (New Graduate).
-
-### 7. **Extracting Additional Information**
-   - Extracted gender and remote work information from text columns (`title`, `description`, `skills`).
-
-### 8. **Final Adjustments**
-   - Dropped unnecessary columns like `description` and `skills`.
-   - Processed and cleaned the `num_of_exp_years` column.""")
-
-        st.markdown("Egypt Dataset After Preprocessing")
-        st.dataframe(df_egypt)
-        st.markdown("Saudi Arabia Dataset After Preprocessing")
-        st.dataframe(df_saudi)
-
+        home()
     elif page == "Egypt Market":
-        st.header("Egypt Job Market")
-        st.write("**This section displays analysis related to the Egyptian job market.**")
-        egypt_explanations = [
-            "- Bar chart showing the top 10 cities in Egypt based on the number of jobs available.\n"
-            "- Cairo dominates with over 2,000 jobs, followed by Alexandria (~100 jobs) and other cities like New Cairo and Sharm El-Sheikh with fewer than 50 jobs each.\n",
-
-            "- Bar chart displaying job availability by company in Egypt.\n"
-            "- Talent 360 leads with over 290 jobs, followed by SSC - Egypt (~180 jobs) and Vodafone - Egypt (100-120 jobs).\n",
-
-            "- Horizontal bar chart showing the most frequent job titles in Egypt.\n"
-            "- Accountant is the most common title (80+ occurrences), followed by Business Analyst (~65) and Account Manager (~60).\n",
-
-            "- Pie chart representing work types in Egypt (On-site, Remote, Hybrid).\n"
-            "- On-site jobs dominate (86.5%), while remote (9.9%) and hybrid (3.6%) roles are less common.\n",
-
-            "- Bar chart illustrating job distribution by gender in Egypt.\n"
-            "- Most job postings have 'No Preference' (3,815 jobs), while Female (130) and Male (64) roles are significantly lower.\n",
-
-            "- Bar chart showing job levels in Egypt (Senior, Management, Junior, etc.).\n"
-            "- Senior roles dominate (843 jobs), followed by Management (679) and Junior (79).\n",
-
-            "- Line chart showing job entries over time (Nov 2025 - Apr 2025).\n"
-            "- Significant growth observed between January and March 2025, peaking around 1,200 jobs in March.\n",
-
-            "- Bar chart displaying top 10 domains for business opportunities in Egypt.\n"
-            "- 'Other Commercial Support Services' leads (3,240 jobs), followed by 'General Engineering Consultancy' (97) and 'Management Consultancy' (85).\n",
-
-            "- Pie chart representing job types in Egypt.\n"
-            "- 'Unknown' dominates (76.48%), followed by 'Management' (18.68%) and 'Full-Time' (3.14%).\n",
-
-            "- Box plot comparing minimum and maximum experience requirements for jobs in Egypt.\n"
-            "- Median min experience is 3 years, while max experience is around 8 years, with significant variability.\n",
-
-            "- Heatmap showing job distribution by city and job level in Egypt.\n"
-            "- Cairo leads in all levels, particularly in 'No Preference' (1,160 jobs) and 'Mid Level' (509 jobs).\n",
-
-            "- Word cloud visualizing the most frequent job titles in Egypt.\n"
-            "- Common titles include 'Account Manager', 'Manager', 'Senior', 'Lead', and 'Accountant'.\n"
-        ]
-
-        for i in range(len(egypt_figs)):
-            st.subheader(f"Egypt: {plot_names[i]}")
-            st.write(f"{egypt_explanations[i]}")
-            st.pyplot(egypt_figs[i])
-
-
+        market_page("Egypt")
     elif page == "Saudi Market":
-        st.header("Saudi Arabia Job Market")
-        st.write("**This section displays analysis related to the Saudi Arabian job market.**")
-        saudi_explanations = [
-            "- Bar chart showing the top 10 cities in Saudi Arabia based on the number of jobs available.\n"
-            "- Riyadh dominates with over 2,000 jobs, followed by Jeddah (~500 jobs) and other cities like Dammam and Khobar with moderate numbers (100-300 jobs).\n",
+        market_page("Saudi Arabia")
+    else:
+        comparison()
 
-            "- Bar chart displaying job availability by company in Saudi Arabia.\n"
-            "- Saudi Aramco leads with over 200 jobs, followed by InterContinental Hotels Group (~180 jobs) and Jobs for Humanity (120-170 jobs).\n",
-
-            "- Horizontal bar chart showing the most frequent job titles in Saudi Arabia.\n"
-            "- Sales Manager is the most common title (85+ occurrences), followed by Account Manager (~85) and Accountant (~80).\n",
-
-            "- Pie chart representing work types in Saudi Arabia (On-site, Remote, Hybrid).\n"
-            "- On-site jobs dominate (93.0%), while remote (3.4%) and hybrid (3.5%) roles are less common.\n",
-
-            "- Bar chart illustrating job distribution by gender in Saudi Arabia.\n"
-            "- Most job postings have 'No Preference' (4,986 jobs), while Male (274) and Female (245) roles are significantly lower.\n",
-
-            "- Bar chart showing job levels in Saudi Arabia (Mid Level, Management, Junior, etc.).\n"
-            "- Mid Level roles dominate (138 jobs), followed by Management (69) and Junior (28).\n",
-
-            "- Line chart showing job entries over time (Nov 2025 - Apr 2025).\n"
-            "- Significant growth observed between January and March 2025, peaking around 1,600 jobs in March.\n",
-
-            "- Bar chart displaying top 10 domains for business opportunities in Saudi Arabia.\n"
-            "- 'Other Commercial Support Services' leads (3,835 jobs), followed by 'Management Consultancy' (109) and 'Construction' (94).\n",
-
-            "- Pie chart representing job types in Saudi Arabia.\n"
-            "- 'Unknown' dominates (76.77%), followed by 'Full-Time' (21.82%) and 'Management' (0.73%).\n",
-
-            "- Box plot comparing minimum and maximum experience requirements for jobs in Saudi Arabia.\n"
-            "- Median min experience is 3 years, while max experience is around 9 years, with significant variability.\n",
-
-            "- Heatmap showing job distribution by city and job level in Saudi Arabia.\n"
-            "- Riyadh leads in all levels, particularly in 'No Preference' (1,970 jobs) and 'Mid Level' (2,020 jobs).\n",
-
-            "- Word cloud visualizing the most frequent job titles in Saudi Arabia.\n"
-            "- Common titles include 'Consultant', 'Supervisor', 'Specialist', 'Engineer', 'Lead', and 'Manager'.\n"
-        ]
-        for i in range(len(saudi_figs)):
-            st.subheader(f"Saudi Arabia: {plot_names[i]}")
-            st.write(f"{saudi_explanations[i]}")
-            st.pyplot(saudi_figs[i])
-
-
-    elif page == "Comparison":
-        st.header("Comparison: Egypt vs Saudi Arabia")
-        st.write("This section compares the two job markets side by side.")
-
-        # Create a list of plot figures for easier iteration
-        comparison_explanations = [
-            "- **Top Cities by Job Availability**:\n"
-            "  - Similarities: Both countries show dominance of capital cities (Cairo in Egypt, Riyadh in Saudi Arabia) with skewed distributions.\n"
-            "  - Differences: Saudi Arabia has broader job distribution across cities like Jeddah, Dammam, and Khobar, while Egypt’s jobs are heavily centralized in Cairo.\n"
-            "  - Conclusion: Riyadh and Cairo dominate their respective job markets, but Saudi Arabia exhibits slightly more diversified opportunities beyond the capital.\n",
-
-            "- **Jobs by Company**:\n"
-            "  - Similarities: A few leading companies dominate job markets in both countries (e.g., Talent 360 in Egypt, Saudi Aramco in Saudi Arabia).\n"
-            "  - Differences: Saudi Arabia shows more diversity among mid-tier companies, while Egypt's job market is concentrated in fewer large employers.\n"
-            "  - Conclusion: While both markets rely on major employers, Saudi Arabia offers more balanced opportunities across various companies.\n",
-
-            "- **Most Frequent Job Titles**:\n"
-            "  - Similarities: Both emphasize accounting and sales roles (e.g., Accountant, Sales Manager).\n"
-            "  - Differences: Saudi Arabia focuses more on engineering roles, whereas Egypt leans toward technology and creative roles.\n"
-            "  - Conclusion: Industry priorities differ; Saudi Arabia prioritizes industrial development, while Egypt emphasizes tech and innovation.\n",
-
-            "- **Work Type Distribution**:\n"
-            "  - Similarities: On-site jobs dominate in both countries (>85%).\n"
-            "  - Differences: Saudi Arabia has a higher proportion of on-site jobs (93%) and slightly more hybrid roles, while Egypt offers marginally more remote work options.\n"
-            "  - Conclusion: Both favor traditional workplace settings, though Egypt provides slightly more flexibility for remote work.\n",
-
-            "- **Job Distribution by Gender**:\n"
-            "  - Similarities: 'No Preference' dominates in both countries, indicating gender-neutral hiring practices.\n"
-            "  - Differences: Saudi Arabia has slightly more gender-specific postings (Male and Female), but these remain low overall.\n"
-            "  - Conclusion: Both prioritize inclusive hiring, but Saudi Arabia shows a marginal increase in gender-specific opportunities.\n",
-
-            "- **Job Levels**:\n"
-            "  - Similarities: Higher-level positions dominate, with limited C-Suite/Senior Management roles.\n"
-            "  - Differences: Egypt favors Senior roles (843 jobs), while Saudi Arabia emphasizes Mid Level roles (138 jobs).\n"
-            "  - Conclusion: Egypt focuses on experienced professionals, while Saudi Arabia targets mid-career individuals.\n",
-
-            "- **Job Entries Over Time**:\n"
-            "  - Similarities: Both show upward trends from November 2025 to March 2025, peaking in March before slight declines in April.\n"
-            "  - Differences: Saudi Arabia consistently outperforms Egypt in total job entries, reaching 1,600 vs. 1,200 at peak.\n"
-            "  - Conclusion: Saudi Arabia demonstrates stronger growth and larger job market size compared to Egypt.\n",
-
-            "- **Top Domains for Business Opportunities**:\n"
-            "  - Similarities: 'Other Commercial Support Services' leads in both countries.\n"
-            "  - Differences: Saudi Arabia includes Construction, Oil and Gas, and Healthcare prominently, reflecting economic diversification efforts.\n"
-            "  - Conclusion: Shared focus on commercial support services, but Saudi Arabia's broader sectoral spread reflects its strategic initiatives.\n",
-
-            "- **Job Types**:\n"
-            "  - Similarities: 'Unknown' dominates in both countries (~76%), highlighting incomplete job descriptions.\n"
-            "  - Differences: Saudi Arabia emphasizes Full-Time roles (21.82% vs. 3.14% in Egypt), while Egypt prioritizes Management roles (18.68% vs. 0.73%).\n"
-            "  - Conclusion: Saudi Arabia leans toward permanent employment, whereas Egypt seeks leadership talent.\n",
-
-            "- **Experience Requirements**:\n"
-            "  - Similarities: Median min experience ~3 years; max experience ~8-9 years; outliers exist for senior roles.\n"
-            "  - Differences: Saudi Arabia shows slightly higher max experience requirements (median 9 years vs. 8 in Egypt).\n"
-            "  - Conclusion: Both cater to mid-career professionals, but Saudi Arabia demands slightly more experienced candidates.\n",
-
-            "- **Heatmap of Jobs by City and Level**:\n"
-            "  - Similarities: Major cities (Cairo, Riyadh) dominate; 'No Preference' is prevalent.\n"
-            "  - Differences: Saudi Arabia has higher overall job counts and more prominent secondary cities (e.g., Dammam).\n"
-            "  - Conclusion: Concentration in urban centers persists, but Saudi Arabia offers greater geographic diversity.\n",
-
-            "- **Word Cloud of Job Titles**:\n"
-            "  - Similarities: Managerial, specialized, and sales roles dominate.\n"
-            "  - Differences: Egypt highlights Accounting and Sales roles, while Saudi Arabia emphasizes Consulting, Engineering, and Leadership roles.\n"
-            "  - Conclusion: Role prominence reflects differing industry priorities—Egypt focuses on services, while Saudi Arabia leans toward engineering and strategy.\n"
-        ]
-
-        # Use st.columns to create two columns for each comparison
-        for i in range(len(egypt_figs)):
-            st.subheader(f"Comparison: {plot_names[i]}")
-            st.write(f"{comparison_explanations[i]}")
-            col1, col2 = st.columns([1, 1])
-            with col1:
-                st.markdown(f"Egypt: {plot_names[i]}")
-                st.pyplot(egypt_figs[i])
-            with col2:
-                st.markdown(f"Saudi Arabia: {plot_names[i]}")
-                st.pyplot(saudi_figs[i])
-
-    # ---------------------------
-    # Footer or Credits
-    # ---------------------------
-    st.markdown("---")
-    st.markdown("Created by DataMentes Team | Job Market Analysis Tool")
-    st.markdown("Team Members Profile: [https://team-portfolio.streamlit.app](https://team-portfolio.streamlit.app)")
+    st.divider()
+    st.caption("Created by DataMentes Team | Job Market Analysis Tool")
 
 
 if __name__ == "__main__":
